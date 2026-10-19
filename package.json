@@ -1,0 +1,23 @@
+{
+  "name": "briefcase-suite",
+  "version": "1.0.0",
+  "description": "BriefCase - Law Firm Case Management System | SVNIT Surat CS203 DBMS Project",
+  "scripts": {
+    "start:backend": "npm --prefix backend start",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:frontend": "npm --prefix frontend run build"
+  },
+  "keywords": [
+    "dbms",
+    "mysql",
+    "stored-procedures",
+    "triggers",
+    "cursors",
+    "express",
+    "react",
+    "svnit"
+  ],
+  "author": "SVNIT B.Tech II CSE",
+  "license": "ISC"
+}
