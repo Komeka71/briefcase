@@ -1,35 +1,105 @@
 @import "tailwindcss";
 
+@theme {
+  --font-serif: 'Cormorant Garamond', Georgia, Cambria, serif;
+  --font-display: 'Cinzel', 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-legal-950: #0a0f18;
+  --color-legal-900: #101827;
+  --color-legal-850: #141f32;
+  --color-legal-800: #18263d;
+  --color-legal-750: #1e304c;
+  --color-legal-700: #22334d;
+  --color-legal-600: #2c4263;
+  --color-legal-500: #3e5b87;
+
+  --color-gold-300: #f2e3c6;
+  --color-gold-400: #dfbe85;
+  --color-gold-500: #c9a96e;
+  --color-gold-600: #b99a61;
+  --color-gold-700: #8e713e;
+}
+
 @layer base {
   :root {
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --bg-primary: #101827;
+    --bg-secondary: #18263d;
+    --bg-elevated: #22334d;
+    --gold-primary: #c9a96e;
+    --gold-subtle: #b99a61;
+    --border-dark: rgba(255, 255, 255, 0.09);
+    --border-gold: rgba(201, 169, 110, 0.22);
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #f8fafc;
-    color: #0f172a;
+    background-color: #101827;
+    color: #e2e8f0;
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
   }
 }
 
-/* Custom scrollbars for data tables */
+/* Luxury Editorial Typography utilities */
+.font-serif {
+  font-family: 'Cormorant Garamond', Georgia, Cambria, serif;
+}
+
+.font-display {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+}
+
+.font-sans {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Gold Text Gradients & Subtle Shimmer */
+.gold-text-gradient {
+  background: linear-gradient(135deg, #f2e3c6 0%, #c9a96e 50%, #b99a61 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border-gradient {
+  border-image: linear-gradient(to right, rgba(201, 169, 110, 0.4), rgba(201, 169, 110, 0.05)) 1;
+}
+
+/* Glass panels and cards */
+.legal-panel {
+  background: rgba(24, 38, 61, 0.72);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.legal-panel-elevated {
+  background: rgba(34, 51, 77, 0.75);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(201, 169, 110, 0.2);
+}
+
+/* Custom scrollbars for data tables and panels */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #101827;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #22334d;
   border-radius: 3px;
+  border: 1px solid rgba(201, 169, 110, 0.15);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #c9a96e;
 }

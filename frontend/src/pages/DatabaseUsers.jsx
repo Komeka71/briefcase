@@ -11,7 +11,10 @@ import {
   AlertCircle,
   X,
   Database,
-  Terminal
+  Terminal,
+  Shield,
+  Layers,
+  KeyRound
 } from 'lucide-react';
 
 export default function DatabaseUsers() {
@@ -115,71 +118,82 @@ export default function DatabaseUsers() {
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
+    <div className="space-y-6 pb-8">
+      {/* Editorial Header */}
+      <div className="bg-[#141f32] border border-white/10 rounded-sm p-6 md:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-[#c9a96e]/5 to-transparent pointer-events-none" />
+
+        <div className="relative z-10 space-y-2">
           <div className="flex items-center space-x-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 border border-indigo-200">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono tracking-wider font-semibold bg-[#18263d] text-[#c9a96e] border border-[#c9a96e]/30">
               Lab Assignment 10 • Req 10.2 & 10.3
             </span>
-            <span className="text-xs text-slate-500 font-mono">MySQL Privileges vs Application USERS</span>
+            <span className="text-xs text-slate-400 font-mono hidden sm:inline">
+              MySQL Privileges vs Application USERS
+            </span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 mt-1">Database Privileges & User Authentication</h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Illustrates the critical architectural distinction between MySQL Database Accounts and Application Login Users.
+
+          <h1 className="text-2xl md:text-3xl font-serif font-normal text-white tracking-tight">
+            Database Privileges & <span className="italic text-[#c9a96e]">User Authentication</span>
+          </h1>
+
+          <p className="text-xs md:text-sm text-slate-300 font-serif leading-relaxed max-w-2xl">
+            Demonstrates the fundamental architectural distinction between MySQL RDBMS Accounts (GRANT matrix)
+            and application-tier authenticated users stored in the USERS table with bcrypt hashing.
           </p>
         </div>
 
         <button
           onClick={() => setRegisterOpen(true)}
-          className="inline-flex items-center space-x-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs"
+          className="relative z-10 inline-flex items-center space-x-2 px-4 py-2.5 bg-[#c9a96e] hover:bg-[#dfbe85] text-[#101827] rounded-sm text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow-lg shadow-black/30 font-mono"
         >
-          <UserPlus className="w-4 h-4" />
-          <span>Register App User (Req 10.3)</span>
+          <UserPlus className="w-4 h-4 stroke-[2.5]" />
+          <span>Register App User (10.3)</span>
         </button>
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 flex items-start space-x-3 text-sm">
-          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-          <div>{error}</div>
+        <div className="p-4 bg-[#18263d] border-l-4 border-red-500 rounded-sm text-slate-200 flex items-start space-x-3 shadow-lg">
+          <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+          <div className="text-xs font-serif">{error}</div>
         </div>
       )}
 
       {success && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800 flex items-start space-x-3 text-sm">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-          <div>{success}</div>
+        <div className="p-4 bg-[#18263d] border-l-4 border-emerald-500 rounded-sm text-slate-200 flex items-start space-x-3 shadow-lg">
+          <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+          <div className="text-xs font-serif">{success}</div>
         </div>
       )}
 
       {/* SECTION A: Requirement 10.2 - MySQL Database Accounts Matrix */}
-      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
-        <div>
+      <div className="bg-[#141f32] rounded-sm border border-white/10 p-6 shadow-xl space-y-4">
+        <div className="pb-3 border-b border-white/5">
           <div className="flex items-center space-x-2">
-            <Database className="w-5 h-5 text-indigo-600" />
-            <h2 className="text-lg font-bold text-slate-900">Requirement 10.2: MySQL Database Accounts Matrix</h2>
+            <Database className="w-5 h-5 text-[#c9a96e]" />
+            <h2 className="text-base font-serif font-semibold text-white">
+              Requirement 10.2: MySQL Database Accounts Matrix
+            </h2>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Database-level authorization controls created via <code className="font-mono bg-slate-100 px-1 rounded">CREATE USER</code> and <code className="font-mono bg-slate-100 px-1 rounded">GRANT</code> in MySQL.
+          <p className="text-xs text-slate-400 font-serif mt-1">
+            Database-level authorization controls created via <code className="font-mono text-[#c9a96e] bg-black/40 px-1 rounded">CREATE USER</code> and <code className="font-mono text-[#c9a96e] bg-black/40 px-1 rounded">GRANT</code> in MySQL.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {dbAccounts.map((acc, idx) => (
-            <div key={idx} className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+            <div key={idx} className="p-4 rounded-sm border border-white/10 bg-[#101827] space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs font-bold text-slate-900">{acc.account}</span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-100 text-indigo-800">
+                <span className="font-mono text-xs font-bold text-[#dfbe85]">{acc.account}</span>
+                <span className="px-2 py-0.5 rounded-sm text-[10px] font-mono bg-[#18263d] text-[#c9a96e] border border-[#c9a96e]/30">
                   {acc.badge}
                 </span>
               </div>
-              <div className="text-xs font-semibold text-slate-700">{acc.role}</div>
-              <div className="text-xs font-mono text-slate-600 bg-white p-2 rounded border border-slate-200">
+              <div className="text-xs font-serif font-semibold text-white">{acc.role}</div>
+              <div className="text-xs font-mono text-slate-300 bg-[#0a0f18] p-2.5 rounded-sm border border-white/5">
                 {acc.privileges}
               </div>
-              <p className="text-xs text-slate-500">{acc.rationale}</p>
+              <p className="text-xs text-slate-400 font-serif">{acc.rationale}</p>
             </div>
           ))}
         </div>
@@ -188,119 +202,126 @@ export default function DatabaseUsers() {
       {/* SECTION B: Requirement 10.3 - Application Users & Bcrypt Authentication */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Login Verification Panel */}
-        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
-          <div className="flex items-center space-x-2">
-            <Key className="w-5 h-5 text-amber-600" />
-            <h3 className="text-base font-bold text-slate-900">Test Login Verification (Procedure: GetUserByEmail)</h3>
+        <div className="bg-[#141f32] rounded-sm border border-white/10 p-6 shadow-xl space-y-4">
+          <div className="flex items-center space-x-2 pb-3 border-b border-white/5">
+            <Key className="w-5 h-5 text-[#c9a96e]" />
+            <h3 className="text-base font-serif font-semibold text-white">
+              Test Login Verification (Procedure: GetUserByEmail)
+            </h3>
           </div>
-          <p className="text-xs text-slate-500">
-            Node.js retrieves the salted hash via <code className="font-mono bg-slate-100 px-1 rounded">GetUserByEmail(?)</code>, executes <code className="font-mono bg-slate-100 px-1 rounded">bcrypt.compare</code>, and issues a JWT token.
+          <p className="text-xs text-slate-400 font-serif">
+            Node.js retrieves the salted hash via <code className="font-mono text-[#c9a96e] bg-black/40 px-1 rounded">GetUserByEmail(?)</code>, executes <code className="font-mono text-[#c9a96e] bg-black/40 px-1 rounded">bcrypt.compare</code>, and issues a JWT token.
           </p>
 
           <form onSubmit={handleLogin} className="space-y-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Email</label>
+              <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Email</label>
               <input
                 type="email"
                 required
                 value={loginForm.email}
                 onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
                 placeholder="adv.mehta@briefcase.in or admin@briefcase.in"
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs"
+                className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white font-mono"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Password</label>
+              <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Password</label>
               <input
                 type="password"
                 required
                 value={loginForm.password}
                 onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                 placeholder="Lawyer@2026 or Admin@2026"
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs"
+                className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white font-mono"
               />
             </div>
             <button
               type="submit"
-              className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold shadow-xs"
+              className="px-4 py-2 bg-[#c9a96e] hover:bg-[#dfbe85] text-[#101827] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
             >
               Verify Credentials & Issue Token
             </button>
           </form>
 
           {loginResult && (
-            <div className="p-3 bg-slate-950 text-emerald-400 rounded-lg font-mono text-xs space-y-1 overflow-x-auto">
-              <div className="font-bold text-amber-300">Authenticated Session Profile:</div>
+            <div className="p-3 bg-[#0a0f18] text-emerald-400 rounded-sm font-mono text-xs space-y-1 overflow-x-auto border border-white/10">
+              <div className="font-bold text-[#dfbe85]">Authenticated Session Profile:</div>
               <div>User: {loginResult.user.name} ({loginResult.user.role})</div>
               <div>Email: {loginResult.user.email}</div>
-              <div className="text-[10px] text-slate-400 truncate">Token: {loginResult.token}</div>
+              <div className="text-[10px] text-slate-400 truncate">JWT Token: {loginResult.token}</div>
             </div>
           )}
         </div>
 
         {/* Conceptual Explanation Box */}
-        <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-xl p-6 shadow-sm flex flex-col justify-between space-y-4">
+        <div className="bg-[#18263d] border border-[#c9a96e]/30 text-white rounded-sm p-6 shadow-xl flex flex-col justify-between space-y-4">
           <div>
-            <div className="flex items-center space-x-2 text-amber-400 font-bold text-sm">
-              <Terminal className="w-4 h-4" />
+            <div className="flex items-center space-x-2 text-[#dfbe85] font-serif font-bold text-sm">
+              <Terminal className="w-4 h-4 text-[#c9a96e]" />
               <span>Architectural Explanation: DB vs App Users</span>
             </div>
-            <div className="mt-3 text-xs text-slate-300 space-y-2 leading-relaxed">
+            <div className="mt-3 text-xs text-slate-300 space-y-2.5 leading-relaxed font-serif">
               <p>
-                <strong>1. MySQL Accounts (<code className="text-amber-300">briefcase_app</code>):</strong> Manage access to the RDBMS itself. The Node.js server maintains a single connection pool authenticated via <code className="text-amber-300">briefcase_app</code>.
+                <strong className="text-white font-sans">1. MySQL Accounts (<code className="text-[#c9a96e] font-mono">briefcase_app</code>):</strong> Manage access to the RDBMS itself. The Node.js server maintains a single connection pool authenticated via <code className="text-[#c9a96e] font-mono">briefcase_app</code>.
               </p>
               <p>
-                <strong>2. Application Users (<code className="text-amber-300">USERS table</code>):</strong> Hundreds of law firm lawyers and assistants do not each require a MySQL server login. Instead, their credentials reside in the <code className="text-amber-300">USERS</code> relational table, hashed with bcrypt (work factor 10).
+                <strong className="text-white font-sans">2. Application Users (<code className="text-[#c9a96e] font-mono">USERS table</code>):</strong> Hundreds of law firm lawyers and assistants do not each require a MySQL server login. Instead, their credentials reside in the <code className="text-[#c9a96e] font-mono">USERS</code> relational table, hashed with bcrypt (work factor 10).
               </p>
               <p>
-                <strong>3. Audit User Tracking:</strong> For database audit triggers, Node.js injects the authenticated lawyer's identity via MySQL session variable <code className="text-amber-300">SET @current_app_user = ?</code> so trigger audit records reflect the real staff member.
+                <strong className="text-white font-sans">3. Audit User Tracking:</strong> For database audit triggers, Node.js injects the authenticated lawyer's identity via MySQL session variable <code className="text-[#c9a96e] font-mono">SET @current_app_user = ?</code> so trigger audit records reflect the real staff member.
               </p>
             </div>
           </div>
-          <div className="text-[11px] text-slate-400 font-mono border-t border-slate-700/60 pt-3">
-            SVNIT CS203 • Demonstrates Principle of Least Privilege
+          <div className="text-[11px] text-slate-400 font-mono border-t border-white/10 pt-3 flex items-center justify-between">
+            <span>SVNIT CS203 DBMS Project</span>
+            <span className="text-[#c9a96e]">Least Privilege Principle</span>
           </div>
         </div>
       </div>
 
       {/* Registration Modal */}
       {registerOpen && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl border border-slate-200 max-w-md w-full">
-            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-              <h3 className="font-bold text-slate-900 text-base">Register Application User (RegisterUser)</h3>
-              <button onClick={() => setRegisterOpen(false)} className="text-slate-400 hover:text-slate-600">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-[#141f32] rounded-sm shadow-2xl border border-[#c9a96e]/30 max-w-md w-full">
+            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#18263d]">
+              <h3 className="font-serif font-semibold text-white text-base">
+                Register Application User (RegisterUser)
+              </h3>
+              <button onClick={() => setRegisterOpen(false)} className="text-slate-400 hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleRegister} className="p-6 space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Full Name *</label>
+                <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Full Legal Name *</label>
                 <input
                   type="text"
                   required
                   value={regForm.name}
                   onChange={(e) => setRegForm({ ...regForm, name: e.target.value })}
                   placeholder="e.g. Adv. Priya Desai"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs"
+                  className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Email Address *</label>
+                <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Email Address *</label>
                 <input
                   type="email"
                   required
                   value={regForm.email}
                   onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
                   placeholder="lawyer@briefcase.in"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs"
+                  className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white font-mono"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Password * (Will be hashed via bcrypt)</label>
+                <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">
+                  Password * (Hashed via bcrypt work factor 10)
+                </label>
                 <input
                   type="password"
                   required
@@ -308,17 +329,17 @@ export default function DatabaseUsers() {
                   value={regForm.password}
                   onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
                   placeholder="Minimum 6 characters"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs"
+                  className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white font-mono"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Role</label>
+                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Role</label>
                   <select
                     value={regForm.role}
                     onChange={(e) => setRegForm({ ...regForm, role: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs"
+                    className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white font-mono"
                   >
                     <option value="Admin">Admin</option>
                     <option value="Lawyer">Lawyer</option>
@@ -327,11 +348,11 @@ export default function DatabaseUsers() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Status</label>
+                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Status</label>
                   <select
                     value={regForm.status}
                     onChange={(e) => setRegForm({ ...regForm, status: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs"
+                    className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white font-mono"
                   >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
@@ -339,17 +360,17 @@ export default function DatabaseUsers() {
                 </div>
               </div>
 
-              <div className="pt-2 flex justify-end space-x-2">
+              <div className="pt-3 flex justify-end space-x-3 border-t border-white/10">
                 <button
                   type="button"
                   onClick={() => setRegisterOpen(false)}
-                  className="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-xs font-semibold"
+                  className="px-4 py-2 border border-white/10 text-slate-400 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider hover:bg-white/5"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs"
+                  className="px-5 py-2 bg-[#c9a96e] hover:bg-[#dfbe85] text-[#101827] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
                 >
                   Execute RegisterUser
                 </button>
