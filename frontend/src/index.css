@@ -1,105 +1,138 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: 'Cormorant Garamond', Georgia, Cambria, serif;
-  --font-display: 'Cinzel', 'Times New Roman', serif;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, Cambria, serif;
+  --font-display: 'Cinzel', 'Playfair Display', 'Times New Roman', serif;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  --color-legal-950: #0a0f18;
-  --color-legal-900: #101827;
-  --color-legal-850: #141f32;
-  --color-legal-800: #18263d;
-  --color-legal-750: #1e304c;
-  --color-legal-700: #22334d;
-  --color-legal-600: #2c4263;
-  --color-legal-500: #3e5b87;
+  /* Midnight Navy, Obsidian Black & Warm Espresso Palette */
+  --color-navy-950: #04070e;
+  --color-navy-900: #080d1a;
+  --color-navy-850: #0d1527;
+  --color-navy-800: #121c33;
+  --color-navy-750: #172442;
+  --color-navy-700: #1e3056;
+  --color-navy-600: #2b4273;
+  --color-navy-500: #3b5a9a;
 
-  --color-gold-300: #f2e3c6;
-  --color-gold-400: #dfbe85;
-  --color-gold-500: #c9a96e;
-  --color-gold-600: #b99a61;
-  --color-gold-700: #8e713e;
+  /* Warm Espresso & Dark Slate Accents */
+  --color-espresso-900: #14100d;
+  --color-espresso-800: #1c1713;
+  --color-espresso-700: #27201b;
+  --color-espresso-600: #382e27;
+
+  /* Pure White, Cream & Platinum */
+  --color-cream-50: #ffffff;
+  --color-cream-100: #fbf9f5;
+  --color-cream-200: #f5f0e7;
+  --color-cream-300: #e8e2d5;
+  --color-cream-400: #d6cdbd;
+  --color-cream-500: #b8ad9c;
 }
 
 @layer base {
   :root {
-    --bg-primary: #101827;
-    --bg-secondary: #18263d;
-    --bg-elevated: #22334d;
-    --gold-primary: #c9a96e;
-    --gold-subtle: #b99a61;
-    --border-dark: rgba(255, 255, 255, 0.09);
-    --border-gold: rgba(201, 169, 110, 0.22);
+    --bg-primary: #060a12;
+    --bg-surface: #0a1020;
+    --bg-elevated: #0e162c;
+    --bg-espresso: #181310;
+    --accent-cream: #f5f0e7;
+    --accent-cream-soft: #e8e2d5;
+    --text-primary: #ffffff;
+    --text-cream: #f5f0e7;
+    --text-muted: #94a3b8;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-cream: rgba(245, 240, 231, 0.16);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #101827;
-    color: #e2e8f0;
+    font-size: 15px;
+    line-height: 1.6;
+    background-color: #060a12;
+    color: #f5f0e7;
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
   }
 }
 
-/* Luxury Editorial Typography utilities */
+/* Typography utilities */
 .font-serif {
-  font-family: 'Cormorant Garamond', Georgia, Cambria, serif;
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, Cambria, serif;
 }
 
 .font-display {
-  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-family: 'Cinzel', 'Playfair Display', 'Times New Roman', serif;
 }
 
 .font-sans {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .font-mono {
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* Gold Text Gradients & Subtle Shimmer */
-.gold-text-gradient {
-  background: linear-gradient(135deg, #f2e3c6 0%, #c9a96e 50%, #b99a61 100%);
+/* Cream & White Text Gradients */
+.cream-text-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #f5f0e7 45%, #d6cdbd 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.gold-border-gradient {
-  border-image: linear-gradient(to right, rgba(201, 169, 110, 0.4), rgba(201, 169, 110, 0.05)) 1;
+.navy-text-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Glass panels and cards */
-.legal-panel {
-  background: rgba(24, 38, 61, 0.72);
-  backdrop-filter: blur(12px);
+/* Midnight Navy Glass Panels & Cards */
+.navy-panel {
+  background: rgba(13, 21, 39, 0.88);
+  backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.legal-panel-elevated {
-  background: rgba(34, 51, 77, 0.75);
+.navy-card-elevated {
+  background: rgba(18, 28, 51, 0.7);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(201, 169, 110, 0.2);
+  border: 1px solid rgba(245, 240, 231, 0.16);
 }
 
-/* Custom scrollbars for data tables and panels */
+.espresso-panel {
+  background: rgba(22, 19, 17, 0.9);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Smooth custom scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #101827;
+  background: #070b14;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #22334d;
+  background: #1e293b;
   border-radius: 3px;
-  border: 1px solid rgba(201, 169, 110, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #c9a96e;
+  background: #334155;
 }

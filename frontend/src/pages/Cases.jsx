@@ -183,86 +183,85 @@ export default function Cases() {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'Hearing':
-        return 'bg-[#18263d] text-[#dfbe85] border border-[#c9a96e]/40';
+        return 'bg-blue-500/15 text-blue-200 border border-blue-500/30';
       case 'Settled':
       case 'Closed':
-        return 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20';
+        return 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
       case 'Filed':
-        return 'bg-blue-500/10 text-blue-300 border border-blue-500/20';
+        return 'bg-[#121c33] text-[#f5f0e7] border border-white/20';
       default:
-        return 'bg-white/5 text-slate-300 border border-white/10';
+        return 'bg-[#0d1527] text-white/70 border border-white/10';
     }
   };
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-4 pb-6">
       {/* Editorial Header */}
-      <div className="bg-[#141f32] border border-white/10 rounded-sm p-6 md:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-[#c9a96e]/5 to-transparent pointer-events-none" />
+      <div className="bg-[#0d1527] border border-white/10 rounded-xl p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-72 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
 
-        <div className="relative z-10 space-y-2">
+        <div className="relative z-10 space-y-1">
           <div className="flex items-center space-x-2">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono tracking-wider font-semibold bg-[#18263d] text-[#c9a96e] border border-[#c9a96e]/30">
-              Core Relational Entity
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono tracking-wider font-semibold bg-[#121c33] text-[#f5f0e7] border border-white/15">
+              Litigation Dockets
             </span>
-            <span className="text-xs text-slate-400 font-mono hidden sm:inline">
-              CASES (references CLIENT, CASE_TYPE, CASE_STATUS)
+            <span className="text-[11px] text-white/50 font-mono hidden sm:inline">
+              BriefCase Active Cases
             </span>
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-serif font-normal text-white tracking-tight">
-            Legal Matters & <span className="italic text-[#c9a96e]">Lawsuit Dossiers</span>
+          <h1 className="text-xl sm:text-2xl font-serif text-[#f5f0e7] tracking-tight">
+            Case Matters & <span className="italic text-white font-medium">Dossiers</span>
           </h1>
 
-          <p className="text-xs md:text-sm text-slate-300 font-serif leading-relaxed max-w-2xl">
-            Administer chambers matters, associate appointed counsel, maintain litigation calendars,
-            and monitor statutory budgets across forums.
+          <p className="text-xs text-white/60 font-sans max-w-xl">
+            Track active chambers litigation, counsel appointments, court dates, and statutory budgets.
           </p>
         </div>
 
         <button
           onClick={openAdd}
-          className="relative z-10 inline-flex items-center space-x-2 px-4 py-2.5 bg-[#c9a96e] hover:bg-[#dfbe85] text-[#101827] rounded-sm text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow-lg shadow-black/30 font-mono"
+          className="relative z-10 inline-flex items-center space-x-2 px-3.5 py-2 bg-[#f5f0e7] hover:bg-white text-[#0a0f1d] rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow-md font-mono cursor-pointer"
         >
-          <Plus className="w-4 h-4 stroke-[2.5]" />
-          <span>Register New Matter</span>
+          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+          <span>New Matter</span>
         </button>
       </div>
 
       {error && (
-        <div className="p-4 bg-[#18263d] border-l-4 border-red-500 rounded-sm text-slate-200 flex items-start space-x-3 shadow-lg">
-          <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs font-serif">{error}</div>
+        <div className="p-3 bg-red-950/60 border border-red-500/40 rounded-lg text-[#f5f0e7] flex items-start space-x-2.5">
+          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+          <div className="text-xs">{error}</div>
         </div>
       )}
 
       {success && (
-        <div className="p-4 bg-[#18263d] border-l-4 border-emerald-500 rounded-sm text-slate-200 flex items-start space-x-3 shadow-lg">
-          <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs font-serif">{success}</div>
+        <div className="p-3 bg-emerald-950/60 border border-emerald-500/40 rounded-lg text-[#f5f0e7] flex items-start space-x-2.5">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+          <div className="text-xs">{success}</div>
         </div>
       )}
 
       {/* Filter Bar */}
-      <div className="bg-[#141f32] p-4 rounded-sm border border-white/10 shadow-lg grid grid-cols-1 sm:grid-cols-4 gap-3">
+      <div className="bg-[#0d1527] p-3 rounded-lg border border-white/10 shadow-sm grid grid-cols-1 sm:grid-cols-4 gap-2.5">
         <div className="relative">
           <input
             type="text"
-            placeholder="Search by case no. or title..."
+            placeholder="Search case # or title..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white placeholder-slate-500 focus:outline-none"
+            className="w-full pl-8 pr-3 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] placeholder-white/40 focus:outline-none"
           />
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+          <Search className="w-3.5 h-3.5 text-white/40 absolute left-2.5 top-2" />
         </div>
 
         <div>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-slate-300 font-mono focus:outline-none"
+            className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
           >
-            <option value="">All Case Statuses</option>
+            <option value="">All Statuses</option>
             {refData.caseStatuses.map((s) => (
               <option key={s.status_id} value={s.status_name}>{s.status_name}</option>
             ))}
@@ -273,9 +272,9 @@ export default function Cases() {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-slate-300 font-mono focus:outline-none"
+            className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
           >
-            <option value="">All Practice Types</option>
+            <option value="">All Practice Areas</option>
             {refData.caseTypes.map((t) => (
               <option key={t.case_type_id} value={t.type_name}>{t.type_name}</option>
             ))}
@@ -286,7 +285,7 @@ export default function Cases() {
           <select
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
-            className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-slate-300 font-mono focus:outline-none"
+            className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
           >
             <option value="">All Priorities</option>
             <option value="High">High Priority</option>
@@ -296,85 +295,85 @@ export default function Cases() {
         </div>
       </div>
 
-      {/* Cases Editorial Data Table */}
-      <div className="bg-[#141f32] rounded-sm border border-white/10 shadow-xl overflow-hidden">
+      {/* Cases Data Table */}
+      <div className="bg-[#0d1527] rounded-xl border border-white/10 shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-slate-300">
-            <thead className="bg-[#0e1624] text-slate-400 text-[11px] uppercase tracking-wider font-mono border-b border-white/10">
+          <table className="w-full text-left text-xs text-white/80">
+            <thead className="bg-[#0a0f1d] text-white/50 text-[11px] uppercase tracking-wider font-mono border-b border-white/10">
               <tr>
-                <th className="px-5 py-3.5">Docket / Case No</th>
-                <th className="px-5 py-3.5">Matter Title</th>
-                <th className="px-5 py-3.5">Client Party</th>
-                <th className="px-5 py-3.5">Practice Type</th>
-                <th className="px-5 py-3.5">Status</th>
-                <th className="px-5 py-3.5">Allocated Budget</th>
-                <th className="px-5 py-3.5 text-right">Actions</th>
+                <th className="px-4 py-3">Docket #</th>
+                <th className="px-4 py-3">Matter Title</th>
+                <th className="px-4 py-3">Client</th>
+                <th className="px-4 py-3">Area</th>
+                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Budget</th>
+                <th className="px-4 py-3 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {loading ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-12 text-slate-400 font-serif">
+                  <td colSpan="7" className="text-center py-8 text-white/50 font-serif">
                     Querying legal matters from MySQL database...
                   </td>
                 </tr>
               ) : cases.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-12 text-slate-400 font-serif">
+                  <td colSpan="7" className="text-center py-8 text-white/50 font-serif">
                     No cases found matching the specified criteria.
                   </td>
                 </tr>
               ) : (
                 cases.map((c) => (
-                  <tr key={c.case_id} className="hover:bg-white/[0.02] transition-colors group">
-                    <td className="px-5 py-4 font-mono text-xs font-bold text-[#c9a96e]">
+                  <tr key={c.case_id} className="hover:bg-white/[0.03] transition-colors group">
+                    <td className="px-4 py-3 font-mono text-xs font-semibold text-[#f5f0e7]">
                       {c.case_number}
                     </td>
-                    <td className="px-5 py-4 max-w-xs">
-                      <div className="font-serif font-semibold text-white text-sm">
+                    <td className="px-4 py-3 max-w-xs">
+                      <div className="font-serif font-medium text-[#f5f0e7] text-sm">
                         {c.title}
                       </div>
-                      <div className="text-[11px] text-slate-500 font-serif truncate mt-0.5">
+                      <div className="text-[11px] text-white/40 truncate mt-0.5">
                         {c.description || 'No description recorded'}
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-xs font-serif text-slate-200">
+                    <td className="px-4 py-3 text-xs text-white/90">
                       {c.client_name}
                     </td>
-                    <td className="px-5 py-4">
-                      <span className="px-2.5 py-0.5 rounded-sm text-[11px] font-mono bg-white/5 text-slate-300 border border-white/10">
+                    <td className="px-4 py-3">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#121c33] text-white/70 border border-white/10">
                         {c.case_type || 'General'}
                       </span>
                     </td>
-                    <td className="px-5 py-4">
-                      <span className={`px-2.5 py-0.5 rounded-sm text-[11px] font-mono font-medium ${getStatusBadge(c.case_status)}`}>
+                    <td className="px-4 py-3">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-medium ${getStatusBadge(c.case_status)}`}>
                         {c.case_status || 'New'}
                       </span>
                     </td>
-                    <td className="px-5 py-4 font-mono text-xs font-light text-[#dfbe85]">
-                      ₹ {Number(c.budget || 0).toLocaleString('en-IN')}
+                    <td className="px-4 py-3 font-mono text-xs text-[#f5f0e7]">
+                      ₹{Number(c.budget || 0).toLocaleString('en-IN')}
                     </td>
-                    <td className="px-5 py-4 text-right space-x-1">
+                    <td className="px-4 py-3 text-right space-x-1">
                       <button
                         onClick={() => viewDetails(c.case_id)}
-                        title="View Full Case Dossier"
-                        className="p-1.5 text-slate-400 hover:text-[#dfbe85] hover:bg-white/5 rounded-sm transition-colors"
+                        title="View Dossier"
+                        className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer"
                       >
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => openEdit(c)}
                         title="Edit Case"
-                        className="p-1.5 text-slate-400 hover:text-[#c9a96e] hover:bg-white/5 rounded-sm transition-colors"
+                        className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer"
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDelete(c.case_id)}
                         title="Delete Case"
-                        className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-sm transition-colors"
+                        className="p-1.5 text-white/60 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors cursor-pointer"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </td>
                   </tr>
@@ -387,36 +386,36 @@ export default function Cases() {
 
       {/* Create / Edit Case Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-[#141f32] rounded-sm shadow-2xl border border-[#c9a96e]/30 max-w-xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#18263d] sticky top-0">
-              <h3 className="font-serif font-semibold text-white text-base">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-[#0d1527] rounded-xl shadow-2xl border border-white/15 max-w-lg w-full max-h-[85vh] overflow-y-auto">
+            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#0a0f1d] sticky top-0">
+              <h3 className="font-serif font-semibold text-[#f5f0e7] text-sm">
                 {isEditing ? 'Update Legal Matter' : 'Register New Legal Matter'}
               </h3>
-              <button onClick={() => setModalOpen(false)} className="text-slate-400 hover:text-white">
-                <X className="w-5 h-5" />
+              <button onClick={() => setModalOpen(false)} className="text-white/60 hover:text-white cursor-pointer">
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmitForm} className="p-6 space-y-4">
+            <form onSubmit={handleSubmitForm} className="p-5 space-y-3.5">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Case Number *</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Case Number *</label>
                   <input
                     type="text"
                     required
                     disabled={isEditing}
                     value={formData.case_number}
                     onChange={(e) => setFormData({ ...formData, case_number: e.target.value })}
-                    className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs font-mono text-white disabled:opacity-50"
+                    className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] disabled:opacity-50"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Client (Foreign Key) *</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Client Entity *</label>
                   <select
                     value={formData.client_id}
                     onChange={(e) => setFormData({ ...formData, client_id: parseInt(e.target.value, 10) })}
-                    className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white font-mono"
+                    className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono"
                   >
                     {refData.clients.map((cl) => (
                       <option key={cl.client_id} value={cl.client_id}>{cl.name} ({cl.client_type})</option>
@@ -426,34 +425,34 @@ export default function Cases() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Case Title *</label>
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Case Title *</label>
                 <input
                   type="text"
                   required
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="e.g. Surat Metro Rail Land Acquisition Challenge"
-                  className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white"
+                  placeholder="e.g. Surat Metro Rail Land Challenge"
+                  className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Description</label>
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Description</label>
                 <textarea
                   rows="2"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white font-serif"
+                  className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7]"
                 ></textarea>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-2.5">
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Practice Type</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Type</label>
                   <select
                     value={formData.case_type_id}
                     onChange={(e) => setFormData({ ...formData, case_type_id: parseInt(e.target.value, 10) })}
-                    className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white font-mono"
+                    className="w-full px-2 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono"
                   >
                     {refData.caseTypes.map((t) => (
                       <option key={t.case_type_id} value={t.case_type_id}>{t.type_name}</option>
@@ -461,11 +460,11 @@ export default function Cases() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Status</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Status</label>
                   <select
                     value={formData.current_status_id}
                     onChange={(e) => setFormData({ ...formData, current_status_id: parseInt(e.target.value, 10) })}
-                    className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white font-mono"
+                    className="w-full px-2 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono"
                   >
                     {refData.caseStatuses.map((s) => (
                       <option key={s.status_id} value={s.status_id}>{s.status_name}</option>
@@ -473,11 +472,11 @@ export default function Cases() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Priority</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Priority</label>
                   <select
                     value={formData.priority}
                     onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                    className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white font-mono"
+                    className="w-full px-2 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono"
                   >
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
@@ -488,7 +487,7 @@ export default function Cases() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Budget (INR) *</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Budget (INR) *</label>
                   <input
                     type="number"
                     step="5000"
@@ -496,33 +495,33 @@ export default function Cases() {
                     required
                     value={formData.budget}
                     onChange={(e) => setFormData({ ...formData, budget: parseFloat(e.target.value) })}
-                    className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs font-mono text-white"
+                    className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Filing Date</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Filing Date</label>
                   <input
                     type="date"
                     value={formData.filed_date}
                     onChange={(e) => setFormData({ ...formData, filed_date: e.target.value })}
-                    className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs font-mono text-white"
+                    className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7]"
                   />
                 </div>
               </div>
 
-              <div className="pt-3 flex justify-end space-x-3 border-t border-white/10">
+              <div className="pt-3 flex justify-end space-x-2.5 border-t border-white/10">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 border border-white/10 text-slate-400 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider hover:bg-white/5"
+                  className="px-3.5 py-1.5 border border-white/15 text-white/70 hover:text-white rounded-md text-xs font-mono uppercase tracking-wider hover:bg-white/5 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#c9a96e] hover:bg-[#dfbe85] text-[#101827] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                  className="px-4 py-1.5 bg-[#f5f0e7] hover:bg-white text-[#0a0f1d] rounded-md text-xs font-semibold uppercase tracking-wider shadow font-mono transition-all cursor-pointer"
                 >
-                  {isEditing ? 'Save Changes' : 'Create Matter'}
+                  {isEditing ? 'Save' : 'Create'}
                 </button>
               </div>
             </form>
@@ -532,59 +531,59 @@ export default function Cases() {
 
       {/* Case Details Dossier Modal */}
       {detailsModalOpen && selectedCase && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-[#141f32] rounded-sm shadow-2xl border border-[#c9a96e]/30 max-w-2xl w-full max-h-[85vh] overflow-y-auto">
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#18263d] sticky top-0">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-[#0d1527] rounded-xl shadow-2xl border border-white/15 max-w-xl w-full max-h-[85vh] overflow-y-auto">
+            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#0a0f1d] sticky top-0">
               <div className="flex items-center space-x-2">
-                <Briefcase className="w-5 h-5 text-[#c9a96e]" />
-                <h3 className="font-serif font-semibold text-white text-base">{selectedCase.case_number}</h3>
+                <Briefcase className="w-4 h-4 text-[#f5f0e7]" />
+                <h3 className="font-serif font-semibold text-[#f5f0e7] text-sm">{selectedCase.case_number}</h3>
               </div>
-              <button onClick={() => setDetailsModalOpen(false)} className="text-slate-400 hover:text-white">
-                <X className="w-5 h-5" />
+              <button onClick={() => setDetailsModalOpen(false)} className="text-white/60 hover:text-white cursor-pointer">
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-5 space-y-4">
               <div>
-                <h2 className="text-xl font-serif text-white">{selectedCase.title}</h2>
-                <p className="text-xs text-slate-300 font-serif mt-1 leading-relaxed">
+                <h2 className="text-lg font-serif text-[#f5f0e7]">{selectedCase.title}</h2>
+                <p className="text-xs text-white/60 font-sans mt-1 leading-relaxed">
                   {selectedCase.description || 'No detailed brief available.'}
                 </p>
               </div>
 
-              <div className="grid grid-cols-3 gap-3 p-4 bg-[#101827] rounded-sm border border-white/10 text-xs">
+              <div className="grid grid-cols-3 gap-2 p-3 bg-[#0a0f1d] rounded-lg border border-white/10 text-xs">
                 <div>
-                  <span className="text-slate-500 block font-mono text-[10px] uppercase">Client:</span>
-                  <span className="font-serif font-semibold text-white text-sm">{selectedCase.client_name}</span>
+                  <span className="text-white/50 block font-mono text-[10px] uppercase">Client</span>
+                  <span className="font-serif font-medium text-[#f5f0e7]">{selectedCase.client_name}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block font-mono text-[10px] uppercase">Allocated Budget:</span>
-                  <span className="font-mono text-[#dfbe85] text-sm">₹ {Number(selectedCase.budget).toLocaleString('en-IN')}</span>
+                  <span className="text-white/50 block font-mono text-[10px] uppercase">Budget</span>
+                  <span className="font-mono text-[#f5f0e7]">₹{Number(selectedCase.budget).toLocaleString('en-IN')}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block font-mono text-[10px] uppercase">Practice Area:</span>
-                  <span className="font-mono text-slate-200">{selectedCase.case_type}</span>
+                  <span className="text-white/50 block font-mono text-[10px] uppercase">Area</span>
+                  <span className="font-mono text-white/80">{selectedCase.case_type}</span>
                 </div>
               </div>
 
               {/* Assigned Lawyers */}
               <div>
-                <h4 className="text-xs font-mono text-[#c9a96e] uppercase tracking-wider mb-2 flex items-center space-x-1.5">
-                  <UserCheck className="w-4 h-4" />
-                  <span>Assigned Counsel (CASE_LAWYER Associative Table)</span>
+                <h4 className="text-[11px] font-mono text-white/80 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
+                  <UserCheck className="w-3.5 h-3.5" />
+                  <span>Assigned Counsel</span>
                 </h4>
-                <div className="border border-white/10 rounded-sm divide-y divide-white/5 overflow-hidden text-xs">
+                <div className="border border-white/10 rounded-lg divide-y divide-white/5 overflow-hidden text-xs">
                   {(!selectedCase.lawyers || selectedCase.lawyers.length === 0) ? (
-                    <p className="p-4 text-slate-400 font-serif text-center">No counsel currently assigned to this matter.</p>
+                    <p className="p-3 text-white/50 font-serif text-center">No counsel currently assigned.</p>
                   ) : (
                     selectedCase.lawyers.map((l) => (
-                      <div key={l.lawyer_id} className="p-3 bg-[#101827] flex items-center justify-between">
+                      <div key={l.lawyer_id} className="p-2.5 bg-[#0a0f1d] flex items-center justify-between">
                         <div>
-                          <div className="font-serif font-semibold text-white text-sm">{l.name}</div>
-                          <div className="text-[10px] text-slate-500 font-mono">Bar Reg: {l.bar_registration_no}</div>
+                          <div className="font-serif font-medium text-[#f5f0e7] text-xs">{l.name}</div>
+                          <div className="text-[10px] text-white/50 font-mono">Bar: {l.bar_registration_no}</div>
                         </div>
-                        <span className="px-2 py-0.5 rounded-sm bg-[#18263d] text-[#dfbe85] border border-[#c9a96e]/30 text-[10px] font-mono">
-                          {l.role} {l.is_primary ? '• Lead Counsel' : ''}
+                        <span className="px-2 py-0.5 rounded bg-[#121c33] text-white/80 border border-white/15 text-[10px] font-mono">
+                          {l.role} {l.is_primary ? '• Lead' : ''}
                         </span>
                       </div>
                     ))
@@ -594,23 +593,23 @@ export default function Cases() {
 
               {/* Hearings Schedule */}
               <div>
-                <h4 className="text-xs font-mono text-[#c9a96e] uppercase tracking-wider mb-2 flex items-center space-x-1.5">
-                  <Calendar className="w-4 h-4" />
-                  <span>Hearings History & Schedule (HEARING Table)</span>
+                <h4 className="text-[11px] font-mono text-white/80 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>Hearings Schedule</span>
                 </h4>
-                <div className="border border-white/10 rounded-sm divide-y divide-white/5 overflow-hidden text-xs">
+                <div className="border border-white/10 rounded-lg divide-y divide-white/5 overflow-hidden text-xs">
                   {(!selectedCase.hearings || selectedCase.hearings.length === 0) ? (
-                    <p className="p-4 text-slate-400 font-serif text-center">No hearings currently scheduled for this matter.</p>
+                    <p className="p-3 text-white/50 font-serif text-center">No hearings scheduled.</p>
                   ) : (
                     selectedCase.hearings.map((h) => (
-                      <div key={h.hearing_id} className="p-3 bg-[#101827] flex items-center justify-between">
+                      <div key={h.hearing_id} className="p-2.5 bg-[#0a0f1d] flex items-center justify-between">
                         <div>
-                          <div className="font-serif font-semibold text-white text-sm">{h.purpose || 'Trial Hearing'}</div>
-                          <div className="text-[11px] text-slate-400">{h.court_name} ({h.city})</div>
+                          <div className="font-serif font-medium text-[#f5f0e7] text-xs">{h.purpose || 'Trial Hearing'}</div>
+                          <div className="text-[10px] text-white/60">{h.court_name} ({h.city})</div>
                         </div>
                         <div className="text-right">
-                          <span className="font-mono text-[#dfbe85] font-semibold">{h.hearing_date}</span>
-                          <div className="text-[10px] text-slate-500 font-mono">{h.start_time || '10:30 AM'}</div>
+                          <span className="font-mono text-[#f5f0e7] font-semibold text-xs">{h.hearing_date}</span>
+                          <div className="text-[10px] text-white/50 font-mono">{h.start_time || '10:30 AM'}</div>
                         </div>
                       </div>
                     ))
@@ -619,12 +618,12 @@ export default function Cases() {
               </div>
             </div>
 
-            <div className="px-6 py-3 border-t border-white/10 bg-[#0e1624] flex justify-end">
+            <div className="px-5 py-2.5 border-t border-white/10 bg-[#0a0f1d] flex justify-end">
               <button
                 onClick={() => setDetailsModalOpen(false)}
-                className="px-4 py-2 bg-[#18263d] hover:bg-[#22334d] text-[#dfbe85] border border-[#c9a96e]/30 rounded-sm text-xs font-mono uppercase tracking-wider"
+                className="px-3.5 py-1.5 bg-[#121c33] hover:bg-[#1a2744] text-[#f5f0e7] border border-white/15 rounded-md text-xs font-mono uppercase tracking-wider cursor-pointer"
               >
-                Close Dossier
+                Close
               </button>
             </div>
           </div>

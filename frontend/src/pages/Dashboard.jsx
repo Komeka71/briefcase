@@ -5,20 +5,17 @@ import {
   Briefcase,
   UserCheck,
   Calendar,
-  Landmark,
-  Scale,
+  Building,
   CheckSquare,
   FileText,
-  Building,
-  History,
   TrendingUp,
   RefreshCw,
   AlertCircle,
-  Clock,
-  ArrowUpRight,
-  ShieldAlert,
-  ChevronRight,
-  Gavel
+  Gavel,
+  History,
+  Scale,
+  Sparkles,
+  ArrowUpRight
 } from 'lucide-react';
 import {
   BarChart,
@@ -56,36 +53,31 @@ export default function Dashboard() {
     fetchDashboard();
   }, []);
 
-  // Luxury Legal Palette for Charts
-  const CHART_COLORS = ['#c9a96e', '#3e5b87', '#5f7fa8', '#8e713e', '#dfbe85', '#22334d'];
+  // Midnight Navy & Cream High-Contrast Palette for Charts
+  const CHART_COLORS = ['#f5f0e7', '#38bdf8', '#818cf8', '#34d399', '#fbbf24', '#f87171', '#cbd5e1'];
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-        <div className="w-12 h-12 rounded-full border border-[#c9a96e]/30 border-t-[#c9a96e] animate-spin" />
-        <p className="text-xs font-serif tracking-widest text-[#c9a96e] uppercase">
+      <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-3">
+        <div className="w-10 h-10 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+        <p className="text-xs font-mono tracking-widest text-[#f5f0e7]/70 uppercase">
           Synthesizing Chambers Telemetry...
         </p>
-        <p className="text-[11px] font-mono text-slate-500">Querying MySQL Relational Aggregates</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-6 bg-[#18263d] border border-red-500/30 rounded-sm text-slate-200 shadow-xl">
+      <div className="p-6 bg-[#0a0f1d] border border-red-500/30 rounded-sm text-white shadow-xl">
         <div className="flex items-center space-x-3">
-          <AlertCircle className="w-6 h-6 text-red-400" />
-          <h3 className="text-base font-serif font-semibold text-white">Database Connection or Query Error</h3>
+          <AlertCircle className="w-5 h-5 text-red-400" />
+          <h3 className="text-sm font-serif font-semibold">Database Connection Error</h3>
         </div>
-        <p className="mt-2 text-sm text-slate-300">{error}</p>
-        <p className="mt-2 text-xs text-slate-400 font-mono">
-          Ensure MySQL 8.0 service is active and the database has been initialized via{' '}
-          <code className="text-[#c9a96e] bg-black/40 px-1 py-0.5 rounded font-mono">00_master_init.sql</code>.
-        </p>
+        <p className="mt-2 text-xs text-[#f5f0e7]/70">{error}</p>
         <button
           onClick={fetchDashboard}
-          className="mt-4 px-4 py-2 bg-[#22334d] hover:bg-[#2c4263] border border-[#c9a96e]/30 text-[#dfbe85] rounded-sm text-xs font-mono uppercase tracking-wider transition-colors"
+          className="mt-3 px-3 py-1.5 bg-[#121c33] hover:bg-[#1e293b] border border-white/20 text-white rounded-sm text-xs font-mono uppercase tracking-wider transition-colors"
         >
           Retry Connection
         </button>
@@ -98,196 +90,150 @@ export default function Dashboard() {
   const recentAudit = data?.recentAudit || [];
 
   return (
-    <div className="space-y-8 pb-8">
-      {/* Editorial Architectural Hero Banner */}
-      <div className="relative rounded-sm overflow-hidden border border-white/10 shadow-2xl bg-[#0c1421]">
-        {/* Background courthouse image with moody navy gradient overlay */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-luminosity filter contrast-125"
-          style={{ backgroundImage: `url('/courthouse.jpg')` }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0c1421] via-[#0c1421]/90 to-[#101827]/70" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0c1421] via-transparent to-transparent" />
-
-        {/* Hero Content */}
-        <div className="relative z-10 p-8 md:p-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="max-w-2xl space-y-3">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#18263d]/80 border border-[#c9a96e]/30 text-[10px] tracking-widest uppercase font-mono text-[#c9a96e]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#c9a96e] animate-pulse"></span>
-              <span>BriefCase Chambers • Law Firm Management</span>
+    <div className="space-y-6 pb-6">
+      {/* Editorial Hero Banner - Compact & Clean */}
+      <div className="relative rounded-sm overflow-hidden border border-white/10 shadow-xl bg-gradient-to-r from-[#0a0f1d] via-[#0d1527] to-[#121c33] p-5 sm:p-6">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-mono tracking-widest uppercase text-[#f5f0e7]/70">
+              <Scale className="w-3.5 h-3.5 text-white" />
+              <span>Chambers Executive Intelligence</span>
             </div>
-            
-            <h1 className="text-3xl md:text-5xl font-serif font-normal tracking-tight text-white leading-tight">
-              Your Practice, <span className="italic text-[#c9a96e] font-serif">In Perspective</span>
+            <h1 className="text-2xl sm:text-3xl font-serif text-white tracking-tight">
+              Practice Management & <span className="italic text-[#f5f0e7]/90">Docket Control</span>
             </h1>
-            
-            <p className="text-sm md:text-base text-slate-300 font-serif leading-relaxed max-w-xl">
-              An overview of your firm's cases, clients, judicial hearings, and fiduciary ledger.
-              Powered by real-time MySQL relational procedures and triggers.
+            <p className="text-xs text-[#f5f0e7]/75 font-sans max-w-xl">
+              Live relational telemetry across matters, hearings, and forensic database logs.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            <div className="text-left sm:text-right text-xs font-mono text-slate-400">
-              <div className="text-slate-500 text-[10px] uppercase tracking-wider">Session Timestamp</div>
-              <div className="text-[#c9a96e] font-medium">{new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</div>
-            </div>
-
+          <div className="flex items-center gap-2.5">
             <button
               onClick={fetchDashboard}
-              className="inline-flex items-center space-x-2 px-4 py-2.5 bg-[#18263d] hover:bg-[#22334d] border border-[#c9a96e]/40 hover:border-[#c9a96e] text-[#dfbe85] rounded-sm text-xs font-mono uppercase tracking-wider transition-all duration-200 shadow-lg group"
+              className="px-3 py-2 bg-[#070b14] hover:bg-[#121c33] border border-white/15 text-white rounded-sm text-xs font-mono uppercase tracking-wider transition-colors flex items-center gap-1.5 shadow-sm"
+              title="Refresh telemetry"
             >
-              <RefreshCw className="w-3.5 h-3.5 transition-transform duration-500 group-hover:rotate-180 text-[#c9a96e]" />
-              <span>Sync Telemetry</span>
+              <RefreshCw className="w-3 h-3" />
+              <span>Sync</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Primary Statistics Grid — Architectural Columns */}
-      <div>
-        <div className="flex items-center justify-between mb-3 px-1">
-          <div className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#a8b2c2]">
-            Registry Overview • Real-Time Database Counts
+      {/* KPI Cards Grid - Compact & Responsive */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="bg-[#0a0f1d] p-3.5 rounded-sm border border-white/10 shadow-md">
+          <div className="flex items-center justify-between text-[#f5f0e7]/60">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Clients</span>
+            <Users className="w-3.5 h-3.5 text-white" />
           </div>
-          <div className="text-[10px] font-mono text-slate-500">SELECT COUNT(*) FROM Entities</div>
+          <div className="text-2xl font-serif font-bold text-white mt-1.5">{counts.clients || 0}</div>
+          <div className="text-[10px] font-mono text-[#f5f0e7]/50 mt-0.5">Enrolled</div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
-          {[
-            { label: 'Total Clients', value: counts.clients ?? 0, icon: Users, desc: 'Registered Entities', link: '/clients' },
-            { label: 'Legal Cases', value: counts.cases ?? 0, icon: Briefcase, desc: 'Active Lawsuits', link: '/cases' },
-            { label: 'Firm Counsel', value: counts.lawyers ?? 0, icon: UserCheck, desc: 'Enrolled Advocates', link: '/lawyers' },
-            { label: 'Court Hearings', value: counts.hearings ?? 0, icon: Calendar, desc: 'Scheduled Sessions', link: '/hearings' },
-            { label: 'Judicial Forums', value: counts.courts ?? 0, icon: Building, desc: 'High & District Courts', link: '/hearings' },
-            { label: 'Pending Tasks', value: counts.tasks ?? 0, icon: CheckSquare, desc: 'Action Items', link: '/cases' },
-          ].map((item, idx) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={idx}
-                className="bg-[#141f32]/90 hover:bg-[#18263d] border border-white/10 hover:border-[#c9a96e]/40 p-4 rounded-sm transition-all duration-200 flex flex-col justify-between group shadow-lg"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono tracking-wider uppercase text-slate-400 group-hover:text-slate-300">
-                    {item.label}
-                  </span>
-                  <div className="p-1.5 rounded bg-[#101827] border border-white/5 text-[#c9a96e] group-hover:text-[#dfbe85] transition-colors">
-                    <Icon className="w-3.5 h-3.5" />
-                  </div>
-                </div>
+        <div className="bg-[#0a0f1d] p-3.5 rounded-sm border border-white/10 shadow-md">
+          <div className="flex items-center justify-between text-[#f5f0e7]/60">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Active Cases</span>
+            <Briefcase className="w-3.5 h-3.5 text-white" />
+          </div>
+          <div className="text-2xl font-serif font-bold text-white mt-1.5">{counts.cases || 0}</div>
+          <div className="text-[10px] font-mono text-emerald-400 mt-0.5">Active Dockets</div>
+        </div>
 
-                <div className="mt-3">
-                  <div className="text-2xl md:text-3xl font-serif font-light text-white group-hover:text-[#dfbe85] transition-colors">
-                    {item.value}
-                  </div>
-                  <div className="text-[10px] text-slate-500 font-serif mt-1 truncate">
-                    {item.desc}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        <div className="bg-[#0a0f1d] p-3.5 rounded-sm border border-white/10 shadow-md">
+          <div className="flex items-center justify-between text-[#f5f0e7]/60">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Counsel</span>
+            <UserCheck className="w-3.5 h-3.5 text-white" />
+          </div>
+          <div className="text-2xl font-serif font-bold text-white mt-1.5">{counts.lawyers || 0}</div>
+          <div className="text-[10px] font-mono text-[#f5f0e7]/50 mt-0.5">Bar Enrolled</div>
+        </div>
+
+        <div className="bg-[#0a0f1d] p-3.5 rounded-sm border border-white/10 shadow-md">
+          <div className="flex items-center justify-between text-[#f5f0e7]/60">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Benches</span>
+            <Building className="w-3.5 h-3.5 text-white" />
+          </div>
+          <div className="text-2xl font-serif font-bold text-white mt-1.5">{counts.courts || 0}</div>
+          <div className="text-[10px] font-mono text-[#f5f0e7]/50 mt-0.5">Jurisdictions</div>
+        </div>
+
+        <div className="bg-[#0a0f1d] p-3.5 rounded-sm border border-white/10 shadow-md">
+          <div className="flex items-center justify-between text-[#f5f0e7]/60">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Hearings</span>
+            <Calendar className="w-3.5 h-3.5 text-white" />
+          </div>
+          <div className="text-2xl font-serif font-bold text-[#f5f0e7] mt-1.5">{counts.hearings || 0}</div>
+          <div className="text-[10px] font-mono text-[#f5f0e7]/50 mt-0.5">Cause Lists</div>
+        </div>
+
+        <div className="bg-[#0a0f1d] p-3.5 rounded-sm border border-white/10 shadow-md">
+          <div className="flex items-center justify-between text-[#f5f0e7]/60">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Audit Logs</span>
+            <History className="w-3.5 h-3.5 text-white" />
+          </div>
+          <div className="text-2xl font-serif font-bold text-emerald-400 mt-1.5">{recentAudit.length ? '10+' : 0}</div>
+          <div className="text-[10px] font-mono text-emerald-400/80 mt-0.5">Trigger Audited</div>
         </div>
       </div>
 
-      {/* Fiduciary / Financial Overview Cards */}
-      <div>
-        <div className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#a8b2c2] mb-3 px-1">
-          Fiduciary Ledger • Aggregate Case Valuations
+      {/* Financial Summary Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="p-4 rounded-sm bg-[#0a0f1d] border border-white/10">
+          <div className="text-[10px] font-mono uppercase text-[#f5f0e7]/60 tracking-wider">Total Matter Budgets</div>
+          <div className="text-xl sm:text-2xl font-serif font-bold text-white mt-1">
+            ₹ {Number(financials.total_case_budget || 0).toLocaleString('en-IN')}
+          </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-[#18263d] border border-[#c9a96e]/30 rounded-sm p-6 relative overflow-hidden shadow-xl">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-[#c9a96e]/10 rounded-full blur-xl pointer-events-none" />
-            <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-              <span className="uppercase tracking-wider">Allocated Case Budget</span>
-              <Scale className="w-4 h-4 text-[#c9a96e]" />
-            </div>
-            <div className="text-3xl font-serif font-light text-[#dfbe85] mt-3">
-              ₹ {Number(financials.total_case_budget || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-            </div>
-            <div className="text-[11px] text-slate-400 font-serif mt-1">
-              Aggregated from CASES.budget via SUM() procedure (Req 10.6)
-            </div>
+        <div className="p-4 rounded-sm bg-[#0a0f1d] border border-white/10">
+          <div className="text-[10px] font-mono uppercase text-[#f5f0e7]/60 tracking-wider">Total Invoiced Fees</div>
+          <div className="text-xl sm:text-2xl font-serif font-bold text-white mt-1">
+            ₹ {Number(financials.total_invoiced || 0).toLocaleString('en-IN')}
           </div>
-
-          <div className="bg-[#141f32] border border-white/10 rounded-sm p-6 shadow-xl">
-            <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-              <span className="uppercase tracking-wider">Total Invoiced Amount</span>
-              <FileText className="w-4 h-4 text-slate-300" />
-            </div>
-            <div className="text-3xl font-serif font-light text-white mt-3">
-              ₹ {Number(financials.total_invoiced || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-            </div>
-            <div className="text-[11px] text-slate-400 font-serif mt-1">
-              Sum of INVOICE.amount across billing cycles
-            </div>
-          </div>
-
-          <div className="bg-[#141f32] border border-white/10 rounded-sm p-6 shadow-xl">
-            <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-              <span className="uppercase tracking-wider">Settled & Collected</span>
-              <TrendingUp className="w-4 h-4 text-emerald-400" />
-            </div>
-            <div className="text-3xl font-serif font-light text-emerald-300 mt-3">
-              ₹ {Number(financials.total_payments_received || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-            </div>
-            <div className="text-[11px] text-slate-400 font-serif mt-1">
-              Reconciled payment receipts in PAYMENT table
-            </div>
+        </div>
+        <div className="p-4 rounded-sm bg-[#0a0f1d] border border-white/10">
+          <div className="text-[10px] font-mono uppercase text-[#f5f0e7]/60 tracking-wider">Cleared Receipts</div>
+          <div className="text-xl sm:text-2xl font-serif font-bold text-emerald-400 mt-1">
+            ₹ {Number(financials.total_payments_received || 0).toLocaleString('en-IN')}
           </div>
         </div>
       </div>
 
-      {/* Visual Analytics — Distribution Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Analytics Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Status Distribution */}
-        <div className="bg-[#141f32] border border-white/10 rounded-sm p-6 shadow-xl">
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/5">
-            <div>
-              <h2 className="text-base font-serif font-semibold text-white">Matter Lifecycle Distribution</h2>
-              <p className="text-[10px] font-mono text-[#c9a96e] mt-0.5">GROUP BY CASE_STATUS (status_name)</p>
-            </div>
-            <div className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">
-              {data?.statusDistribution?.length || 0} Status Stages
-            </div>
+        <div className="bg-[#0a0f1d] p-4 sm:p-5 rounded-sm border border-white/10 shadow-lg">
+          <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-3">
+            <h3 className="font-serif font-semibold text-white text-sm">
+              Matter Docket Progression
+            </h3>
+            <span className="text-[10px] font-mono text-[#f5f0e7]/60">CASE_STATUS</span>
           </div>
-
-          <div className="h-64">
+          <div className="h-60 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data?.statusDistribution || []}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#22334d" />
-                <XAxis dataKey="status_name" tick={{ fontSize: 11, fill: '#94a3b8' }} />
-                <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#94a3b8' }} />
+              <BarChart data={data?.statusDistribution || []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="status_name" stroke="#94a3b8" fontSize={11} tickLine={false} />
+                <YAxis stroke="#94a3b8" fontSize={11} allowDecimals={false} tickLine={false} />
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#0c1421',
-                    borderColor: 'rgba(201, 169, 110, 0.4)',
-                    color: '#f8fafc',
-                    borderRadius: '2px',
-                    fontSize: '12px'
-                  }}
+                  contentStyle={{ backgroundColor: '#070b14', borderColor: 'rgba(255,255,255,0.15)', borderRadius: '4px', fontSize: '11px' }}
+                  itemStyle={{ color: '#ffffff' }}
                 />
-                <Bar dataKey="count" fill="#c9a96e" radius={[2, 2, 0, 0]} name="Cases Count" />
+                <Bar dataKey="count" fill="#f5f0e7" radius={[2, 2, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Practice Type Distribution */}
-        <div className="bg-[#141f32] border border-white/10 rounded-sm p-6 shadow-xl">
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/5">
-            <div>
-              <h2 className="text-base font-serif font-semibold text-white">Chambers Practice Areas</h2>
-              <p className="text-[10px] font-mono text-[#c9a96e] mt-0.5">GROUP BY CASE_TYPE (type_name)</p>
-            </div>
-            <div className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">
-              Practice Spectrum
-            </div>
+        {/* Case Type Distribution */}
+        <div className="bg-[#0a0f1d] p-4 sm:p-5 rounded-sm border border-white/10 shadow-lg">
+          <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-3">
+            <h3 className="font-serif font-semibold text-white text-sm">
+              Practice Area Allocation
+            </h3>
+            <span className="text-[10px] font-mono text-[#f5f0e7]/60">CASE_TYPE</span>
           </div>
-
-          <div className="h-64">
+          <div className="h-60 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -296,66 +242,56 @@ export default function Dashboard() {
                   nameKey="type_name"
                   cx="50%"
                   cy="50%"
-                  outerRadius={80}
-                  innerRadius={36}
+                  outerRadius={75}
+                  innerRadius={45}
                   paddingAngle={3}
-                  label
+                  stroke="#0a0f1d"
+                  strokeWidth={2}
                 >
                   {(data?.typeDistribution || []).map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#0c1421',
-                    borderColor: 'rgba(201, 169, 110, 0.4)',
-                    color: '#f8fafc',
-                    borderRadius: '2px',
-                    fontSize: '12px'
-                  }}
+                  contentStyle={{ backgroundColor: '#070b14', borderColor: 'rgba(255,255,255,0.15)', borderRadius: '4px', fontSize: '11px' }}
+                  itemStyle={{ color: '#ffffff' }}
                 />
-                <Legend wrapperStyle={{ fontSize: '11px', color: '#94a3b8' }} />
+                <Legend
+                  wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
+                  formatter={(value) => <span className="text-[#f5f0e7]/80">{value}</span>}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* Operational Workflow: Hearings & Pending Tasks */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Cause Lists & Action Items Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Upcoming Hearings */}
-        <div className="bg-[#141f32] border border-white/10 rounded-sm overflow-hidden shadow-xl">
-          <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#18263d]/50">
-            <div className="flex items-center space-x-2.5">
-              <Calendar className="w-4 h-4 text-[#c9a96e]" />
-              <h3 className="font-serif font-semibold text-white text-sm">Upcoming Court Hearings</h3>
+        <div className="bg-[#0a0f1d] p-4 sm:p-5 rounded-sm border border-white/10 shadow-lg">
+          <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-3">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-white" />
+              <h3 className="font-serif font-semibold text-white text-sm">Upcoming Cause List</h3>
             </div>
-            <span className="text-[10px] text-slate-400 font-mono">HEARING JOIN COURT</span>
+            <span className="text-[10px] font-mono text-[#f5f0e7]/60">Next 14 Days</span>
           </div>
 
-          <div className="divide-y divide-white/5">
+          <div className="space-y-2.5">
             {(!data?.upcomingHearings || data.upcomingHearings.length === 0) ? (
-              <div className="p-8 text-center">
-                <Gavel className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-                <p className="text-xs text-slate-400 font-serif">No court hearings currently scheduled.</p>
-                <p className="text-[10px] text-slate-500 font-mono mt-1">Add hearings via the Court Hearings module.</p>
-              </div>
+              <p className="text-xs font-serif text-[#f5f0e7]/60 text-center py-6">No scheduled court appearances on docket.</p>
             ) : (
               data.upcomingHearings.map((h) => (
-                <div key={h.hearing_id} className="p-4 hover:bg-white/[0.02] transition-colors flex items-center justify-between">
+                <div key={h.hearing_id} className="p-3 rounded-sm bg-[#070b14] border border-white/5 flex items-start justify-between gap-3 text-xs">
                   <div>
-                    <div className="text-sm font-serif font-medium text-white">{h.case_title}</div>
-                    <div className="text-xs text-slate-400 flex items-center space-x-2 mt-0.5">
-                      <span className="font-mono text-[#c9a96e] text-xs">{h.case_number}</span>
-                      <span>•</span>
-                      <span>{h.court_name} ({h.city})</span>
-                    </div>
+                    <div className="font-serif font-semibold text-white text-xs">{h.case_title}</div>
+                    <div className="text-[10px] font-mono text-[#f5f0e7]/60 mt-0.5">{h.case_number} • {h.court_name}</div>
+                    <div className="text-[11px] text-[#f5f0e7]/75 font-serif mt-1">{h.purpose}</div>
                   </div>
-                  <div className="text-right">
-                    <span className="inline-block px-2.5 py-0.5 rounded-sm text-xs font-mono font-medium bg-[#18263d] text-[#dfbe85] border border-[#c9a96e]/30">
-                      {h.hearing_date}
-                    </span>
-                    <div className="text-[10px] text-slate-400 font-mono mt-0.5">{h.start_time || '10:30 AM'}</div>
+                  <div className="text-right flex-shrink-0 font-mono text-[11px] text-white">
+                    <div>{h.hearing_date}</div>
+                    <div className="text-[10px] text-[#f5f0e7]/50">{h.start_time?.slice(0, 5)}</div>
                   </div>
                 </div>
               ))
@@ -363,41 +299,33 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Actionable Tasks */}
-        <div className="bg-[#141f32] border border-white/10 rounded-sm overflow-hidden shadow-xl">
-          <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#18263d]/50">
-            <div className="flex items-center space-x-2.5">
-              <CheckSquare className="w-4 h-4 text-emerald-400" />
-              <h3 className="font-serif font-semibold text-white text-sm">Actionable Pending Tasks</h3>
+        {/* Pending Action Items */}
+        <div className="bg-[#0a0f1d] p-4 sm:p-5 rounded-sm border border-white/10 shadow-lg">
+          <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-3">
+            <div className="flex items-center gap-2">
+              <CheckSquare className="w-4 h-4 text-white" />
+              <h3 className="font-serif font-semibold text-white text-sm">Urgent Filing Deadlines</h3>
             </div>
-            <span className="text-[10px] text-slate-400 font-mono">TASK JOIN CASES</span>
+            <span className="text-[10px] font-mono text-[#f5f0e7]/60">TASK Table</span>
           </div>
 
-          <div className="divide-y divide-white/5">
+          <div className="space-y-2.5">
             {(!data?.pendingTasks || data.pendingTasks.length === 0) ? (
-              <div className="p-8 text-center">
-                <CheckSquare className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-                <p className="text-xs text-slate-400 font-serif">No actionable tasks pending resolution.</p>
-                <p className="text-[10px] text-slate-500 font-mono mt-1">All case milestones are up to date.</p>
-              </div>
+              <p className="text-xs font-serif text-[#f5f0e7]/60 text-center py-6">All action items resolved.</p>
             ) : (
               data.pendingTasks.map((t) => (
-                <div key={t.task_id} className="p-4 hover:bg-white/[0.02] transition-colors flex items-center justify-between">
+                <div key={t.task_id} className="p-3 rounded-sm bg-[#070b14] border border-white/5 flex items-start justify-between gap-3 text-xs">
                   <div>
-                    <div className="text-sm font-serif font-medium text-white">{t.title}</div>
-                    <div className="text-xs text-slate-400 flex items-center space-x-2 mt-0.5">
-                      <span className="font-mono text-slate-300">{t.case_number}</span>
-                      <span>•</span>
-                      <span>Assigned to: {t.assigned_to_name || 'Counsel'}</span>
-                    </div>
+                    <div className="font-serif font-semibold text-white text-xs">{t.title}</div>
+                    <div className="text-[10px] font-mono text-[#f5f0e7]/60 mt-0.5">{t.case_number}</div>
                   </div>
-                  <div className="text-right">
-                    <span className={`inline-block px-2 py-0.5 rounded-sm text-[10px] font-mono font-medium ${
-                      t.priority === 'High' ? 'bg-red-500/20 text-red-300 border border-red-500/30' : 'bg-white/5 text-slate-300 border border-white/10'
+                  <div className="text-right flex-shrink-0 font-mono">
+                    <span className={`px-2 py-0.5 rounded-sm text-[9px] ${
+                      t.priority === 'High' ? 'bg-red-950/60 text-red-300 border border-red-500/30' : 'bg-amber-950/60 text-amber-300 border border-amber-500/30'
                     }`}>
                       {t.priority}
                     </span>
-                    <div className="text-[10px] text-slate-500 font-mono mt-0.5">Due: {t.due_date || 'ASAP'}</div>
+                    <div className="text-[10px] text-[#f5f0e7]/60 mt-1">{t.due_date ? String(t.due_date).slice(0, 10) : '—'}</div>
                   </div>
                 </div>
               ))
@@ -405,35 +333,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-
-      {/* Forensic Audit Telemetry Strip */}
-      {recentAudit.length > 0 && (
-        <div className="bg-[#141f32] border border-white/10 rounded-sm p-6 shadow-xl">
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/5">
-            <div className="flex items-center space-x-2.5">
-              <History className="w-4 h-4 text-[#c9a96e]" />
-              <h3 className="font-serif font-semibold text-white text-sm">Recent Forensic Trigger Activity</h3>
-            </div>
-            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">
-              AFTER INSERT/UPDATE/DELETE Triggers (Req 10.9)
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {recentAudit.map((item, idx) => (
-              <div key={idx} className="p-3 bg-[#101827] border border-white/5 rounded-sm text-xs">
-                <div className="flex items-center justify-between font-mono text-[10px]">
-                  <span className="text-[#c9a96e] font-semibold">{item.operation_type}</span>
-                  <span className="text-slate-500">{item.changed_at}</span>
-                </div>
-                <div className="mt-1 font-serif text-slate-200">
-                  Target Entity: <span className="font-mono text-white">{item.table_name}</span> #{item.record_id}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

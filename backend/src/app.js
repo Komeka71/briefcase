@@ -10,6 +10,7 @@ const reportRoutes = require('./routes/reportRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const auditRoutes = require('./routes/auditRoutes');
 const authRoutes = require('./routes/authRoutes');
+const practiceRoutes = require('./routes/practiceRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -37,6 +38,7 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/audit', auditRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/practice', practiceRoutes);
 
 // 404 Handler for undefined routes
 app.use((req, res, next) => {

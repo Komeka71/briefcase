@@ -87,4 +87,21 @@ export const authService = {
   deleteUser: (id) => api.delete(`/auth/users/${id}`)
 };
 
+export const practiceService = {
+  getDocuments: () => api.get('/practice/documents'),
+  createDocument: (data) => api.post('/practice/documents', data),
+  deleteDocument: (id) => api.delete(`/practice/documents/${id}`),
+
+  getTasks: () => api.get('/practice/tasks'),
+  createTask: (data) => api.post('/practice/tasks', data),
+  updateTaskStatus: (id, status) => api.put(`/practice/tasks/${id}/status`, { status }),
+  deleteTask: (id) => api.delete(`/practice/tasks/${id}`),
+
+  getInvoices: () => api.get('/practice/invoices'),
+  getPayments: () => api.get('/practice/payments'),
+
+  getAppointments: () => api.get('/practice/appointments')
+};
+
 export default api;
+

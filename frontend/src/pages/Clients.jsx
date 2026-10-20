@@ -9,18 +9,13 @@ import {
   ChevronLeft,
   ChevronRight,
   Database,
-  Code2,
   FileCode,
-  Download,
   AlertCircle,
   CheckCircle2,
   X,
   Play,
   Building2,
-  User,
-  Shield,
-  Layers,
-  Sparkles
+  User
 } from 'lucide-react';
 
 export default function Clients() {
@@ -29,25 +24,24 @@ export default function Clients() {
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
 
-  // Pagination state (Req 10.5)
+  // Pagination state (PaginateClients Stored Procedure)
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [search, setSearch] = useState('');
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
 
-  // Cursor modal state (Req 10.4)
+  // Cursor modal state
   const [cursorModalOpen, setCursorModalOpen] = useState(false);
   const [cursorData, setCursorData] = useState([]);
   const [cursorType, setCursorType] = useState('');
-  const [cursorLimit, setCursorLimit] = useState(5);
   const [cursorLoading, setCursorLoading] = useState(false);
 
-  // XML Modal state (Req 11.F)
+  // XML Modal state
   const [xmlModalOpen, setXmlModalOpen] = useState(false);
   const [xmlContent, setXmlContent] = useState('');
 
-  // Form modal state (Req 10.1)
+  // Form modal state
   const [formModalOpen, setFormModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -86,7 +80,6 @@ export default function Clients() {
     fetchClients();
   };
 
-  // Cursor procedure execution
   const runCursor = async (limit = null) => {
     setCursorLoading(true);
     try {
@@ -101,37 +94,33 @@ export default function Clients() {
     }
   };
 
-  // XML Export
   const fetchXml = async () => {
     try {
       const res = await clientService.getAll('xml');
       setXmlContent(res.data);
       setXmlModalOpen(true);
     } catch (err) {
-      setError('Failed to generate XML output.');
+      setError('XML serialization failed.');
     }
   };
 
-  // Form submit (InsertClient / UpdateClient Stored Procedures)
   const handleSubmitForm = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccessMsg(null);
-
     try {
       if (isEditing) {
-        const res = await clientService.update(editId, formData);
-        setSuccessMsg(res.data.message || 'Client updated via UpdateClient procedure.');
+        await clientService.update(editId, formData);
+        setSuccessMsg(`Client #${editId} record updated.`);
       } else {
-        const res = await clientService.create(formData);
-        setSuccessMsg(`Client created via InsertClient procedure (Client ID: ${res.data.client_id}).`);
+        await clientService.create(formData);
+        setSuccessMsg(`Client "${formData.name}" enrolled.`);
       }
       setFormModalOpen(false);
       resetForm();
       fetchClients();
     } catch (err) {
-      // Highlight Trigger or Procedure validation errors
-      setError(err.response?.data?.message || err.message || 'Operation failed.');
+      setError(err.response?.data?.message || 'Database rejected client mutation.');
     }
   };
 
@@ -166,77 +155,63 @@ export default function Clients() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm(`Delete client record #${id}?\nThis will invoke Stored Procedure DeleteClient and enforce referential integrity.`)) {
+    if (!window.confirm(`Delete client record #${id}? Dependent case assignments may prevent deletion.`)) {
       return;
     }
     setError(null);
     setSuccessMsg(null);
     try {
       const res = await clientService.delete(id);
-      setSuccessMsg(res.data.message || 'Client deleted successfully.');
+      setSuccessMsg(res.data.message || 'Client record deleted.');
       fetchClients();
     } catch (err) {
-      setError(err.response?.data?.message || 'Cannot delete client. Dependent cases or records exist.');
+      setError(err.response?.data?.message || 'Cannot delete client. Dependent litigation matters exist.');
     }
   };
 
   return (
-    <div className="space-y-6 pb-8">
-      {/* Editorial Header */}
-      <div className="bg-[#141f32] border border-white/10 rounded-sm p-6 md:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-[#c9a96e]/5 to-transparent pointer-events-none" />
-
-        <div className="relative z-10 space-y-2">
+    <div className="space-y-5 pb-6">
+      {/* Header - Compact & Responsive */}
+      <div className="bg-[#0a0f1d] border border-white/10 rounded-sm p-5 sm:p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
           <div className="flex items-center space-x-2">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono tracking-wider font-semibold bg-[#18263d] text-[#c9a96e] border border-[#c9a96e]/30">
-              Lab Assignment 10 • Req 10.1, 10.4, 10.5
-            </span>
-            <span className="text-xs text-slate-400 font-mono hidden sm:inline">
-              CALL InsertClient / UpdateClient / DeleteClient
+            <span className="px-2 py-0.5 rounded-full text-[9px] font-mono tracking-wider uppercase font-semibold bg-[#121c33] text-white border border-white/15">
+              Client Registry
             </span>
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-serif font-normal text-white tracking-tight">
-            Clients Registry & <span className="italic text-[#c9a96e]">Stored Procedures</span>
+          <h1 className="text-xl sm:text-2xl font-serif text-white tracking-tight">
+            Institutional & Individual <span className="italic text-[#f5f0e7]/90">Client Registry</span>
           </h1>
 
-          <p className="text-xs md:text-sm text-slate-300 font-serif leading-relaxed max-w-2xl">
-            Manage principal legal relationships. Powered by MySQL explicit cursors, server-side pagination,
-            and declarative BEFORE INSERT/UPDATE data sanitization triggers.
+          <p className="text-xs text-[#f5f0e7]/70 font-sans max-w-xl">
+            Principal legal relationships managed via MySQL stored procedures and validation triggers.
           </p>
         </div>
 
         {/* Action Controls */}
-        <div className="relative z-10 flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => runCursor(null)}
-            className="inline-flex items-center space-x-1.5 px-3 py-2 bg-[#18263d] hover:bg-[#22334d] text-slate-200 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider border border-white/10 hover:border-[#c9a96e]/40 transition-all duration-200"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#070b14] hover:bg-[#121c33] text-[#f5f0e7]/80 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider border border-white/10 transition-colors"
           >
-            <Database className="w-3.5 h-3.5 text-[#c9a96e]" />
-            <span>Unbounded Cursor</span>
-          </button>
-
-          <button
-            onClick={() => runCursor(5)}
-            className="inline-flex items-center space-x-1.5 px-3 py-2 bg-[#18263d] hover:bg-[#22334d] text-slate-200 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider border border-white/10 hover:border-[#c9a96e]/40 transition-all duration-200"
-          >
-            <Play className="w-3.5 h-3.5 text-[#dfbe85]" />
-            <span>Cursor (Limit 5)</span>
+            <Database className="w-3.5 h-3.5" />
+            <span>Cursor Batch</span>
           </button>
 
           <button
             onClick={fetchXml}
-            className="inline-flex items-center space-x-1.5 px-3 py-2 bg-[#18263d] hover:bg-[#22334d] text-slate-200 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider border border-white/10 hover:border-[#c9a96e]/40 transition-all duration-200"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#070b14] hover:bg-[#121c33] text-[#f5f0e7]/80 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider border border-white/10 transition-colors"
           >
-            <FileCode className="w-3.5 h-3.5 text-slate-300" />
-            <span>Export XML (11.F)</span>
+            <FileCode className="w-3.5 h-3.5" />
+            <span>Export XML</span>
           </button>
 
           <button
             onClick={openAddModal}
-            className="inline-flex items-center space-x-2 px-4 py-2 bg-[#c9a96e] hover:bg-[#dfbe85] text-[#101827] rounded-sm text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow-lg shadow-black/30 font-mono"
+            className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 bg-[#f5f0e7] hover:bg-white text-[#070b14] rounded-sm text-xs font-mono font-medium uppercase tracking-wider transition-all shadow-md"
           >
-            <Plus className="w-4 h-4 stroke-[2.5]" />
+            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
             <span>New Client</span>
           </button>
         </div>
@@ -244,44 +219,34 @@ export default function Clients() {
 
       {/* Alert Messages */}
       {error && (
-        <div className="p-4 bg-[#18263d] border-l-4 border-red-500 rounded-sm text-slate-200 flex items-start space-x-3 shadow-lg">
-          <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs">
-            <div className="font-semibold text-red-300 font-mono uppercase tracking-wider">
-              MySQL Error / Trigger Integrity Constraint:
-            </div>
-            <div className="mt-1 text-slate-300 font-serif text-sm">{error}</div>
-          </div>
+        <div className="p-3 bg-[#1e1517] border-l-4 border-red-500 rounded-sm text-red-200 text-xs flex items-start space-x-2.5">
+          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+          <span>{error}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="p-4 bg-[#18263d] border-l-4 border-emerald-500 rounded-sm text-slate-200 flex items-start space-x-3 shadow-lg">
-          <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs">
-            <div className="font-semibold text-emerald-300 font-mono uppercase tracking-wider">
-              Operation Completed:
-            </div>
-            <div className="mt-1 text-slate-300 font-serif text-sm">{successMsg}</div>
-          </div>
+        <div className="p-3 bg-[#151e18] border-l-4 border-emerald-500 rounded-sm text-emerald-200 text-xs flex items-start space-x-2.5">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+          <span>{successMsg}</span>
         </div>
       )}
 
-      {/* Search & Filter Toolbar */}
-      <div className="bg-[#141f32] p-4 rounded-sm border border-white/10 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
-        <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-96">
+      {/* Search Toolbar */}
+      <div className="bg-[#0a0f1d] p-3 rounded-sm border border-white/10 shadow-md flex flex-col sm:flex-row items-center justify-between gap-3">
+        <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80">
           <input
             type="text"
-            placeholder="Search by legal name, email, or client type..."
+            placeholder="Search by name, email, or classification..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white placeholder-slate-500 focus:outline-none transition-colors"
+            className="w-full pl-8 pr-3 py-1.5 bg-[#070b14] border border-white/10 rounded-sm text-xs text-white placeholder-[#f5f0e7]/30 focus:border-white focus:outline-none transition-colors"
           />
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+          <Search className="w-3.5 h-3.5 text-[#f5f0e7]/40 absolute left-2.5 top-2" />
         </form>
 
-        <div className="flex items-center space-x-4 text-xs font-mono text-slate-400">
-          <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3 text-xs font-mono text-[#f5f0e7]/70">
+          <div className="flex items-center space-x-1.5">
             <span>Rows:</span>
             <select
               value={pageSize}
@@ -289,98 +254,90 @@ export default function Clients() {
                 setPageSize(Number(e.target.value));
                 setPage(1);
               }}
-              className="border border-white/10 rounded-sm px-2.5 py-1 bg-[#101827] text-white font-mono text-xs focus:outline-none focus:border-[#c9a96e]"
+              className="border border-white/10 rounded-sm px-2 py-1 bg-[#070b14] text-white font-mono text-xs focus:outline-none"
             >
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="20">20</option>
             </select>
           </div>
-          <span className="text-[#c9a96e] border-l border-white/10 pl-3">
-            Total Entities: {totalRecords}
+          <span className="text-white border-l border-white/10 pl-3">
+            Total: {totalRecords}
           </span>
         </div>
       </div>
 
-      {/* Clients Editorial Data Table (Req 11.1) */}
-      <div className="bg-[#141f32] rounded-sm border border-white/10 shadow-xl overflow-hidden">
+      {/* Clients Data Table */}
+      <div className="bg-[#0a0f1d] rounded-sm border border-white/10 shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-slate-300">
-            <thead className="bg-[#0e1624] text-slate-400 text-[11px] uppercase tracking-wider font-mono border-b border-white/10">
+          <table className="w-full text-left text-xs text-[#f5f0e7]/75">
+            <thead className="bg-[#070b14] text-[#f5f0e7]/60 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
               <tr>
-                <th className="px-5 py-3.5">ID</th>
-                <th className="px-5 py-3.5">Client Legal Name</th>
-                <th className="px-5 py-3.5">Classification</th>
-                <th className="px-5 py-3.5">Contact Telemetry</th>
-                <th className="px-5 py-3.5">Jurisdiction / Address</th>
-                <th className="px-5 py-3.5">Registration Date</th>
-                <th className="px-5 py-3.5 text-right">Procedure Actions</th>
+                <th className="px-4 py-3">ID</th>
+                <th className="px-4 py-3">Client Legal Name</th>
+                <th className="px-4 py-3">Type</th>
+                <th className="px-4 py-3">Contact</th>
+                <th className="px-4 py-3">Address</th>
+                <th className="px-4 py-3">Registration</th>
+                <th className="px-4 py-3 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {loading ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-12 text-slate-400">
-                    <div className="flex flex-col items-center justify-center space-y-2">
-                      <div className="w-6 h-6 border-2 border-[#c9a96e]/30 border-t-[#c9a96e] rounded-full animate-spin" />
-                      <span className="font-serif text-slate-300">Executing PaginateClients Stored Procedure...</span>
-                    </div>
+                  <td colSpan="7" className="text-center py-10 text-[#f5f0e7]/60">
+                    Loading client records...
                   </td>
                 </tr>
               ) : clients.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-12 text-slate-400 font-serif">
-                    No matching client records found in database.
+                  <td colSpan="7" className="text-center py-10 text-[#f5f0e7]/60 font-serif">
+                    No matching client records found.
                   </td>
                 </tr>
               ) : (
                 clients.map((c) => (
                   <tr key={c.client_id} className="hover:bg-white/[0.02] transition-colors group">
-                    <td className="px-5 py-4 font-mono text-xs font-bold text-[#c9a96e]">
+                    <td className="px-4 py-3 font-mono text-xs font-bold text-white">
                       #{c.client_id}
                     </td>
-                    <td className="px-5 py-4">
-                      <div className="font-serif font-semibold text-white text-sm">
-                        {c.name}
-                      </div>
-                      <div className="text-[10px] text-slate-500 font-mono">
-                        Upper-normalized via Trigger 10.8
-                      </div>
+                    <td className="px-4 py-3 font-serif font-semibold text-white text-xs">
+                      {c.name}
                     </td>
-                    <td className="px-5 py-4">
-                      <span className={`inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-sm text-[11px] font-mono ${
+                    <td className="px-4 py-3">
+                      <span className={`inline-flex items-center space-x-1 px-2 py-0.5 rounded-sm text-[10px] font-mono ${
                         c.client_type === 'Organization'
-                          ? 'bg-[#18263d] text-[#dfbe85] border border-[#c9a96e]/30'
-                          : 'bg-white/5 text-slate-300 border border-white/10'
+                          ? 'bg-[#121c33] text-white border border-white/20'
+                          : 'bg-[#070b14] text-[#f5f0e7]/70 border border-white/10'
                       }`}>
-                        {c.client_type === 'Organization' ? <Building2 className="w-3 h-3 text-[#c9a96e]" /> : <User className="w-3 h-3 text-slate-400" />}
+                        {c.client_type === 'Organization' ? <Building2 className="w-3 h-3 text-white" /> : <User className="w-3 h-3" />}
                         <span>{c.client_type}</span>
                       </span>
                     </td>
-                    <td className="px-5 py-4 font-mono text-[11px]">
-                      <div className="text-slate-200">{c.phone || '—'}</div>
-                      <div className="text-slate-500">{c.email || '—'}</div>
+                    <td className="px-4 py-3 font-mono text-[11px]">
+                      <div className="text-white">{c.phone || '—'}</div>
+                      <div className="text-[#f5f0e7]/50">{c.email || '—'}</div>
                     </td>
-                    <td className="px-5 py-4 text-xs font-serif text-slate-300 max-w-xs truncate">
+                    <td className="px-4 py-3 text-xs font-serif text-[#f5f0e7]/70 max-w-xs truncate">
                       {c.address || '—'}
                     </td>
-                    <td className="px-5 py-4 text-xs font-mono text-slate-400">
+                    <td className="px-4 py-3 text-xs font-mono text-[#f5f0e7]/70">
                       {c.date_of_registration}
                     </td>
-                    <td className="px-5 py-4 text-right space-x-1">
+                    <td className="px-4 py-3 text-right space-x-1">
                       <button
                         onClick={() => openEditModal(c)}
-                        title="Update via Stored Procedure"
-                        className="p-1.5 text-slate-400 hover:text-[#dfbe85] hover:bg-white/5 rounded-sm transition-colors"
+                        title="Update Client"
+                        className="p-1 text-[#f5f0e7]/60 hover:text-white hover:bg-white/10 rounded transition-colors"
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDelete(c.client_id)}
-                        title="Delete via Stored Procedure (Integrity Checked)"
-                        className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-sm transition-colors"
+                        title="Delete Client"
+                        className="p-1 text-[#f5f0e7]/60 hover:text-red-400 hover:bg-red-950/40 rounded transition-colors"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </td>
                   </tr>
@@ -390,89 +347,73 @@ export default function Clients() {
           </table>
         </div>
 
-        {/* Pagination Bar (Req 10.5) */}
-        <div className="px-6 py-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-400 bg-[#0e1624]">
+        {/* Pagination Bar */}
+        <div className="px-4 py-3 border-t border-white/10 flex items-center justify-between text-xs font-mono text-[#f5f0e7]/60 bg-[#070b14]">
           <div>
-            Page <span className="font-semibold text-white">{page}</span> of{' '}
-            <span className="font-semibold text-white">{totalPages}</span>
-            <span className="text-slate-600 mx-2">|</span>
-            <span>Displaying {clients.length} of {totalRecords} records</span>
+            Page <span className="text-white font-medium">{page}</span> of{' '}
+            <span className="text-white font-medium">{totalPages}</span>
+            <span className="text-white/20 mx-2">|</span>
+            <span>{clients.length} of {totalRecords} records</span>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1.5">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="p-1.5 rounded-sm border border-white/10 hover:border-[#c9a96e]/40 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed text-slate-300"
+              className="p-1 rounded-sm border border-white/10 hover:border-white/30 disabled:opacity-30 disabled:pointer-events-none text-white"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page >= totalPages}
-              className="p-1.5 rounded-sm border border-white/10 hover:border-[#c9a96e]/40 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed text-slate-300"
+              className="p-1 rounded-sm border border-white/10 hover:border-white/30 disabled:opacity-30 disabled:pointer-events-none text-white"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Add / Edit Client Modal (Invokes InsertClient or UpdateClient) */}
+      {/* Add / Edit Client Modal */}
       {formModalOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-[#141f32] rounded-sm shadow-2xl border border-[#c9a96e]/30 max-w-lg w-full overflow-hidden">
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#18263d]">
-              <div>
-                <h3 className="font-serif font-semibold text-white text-base">
-                  {isEditing ? 'Update Client Record (UpdateClient)' : 'Add New Client (InsertClient)'}
-                </h3>
-                <p className="text-[10px] font-mono text-[#c9a96e] mt-0.5">
-                  Stored Procedure Execution Environment
-                </p>
-              </div>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-[#0a0f1d] rounded-sm shadow-2xl border border-white/20 max-w-lg w-full overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#070b14]">
+              <h3 className="font-serif font-semibold text-white text-base">
+                {isEditing ? 'Update Client Record' : 'Enroll New Client'}
+              </h3>
               <button
                 onClick={() => setFormModalOpen(false)}
-                className="text-slate-400 hover:text-white"
+                className="text-[#f5f0e7]/60 hover:text-white"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmitForm} className="p-6 space-y-4">
-              <div className="p-3 bg-[#101827] border border-[#c9a96e]/20 rounded-sm text-xs text-slate-300 space-y-1">
-                <div className="font-mono text-[#dfbe85] uppercase tracking-wider text-[10px] font-semibold">
-                  Trigger & Procedure Rules Enforced:
-                </div>
-                <div className="text-[11px] font-serif leading-relaxed text-slate-400">
-                  • Name must be $\ge 2$ characters (Empty name triggers SQLSTATE 45000).<br />
-                  • Client Type must be strictly <code className="text-[#c9a96e] font-mono">Individual</code> or <code className="text-[#c9a96e] font-mono">Organization</code>.<br />
-                  • Name will automatically normalize to UPPERCASE before saving via Trigger 10.8.
-                </div>
-              </div>
-
+            <form onSubmit={handleSubmitForm} className="p-5 space-y-3.5">
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">
-                  Client Name <span className="text-red-400">*</span>
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1">
+                  Client Legal Name *
                 </label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="e.g. Ramesh Patel or Reliance Industries"
-                  className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white focus:outline-none"
+                  placeholder="e.g. Ramesh Patel or Reliance Industries Ltd"
+                  className="w-full px-3 py-2 bg-[#070b14] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">
-                  Client Classification <span className="text-red-400">*</span>
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1">
+                  Classification *
                 </label>
                 <select
                   value={formData.client_type}
                   onChange={(e) => setFormData({ ...formData, client_type: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white focus:outline-none font-mono"
+                  className="w-full px-3 py-2 bg-[#070b14] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none font-mono"
                 >
                   <option value="Individual">Individual</option>
                   <option value="Organization">Organization</option>
@@ -481,51 +422,51 @@ export default function Clients() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Phone</label>
+                  <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1">Phone</label>
                   <input
                     type="text"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="+91 98980 12345"
-                    className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white font-mono focus:outline-none"
+                    className="w-full px-3 py-2 bg-[#070b14] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Email</label>
+                  <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1">Email</label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="client@domain.com"
-                    className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white font-mono focus:outline-none"
+                    className="w-full px-3 py-2 bg-[#070b14] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Address / Jurisdiction</label>
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1">Address / Jurisdiction</label>
                 <textarea
                   rows="2"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   placeholder="Street, City, State"
-                  className="w-full px-3 py-2 bg-[#101827] border border-white/10 focus:border-[#c9a96e] rounded-sm text-xs text-white focus:outline-none font-serif"
-                ></textarea>
+                  className="w-full px-3 py-2 bg-[#070b14] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none"
+                />
               </div>
 
-              <div className="pt-3 flex items-center justify-end space-x-3 border-t border-white/10">
+              <div className="pt-2 flex items-center justify-end space-x-2.5 border-t border-white/10">
                 <button
                   type="button"
                   onClick={() => setFormModalOpen(false)}
-                  className="px-4 py-2 border border-white/10 text-slate-400 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider hover:bg-white/5"
+                  className="px-3.5 py-1.5 border border-white/10 text-[#f5f0e7]/70 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#c9a96e] hover:bg-[#dfbe85] text-[#101827] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                  className="px-4 py-1.5 bg-[#f5f0e7] hover:bg-white text-[#070b14] rounded-sm text-xs font-mono font-medium uppercase tracking-wider shadow-md"
                 >
-                  {isEditing ? 'Execute UpdateClient' : 'Execute InsertClient'}
+                  {isEditing ? 'Save Changes' : 'Confirm Enrollment'}
                 </button>
               </div>
             </form>
@@ -533,54 +474,42 @@ export default function Clients() {
         </div>
       )}
 
-      {/* Explicit Cursor Results Modal (Req 10.4) */}
+      {/* Explicit Cursor Results Modal */}
       {cursorModalOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-[#141f32] rounded-sm shadow-2xl border border-[#c9a96e]/40 max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#18263d]">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-[#0a0f1d] rounded-sm shadow-2xl border border-white/20 max-w-xl w-full max-h-[80vh] flex flex-col overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#070b14]">
               <div className="flex items-center space-x-2">
-                <Database className="w-5 h-5 text-[#c9a96e]" />
-                <h3 className="font-serif font-semibold text-white text-base">{cursorType}</h3>
+                <Database className="w-4 h-4 text-white" />
+                <h3 className="font-serif font-semibold text-white text-sm">{cursorType} Batch Stream</h3>
               </div>
-              <button onClick={() => setCursorModalOpen(false)} className="text-slate-400 hover:text-white">
-                <X className="w-5 h-5" />
+              <button onClick={() => setCursorModalOpen(false)} className="text-[#f5f0e7]/60 hover:text-white">
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-6 overflow-y-auto space-y-4">
-              <div className="p-3 bg-[#101827] border border-[#c9a96e]/20 rounded-sm text-xs text-slate-300 space-y-1 font-serif">
-                <div className="font-mono text-[#dfbe85] uppercase tracking-wider text-[10px] font-semibold">
-                  Requirement 10.4 Architecture:
-                </div>
-                <div>
-                  This procedure executed an <strong>explicit cursor</strong> with row-by-row iteration in MySQL:
-                  <code className="text-[#c9a96e] bg-black/40 px-1 py-0.5 rounded font-mono ml-1">
-                    DECLARE ... CURSOR FOR SELECT ... OPEN ... FETCH ... CLOSE
-                  </code>
-                </div>
-              </div>
-
+            <div className="p-4 overflow-y-auto space-y-3">
               <div className="border border-white/10 rounded-sm overflow-hidden">
-                <table className="w-full text-left text-xs text-slate-300 font-mono">
-                  <thead className="bg-[#0e1624] text-slate-400 font-semibold uppercase text-[10px]">
+                <table className="w-full text-left text-xs text-[#f5f0e7]/75 font-mono">
+                  <thead className="bg-[#070b14] text-[#f5f0e7]/60 text-[10px] uppercase border-b border-white/10">
                     <tr>
-                      <th className="px-3.5 py-2.5">Cursor Seq</th>
-                      <th className="px-3.5 py-2.5">Client ID</th>
-                      <th className="px-3.5 py-2.5">Client Name</th>
-                      <th className="px-3.5 py-2.5">Type</th>
-                      <th className="px-3.5 py-2.5">Processed Status</th>
+                      <th className="px-3 py-2">Seq</th>
+                      <th className="px-3 py-2">ID</th>
+                      <th className="px-3 py-2">Client Name</th>
+                      <th className="px-3 py-2">Type</th>
+                      <th className="px-3 py-2">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {cursorData.map((row, idx) => (
                       <tr key={idx} className="hover:bg-white/[0.02]">
-                        <td className="px-3.5 py-2.5 text-[#c9a96e] font-bold">{row.cursor_seq_no}</td>
-                        <td className="px-3.5 py-2.5 text-slate-400">#{row.client_id}</td>
-                        <td className="px-3.5 py-2.5 font-semibold text-white">{row.client_name}</td>
-                        <td className="px-3.5 py-2.5 text-slate-300">{row.client_type}</td>
-                        <td className="px-3.5 py-2.5">
-                          <span className="px-2 py-0.5 rounded-sm bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-semibold">
-                            FETCHED VIA CURSOR
+                        <td className="px-3 py-2 text-white font-bold">{row.cursor_seq_no}</td>
+                        <td className="px-3 py-2 text-[#f5f0e7]/60">#{row.client_id}</td>
+                        <td className="px-3 py-2 text-white">{row.client_name}</td>
+                        <td className="px-3 py-2 text-[#f5f0e7]/60">{row.client_type}</td>
+                        <td className="px-3 py-2">
+                          <span className="px-1.5 py-0.5 rounded-sm bg-emerald-950/60 text-emerald-300 border border-emerald-500/30 text-[9px]">
+                            FETCHED
                           </span>
                         </td>
                       </tr>
@@ -590,10 +519,10 @@ export default function Clients() {
               </div>
             </div>
 
-            <div className="px-6 py-3 border-t border-white/10 bg-[#0e1624] flex justify-end">
+            <div className="px-5 py-2.5 border-t border-white/10 bg-[#070b14] flex justify-end">
               <button
                 onClick={() => setCursorModalOpen(false)}
-                className="px-4 py-2 bg-[#18263d] hover:bg-[#22334d] text-[#dfbe85] border border-[#c9a96e]/30 rounded-sm text-xs font-mono uppercase tracking-wider"
+                className="px-3.5 py-1.5 bg-[#121c33] hover:bg-[#1e293b] text-white border border-white/10 rounded-sm text-xs font-mono uppercase tracking-wider"
               >
                 Close Viewer
               </button>
@@ -602,35 +531,32 @@ export default function Clients() {
         </div>
       )}
 
-      {/* XML Viewer Modal (Req 11.F) */}
+      {/* XML Viewer Modal */}
       {xmlModalOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-[#141f32] rounded-sm shadow-2xl border border-[#c9a96e]/40 max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#18263d]">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-[#0a0f1d] rounded-sm shadow-2xl border border-white/20 max-w-xl w-full max-h-[80vh] flex flex-col overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#070b14]">
               <div className="flex items-center space-x-2">
-                <FileCode className="w-5 h-5 text-[#c9a96e]" />
-                <h3 className="font-serif font-semibold text-white text-base">Raw XML Serialized Output (Query 1)</h3>
+                <FileCode className="w-4 h-4 text-white" />
+                <h3 className="font-serif font-semibold text-white text-sm">XML Serialized Payload</h3>
               </div>
-              <button onClick={() => setXmlModalOpen(false)} className="text-slate-400 hover:text-white">
-                <X className="w-5 h-5" />
+              <button onClick={() => setXmlModalOpen(false)} className="text-[#f5f0e7]/60 hover:text-white">
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-6 overflow-y-auto">
-              <div className="p-2.5 bg-[#101827] border border-[#c9a96e]/20 rounded text-xs text-[#dfbe85] mb-3 font-mono">
-                Content-Type: application/xml; charset=utf-8 (Lab Assignment 11 Requirement F)
-              </div>
-              <pre className="bg-[#0a0f18] text-emerald-400 p-4 rounded-sm font-mono text-xs overflow-x-auto leading-relaxed border border-white/10">
+            <div className="p-4 overflow-y-auto">
+              <pre className="bg-[#070b14] text-emerald-300 p-3 rounded-sm font-mono text-xs overflow-x-auto border border-white/10">
                 {xmlContent}
               </pre>
             </div>
 
-            <div className="px-6 py-3 border-t border-white/10 bg-[#0e1624] flex justify-end">
+            <div className="px-5 py-2.5 border-t border-white/10 bg-[#070b14] flex justify-end">
               <button
                 onClick={() => setXmlModalOpen(false)}
-                className="px-4 py-2 bg-[#18263d] hover:bg-[#22334d] text-[#dfbe85] border border-[#c9a96e]/30 rounded-sm text-xs font-mono uppercase tracking-wider"
+                className="px-3.5 py-1.5 bg-[#121c33] hover:bg-[#1e293b] text-white border border-white/10 rounded-sm text-xs font-mono uppercase tracking-wider"
               >
-                Close XML Modal
+                Close
               </button>
             </div>
           </div>
