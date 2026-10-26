@@ -76,10 +76,10 @@ export default function AuditLogs() {
   return (
     <div className="space-y-6 pb-12">
       {/* Editorial Header */}
-      <div className="relative overflow-hidden rounded-sm bg-gradient-to-r from-[#0a1020] via-[#0d1527] to-[#121c33] border border-white/10 p-6 md:p-8 shadow-xl">
+      <div className="relative overflow-hidden rounded-sm bg-gradient-to-r from-[#553a28] via-[#664631] to-[#73513a] border border-white/10 p-6 md:p-8 shadow-xl">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono tracking-widest uppercase font-semibold bg-[#060a12] text-[#f5f0e7] border border-white/15">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono tracking-widest uppercase font-semibold bg-[#4a3324] text-[#f5f0e7] border border-white/15">
               <ShieldCheck className="w-3.5 h-3.5 text-white" />
               <span>Chambers Compliance & Immutable Logging</span>
             </div>
@@ -98,7 +98,7 @@ export default function AuditLogs() {
               fetchLogs();
               fetchStats();
             }}
-            className="self-start md:self-auto inline-flex items-center space-x-2 px-4 py-2.5 bg-[#060a12] hover:bg-[#121c33] border border-white/15 hover:border-white/30 text-white rounded-sm text-xs font-mono uppercase tracking-wider transition-all duration-200 shadow-xl group cursor-pointer"
+            className="self-start md:self-auto inline-flex items-center space-x-2 px-4 py-2.5 bg-[#4a3324] hover:bg-[#73513a] border border-white/15 hover:border-white/30 text-white rounded-sm text-xs font-mono uppercase tracking-wider transition-all duration-200 shadow-xl group cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5 transition-transform duration-500 group-hover:rotate-180 text-white" />
             <span>Refresh Audit Trail</span>
@@ -109,25 +109,25 @@ export default function AuditLogs() {
       {/* KPI Stats Bar */}
       {stats && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-          <div className="bg-[#0a1020] p-4 rounded-sm border border-white/10 shadow-lg">
+          <div className="bg-[#553a28] p-4 rounded-sm border border-white/10 shadow-lg">
             <div className="text-[10px] font-mono uppercase text-[#f5f0e7]/60 tracking-wider">Total Audit Events</div>
             <div className="text-2xl font-serif font-bold text-white mt-1">
               {stats.total_events || totalRecords}
             </div>
           </div>
-          <div className="bg-[#0a1020] p-4 rounded-sm border border-white/10 shadow-lg">
+          <div className="bg-[#553a28] p-4 rounded-sm border border-white/10 shadow-lg">
             <div className="text-[10px] font-mono uppercase text-[#f5f0e7]/60 tracking-wider">Insert Operations</div>
             <div className="text-2xl font-serif font-bold text-emerald-400 mt-1">
               {stats.insert_count || 0}
             </div>
           </div>
-          <div className="bg-[#0a1020] p-4 rounded-sm border border-white/10 shadow-lg">
+          <div className="bg-[#553a28] p-4 rounded-sm border border-white/10 shadow-lg">
             <div className="text-[10px] font-mono uppercase text-[#f5f0e7]/60 tracking-wider">Update Operations</div>
             <div className="text-2xl font-serif font-bold text-sky-400 mt-1">
               {stats.update_count || 0}
             </div>
           </div>
-          <div className="bg-[#0a1020] p-4 rounded-sm border border-white/10 shadow-lg">
+          <div className="bg-[#553a28] p-4 rounded-sm border border-white/10 shadow-lg">
             <div className="text-[10px] font-mono uppercase text-[#f5f0e7]/60 tracking-wider">Delete Operations</div>
             <div className="text-2xl font-serif font-bold text-red-400 mt-1">
               {stats.delete_count || 0}
@@ -137,7 +137,7 @@ export default function AuditLogs() {
       )}
 
       {/* Filters and Controls */}
-      <div className="bg-[#0a1020] p-3.5 rounded-sm border border-white/10 shadow-md flex flex-wrap gap-3 items-center justify-between">
+      <div className="bg-[#553a28] p-3.5 rounded-sm border border-white/10 shadow-md flex flex-wrap gap-3 items-center justify-between">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
             <Filter className="w-3.5 h-3.5 text-white" />
@@ -147,7 +147,7 @@ export default function AuditLogs() {
                 setFilterTable(e.target.value);
                 setPage(1);
               }}
-              className="px-3 py-1.5 bg-[#060a12] border border-white/15 rounded-sm text-xs text-white font-mono focus:border-white focus:outline-none"
+              className="px-3 py-1.5 bg-[#4a3324] border border-white/15 rounded-sm text-xs text-white font-mono focus:border-white focus:outline-none"
             >
               <option value="">All Database Entities</option>
               <option value="CLIENT">CLIENT</option>
@@ -169,7 +169,7 @@ export default function AuditLogs() {
                 setFilterOp(e.target.value);
                 setPage(1);
               }}
-              className="px-3 py-1.5 bg-[#060a12] border border-white/15 rounded-sm text-xs text-white font-mono focus:border-white focus:outline-none"
+              className="px-3 py-1.5 bg-[#4a3324] border border-white/15 rounded-sm text-xs text-white font-mono focus:border-white focus:outline-none"
             >
               <option value="">All DML Operations</option>
               <option value="INSERT">INSERT</option>
@@ -192,10 +192,10 @@ export default function AuditLogs() {
       )}
 
       {/* Audit Log Table */}
-      <div className="bg-[#0a1020] rounded-sm border border-white/10 shadow-xl overflow-hidden">
+      <div className="bg-[#553a28] rounded-sm border border-white/10 shadow-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs text-[#f5f0e7]/75">
-            <thead className="bg-[#060a12] text-white/70 text-[11px] uppercase tracking-wider font-mono border-b border-white/10">
+            <thead className="bg-[#4a3324] text-white/70 text-[11px] uppercase tracking-wider font-mono border-b border-white/10">
               <tr>
                 <th className="px-5 py-3.5 font-semibold">Audit ID</th>
                 <th className="px-5 py-3.5 font-semibold">Timestamp</th>
@@ -241,7 +241,7 @@ export default function AuditLogs() {
                       </td>
 
                       <td className="px-5 py-3.5">
-                        <span className="px-2 py-0.5 rounded-sm bg-[#060a12] border border-white/10 text-white font-semibold">
+                        <span className="px-2 py-0.5 rounded-sm bg-[#4a3324] border border-white/10 text-white font-semibold">
                           {log.table_name}
                         </span>
                       </td>
@@ -267,7 +267,7 @@ export default function AuditLogs() {
                       <td className="px-5 py-3.5 text-right">
                         <button
                           onClick={() => setSelectedLog(log)}
-                          className="px-2.5 py-1 text-[11px] font-mono text-white hover:text-white bg-[#121c33] hover:bg-[#1a294b] border border-white/20 rounded-sm transition-colors cursor-pointer"
+                          className="px-2.5 py-1 text-[11px] font-mono text-white hover:text-white bg-[#73513a] hover:bg-[#7d5a41] border border-white/20 rounded-sm transition-colors cursor-pointer"
                         >
                           View Diff
                         </button>
@@ -282,7 +282,7 @@ export default function AuditLogs() {
 
         {/* Pagination Bar */}
         {totalPages > 1 && (
-          <div className="px-5 py-3 bg-[#060a12] border-t border-white/10 flex items-center justify-between text-xs font-mono text-[#f5f0e7]/70">
+          <div className="px-5 py-3 bg-[#4a3324] border-t border-white/10 flex items-center justify-between text-xs font-mono text-[#f5f0e7]/70">
             <div>
               Page {page} of {totalPages}
             </div>
@@ -309,8 +309,8 @@ export default function AuditLogs() {
       {/* JSON State Diff Modal */}
       {selectedLog && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#0a1020] rounded-sm shadow-2xl border border-white/20 max-w-2xl w-full overflow-hidden max-h-[90vh] flex flex-col">
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#060a12]">
+          <div className="bg-[#553a28] rounded-sm shadow-2xl border border-white/20 max-w-2xl w-full overflow-hidden max-h-[90vh] flex flex-col">
+            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#4a3324]">
               <div className="flex items-center gap-2.5">
                 <Code className="w-4 h-4 text-white" />
                 <h3 className="font-serif font-semibold text-white text-base">
@@ -336,7 +336,7 @@ export default function AuditLogs() {
                   <div className="text-xs font-mono uppercase tracking-wider text-red-400 mb-1">
                     Previous State (BEFORE Mutation):
                   </div>
-                  <pre className="p-3 bg-[#060a12] border border-red-500/20 rounded-sm text-xs font-mono text-red-300 overflow-x-auto">
+                  <pre className="p-3 bg-[#4a3324] border border-red-500/20 rounded-sm text-xs font-mono text-red-300 overflow-x-auto">
                     {JSON.stringify(parseJsonSafe(selectedLog.old_data), null, 2)}
                   </pre>
                 </div>
@@ -347,7 +347,7 @@ export default function AuditLogs() {
                   <div className="text-xs font-mono uppercase tracking-wider text-emerald-400 mb-1">
                     Committed State (AFTER Mutation):
                   </div>
-                  <pre className="p-3 bg-[#060a12] border border-emerald-500/20 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto">
+                  <pre className="p-3 bg-[#4a3324] border border-emerald-500/20 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto">
                     {JSON.stringify(parseJsonSafe(selectedLog.new_data), null, 2)}
                   </pre>
                 </div>
@@ -356,7 +356,7 @@ export default function AuditLogs() {
               <div className="pt-3 flex justify-end border-t border-white/10">
                 <button
                   onClick={() => setSelectedLog(null)}
-                  className="px-5 py-2 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-mono uppercase tracking-wider font-semibold transition-colors cursor-pointer"
+                  className="px-5 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-mono uppercase tracking-wider font-semibold transition-colors cursor-pointer"
                 >
                   Close Inspection
                 </button>

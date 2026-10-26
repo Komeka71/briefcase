@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { dashboardService } from '../services/api';
+import TableStatsPanel from '../components/TableStatsPanel';
 import {
   Users,
   Briefcase,
@@ -54,7 +55,7 @@ export default function Dashboard() {
   }, []);
 
   // Midnight Navy & Cream High-Contrast Palette for Charts
-  const CHART_COLORS = ['#f5f0e7', '#38bdf8', '#818cf8', '#34d399', '#fbbf24', '#f87171', '#cbd5e1'];
+  const CHART_COLORS = ['#f5f0e7', '#e6cfa9', '#c49a6c', '#ecdcc0', '#a47a52', '#f3e3c7', '#8a5a3b'];
 
   if (loading) {
     return (
@@ -69,7 +70,7 @@ export default function Dashboard() {
 
   if (error) {
     return (
-      <div className="p-6 bg-[#0a0f1d] border border-red-500/30 rounded-sm text-white shadow-xl">
+      <div className="p-6 bg-[#5e412d] border border-red-500/30 rounded-sm text-white shadow-xl">
         <div className="flex items-center space-x-3">
           <AlertCircle className="w-5 h-5 text-red-400" />
           <h3 className="text-sm font-serif font-semibold">Database Connection Error</h3>
@@ -77,7 +78,7 @@ export default function Dashboard() {
         <p className="mt-2 text-xs text-[#f5f0e7]/70">{error}</p>
         <button
           onClick={fetchDashboard}
-          className="mt-3 px-3 py-1.5 bg-[#121c33] hover:bg-[#1e293b] border border-white/20 text-white rounded-sm text-xs font-mono uppercase tracking-wider transition-colors"
+          className="mt-3 px-3 py-1.5 bg-[#73513a] hover:bg-[#7d5a41] border border-white/20 text-white rounded-sm text-xs font-mono uppercase tracking-wider transition-colors"
         >
           Retry Connection
         </button>
@@ -92,15 +93,15 @@ export default function Dashboard() {
   return (
     <div className="space-y-6 pb-6">
       {/* Editorial Hero Banner - Compact & Clean */}
-      <div className="relative rounded-sm overflow-hidden border border-white/10 shadow-xl bg-gradient-to-r from-[#0a0f1d] via-[#0d1527] to-[#121c33] p-5 sm:p-6">
+      <div className="relative rounded-sm overflow-hidden border border-white/10 shadow-xl bg-gradient-to-r from-[#5e412d] via-[#664631] to-[#73513a] p-5 sm:p-6">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-1.5 text-[10px] font-mono tracking-widest uppercase text-[#f5f0e7]/70">
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-mono tracking-widest uppercase text-[#ecdcc0]">
               <Scale className="w-3.5 h-3.5 text-white" />
               <span>Chambers Executive Intelligence</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-serif text-white tracking-tight">
-              Practice Management & <span className="italic text-[#f5f0e7]/90">Docket Control</span>
+              Practice Management & <span className="italic text-[#f3e3c7]">Docket Control</span>
             </h1>
             <p className="text-xs text-[#f5f0e7]/75 font-sans max-w-xl">
               Live relational telemetry across matters, hearings, and forensic database logs.
@@ -110,7 +111,7 @@ export default function Dashboard() {
           <div className="flex items-center gap-2.5">
             <button
               onClick={fetchDashboard}
-              className="px-3 py-2 bg-[#070b14] hover:bg-[#121c33] border border-white/15 text-white rounded-sm text-xs font-mono uppercase tracking-wider transition-colors flex items-center gap-1.5 shadow-sm"
+              className="px-3 py-2 bg-[#3f2b1e] hover:bg-[#73513a] border border-white/15 text-white rounded-sm text-xs font-mono uppercase tracking-wider transition-colors flex items-center gap-1.5 shadow-sm"
               title="Refresh telemetry"
             >
               <RefreshCw className="w-3 h-3" />
@@ -120,9 +121,12 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Lab Assignment 10 / 11 shortcuts + statistics of all tables (11.E) */}
+      <TableStatsPanel />
+
       {/* KPI Cards Grid - Compact & Responsive */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="bg-[#0a0f1d] p-3.5 rounded-sm border border-white/10 shadow-md">
+        <div className="bg-[#5e412d] p-3.5 rounded-sm border border-white/10 shadow-md">
           <div className="flex items-center justify-between text-[#f5f0e7]/60">
             <span className="text-[10px] font-mono uppercase tracking-wider">Clients</span>
             <Users className="w-3.5 h-3.5 text-white" />
@@ -131,7 +135,7 @@ export default function Dashboard() {
           <div className="text-[10px] font-mono text-[#f5f0e7]/50 mt-0.5">Enrolled</div>
         </div>
 
-        <div className="bg-[#0a0f1d] p-3.5 rounded-sm border border-white/10 shadow-md">
+        <div className="bg-[#5e412d] p-3.5 rounded-sm border border-white/10 shadow-md">
           <div className="flex items-center justify-between text-[#f5f0e7]/60">
             <span className="text-[10px] font-mono uppercase tracking-wider">Active Cases</span>
             <Briefcase className="w-3.5 h-3.5 text-white" />
@@ -140,7 +144,7 @@ export default function Dashboard() {
           <div className="text-[10px] font-mono text-emerald-400 mt-0.5">Active Dockets</div>
         </div>
 
-        <div className="bg-[#0a0f1d] p-3.5 rounded-sm border border-white/10 shadow-md">
+        <div className="bg-[#5e412d] p-3.5 rounded-sm border border-white/10 shadow-md">
           <div className="flex items-center justify-between text-[#f5f0e7]/60">
             <span className="text-[10px] font-mono uppercase tracking-wider">Counsel</span>
             <UserCheck className="w-3.5 h-3.5 text-white" />
@@ -149,7 +153,7 @@ export default function Dashboard() {
           <div className="text-[10px] font-mono text-[#f5f0e7]/50 mt-0.5">Bar Enrolled</div>
         </div>
 
-        <div className="bg-[#0a0f1d] p-3.5 rounded-sm border border-white/10 shadow-md">
+        <div className="bg-[#5e412d] p-3.5 rounded-sm border border-white/10 shadow-md">
           <div className="flex items-center justify-between text-[#f5f0e7]/60">
             <span className="text-[10px] font-mono uppercase tracking-wider">Benches</span>
             <Building className="w-3.5 h-3.5 text-white" />
@@ -158,7 +162,7 @@ export default function Dashboard() {
           <div className="text-[10px] font-mono text-[#f5f0e7]/50 mt-0.5">Jurisdictions</div>
         </div>
 
-        <div className="bg-[#0a0f1d] p-3.5 rounded-sm border border-white/10 shadow-md">
+        <div className="bg-[#5e412d] p-3.5 rounded-sm border border-white/10 shadow-md">
           <div className="flex items-center justify-between text-[#f5f0e7]/60">
             <span className="text-[10px] font-mono uppercase tracking-wider">Hearings</span>
             <Calendar className="w-3.5 h-3.5 text-white" />
@@ -167,7 +171,7 @@ export default function Dashboard() {
           <div className="text-[10px] font-mono text-[#f5f0e7]/50 mt-0.5">Cause Lists</div>
         </div>
 
-        <div className="bg-[#0a0f1d] p-3.5 rounded-sm border border-white/10 shadow-md">
+        <div className="bg-[#5e412d] p-3.5 rounded-sm border border-white/10 shadow-md">
           <div className="flex items-center justify-between text-[#f5f0e7]/60">
             <span className="text-[10px] font-mono uppercase tracking-wider">Audit Logs</span>
             <History className="w-3.5 h-3.5 text-white" />
@@ -179,19 +183,19 @@ export default function Dashboard() {
 
       {/* Financial Summary Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="p-4 rounded-sm bg-[#0a0f1d] border border-white/10">
+        <div className="p-4 rounded-sm bg-[#5e412d] border border-white/10">
           <div className="text-[10px] font-mono uppercase text-[#f5f0e7]/60 tracking-wider">Total Matter Budgets</div>
           <div className="text-xl sm:text-2xl font-serif font-bold text-white mt-1">
             ₹ {Number(financials.total_case_budget || 0).toLocaleString('en-IN')}
           </div>
         </div>
-        <div className="p-4 rounded-sm bg-[#0a0f1d] border border-white/10">
+        <div className="p-4 rounded-sm bg-[#5e412d] border border-white/10">
           <div className="text-[10px] font-mono uppercase text-[#f5f0e7]/60 tracking-wider">Total Invoiced Fees</div>
           <div className="text-xl sm:text-2xl font-serif font-bold text-white mt-1">
             ₹ {Number(financials.total_invoiced || 0).toLocaleString('en-IN')}
           </div>
         </div>
-        <div className="p-4 rounded-sm bg-[#0a0f1d] border border-white/10">
+        <div className="p-4 rounded-sm bg-[#5e412d] border border-white/10">
           <div className="text-[10px] font-mono uppercase text-[#f5f0e7]/60 tracking-wider">Cleared Receipts</div>
           <div className="text-xl sm:text-2xl font-serif font-bold text-emerald-400 mt-1">
             ₹ {Number(financials.total_payments_received || 0).toLocaleString('en-IN')}
@@ -202,7 +206,7 @@ export default function Dashboard() {
       {/* Analytics Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Status Distribution */}
-        <div className="bg-[#0a0f1d] p-4 sm:p-5 rounded-sm border border-white/10 shadow-lg">
+        <div className="bg-[#5e412d] p-4 sm:p-5 rounded-sm border border-white/10 shadow-lg">
           <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-3">
             <h3 className="font-serif font-semibold text-white text-sm">
               Matter Docket Progression
@@ -213,10 +217,10 @@ export default function Dashboard() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data?.statusDistribution || []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="status_name" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} allowDecimals={false} tickLine={false} />
+                <XAxis dataKey="status_name" stroke="#e6cfa9" fontSize={11} tickLine={false} />
+                <YAxis stroke="#e6cfa9" fontSize={11} allowDecimals={false} tickLine={false} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#070b14', borderColor: 'rgba(255,255,255,0.15)', borderRadius: '4px', fontSize: '11px' }}
+                  contentStyle={{ backgroundColor: '#3f2b1e', borderColor: 'rgba(255,255,255,0.15)', borderRadius: '4px', fontSize: '11px' }}
                   itemStyle={{ color: '#ffffff' }}
                 />
                 <Bar dataKey="count" fill="#f5f0e7" radius={[2, 2, 0, 0]} />
@@ -226,7 +230,7 @@ export default function Dashboard() {
         </div>
 
         {/* Case Type Distribution */}
-        <div className="bg-[#0a0f1d] p-4 sm:p-5 rounded-sm border border-white/10 shadow-lg">
+        <div className="bg-[#5e412d] p-4 sm:p-5 rounded-sm border border-white/10 shadow-lg">
           <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-3">
             <h3 className="font-serif font-semibold text-white text-sm">
               Practice Area Allocation
@@ -245,7 +249,7 @@ export default function Dashboard() {
                   outerRadius={75}
                   innerRadius={45}
                   paddingAngle={3}
-                  stroke="#0a0f1d"
+                  stroke="#5e412d"
                   strokeWidth={2}
                 >
                   {(data?.typeDistribution || []).map((entry, index) => (
@@ -253,7 +257,7 @@ export default function Dashboard() {
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#070b14', borderColor: 'rgba(255,255,255,0.15)', borderRadius: '4px', fontSize: '11px' }}
+                  contentStyle={{ backgroundColor: '#3f2b1e', borderColor: 'rgba(255,255,255,0.15)', borderRadius: '4px', fontSize: '11px' }}
                   itemStyle={{ color: '#ffffff' }}
                 />
                 <Legend
@@ -269,7 +273,7 @@ export default function Dashboard() {
       {/* Cause Lists & Action Items Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Upcoming Hearings */}
-        <div className="bg-[#0a0f1d] p-4 sm:p-5 rounded-sm border border-white/10 shadow-lg">
+        <div className="bg-[#5e412d] p-4 sm:p-5 rounded-sm border border-white/10 shadow-lg">
           <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-3">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-white" />
@@ -283,7 +287,7 @@ export default function Dashboard() {
               <p className="text-xs font-serif text-[#f5f0e7]/60 text-center py-6">No scheduled court appearances on docket.</p>
             ) : (
               data.upcomingHearings.map((h) => (
-                <div key={h.hearing_id} className="p-3 rounded-sm bg-[#070b14] border border-white/5 flex items-start justify-between gap-3 text-xs">
+                <div key={h.hearing_id} className="p-3 rounded-sm bg-[#3f2b1e] border border-white/5 flex items-start justify-between gap-3 text-xs">
                   <div>
                     <div className="font-serif font-semibold text-white text-xs">{h.case_title}</div>
                     <div className="text-[10px] font-mono text-[#f5f0e7]/60 mt-0.5">{h.case_number} • {h.court_name}</div>
@@ -300,7 +304,7 @@ export default function Dashboard() {
         </div>
 
         {/* Pending Action Items */}
-        <div className="bg-[#0a0f1d] p-4 sm:p-5 rounded-sm border border-white/10 shadow-lg">
+        <div className="bg-[#5e412d] p-4 sm:p-5 rounded-sm border border-white/10 shadow-lg">
           <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-3">
             <div className="flex items-center gap-2">
               <CheckSquare className="w-4 h-4 text-white" />
@@ -314,7 +318,7 @@ export default function Dashboard() {
               <p className="text-xs font-serif text-[#f5f0e7]/60 text-center py-6">All action items resolved.</p>
             ) : (
               data.pendingTasks.map((t) => (
-                <div key={t.task_id} className="p-3 rounded-sm bg-[#070b14] border border-white/5 flex items-start justify-between gap-3 text-xs">
+                <div key={t.task_id} className="p-3 rounded-sm bg-[#3f2b1e] border border-white/5 flex items-start justify-between gap-3 text-xs">
                   <div>
                     <div className="font-serif font-semibold text-white text-xs">{t.title}</div>
                     <div className="text-[10px] font-mono text-[#f5f0e7]/60 mt-0.5">{t.case_number}</div>

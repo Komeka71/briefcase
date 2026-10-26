@@ -124,11 +124,11 @@ export default function Tasks() {
   return (
     <div className="space-y-4 pb-6">
       {/* Editorial Header */}
-      <div className="relative overflow-hidden rounded-xl bg-[#0d1527] border border-white/10 p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="relative overflow-hidden rounded-xl bg-[#664631] border border-white/10 p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
 
         <div className="relative z-10 space-y-1 max-w-xl">
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider uppercase font-semibold bg-[#121c33] text-[#f5f0e7] border border-white/15">
+          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider uppercase font-semibold bg-[#73513a] text-[#f5f0e7] border border-white/15">
             <CheckSquare className="w-3 h-3 text-white" />
             <span>Workflow & Deadlines</span>
           </div>
@@ -144,7 +144,7 @@ export default function Tasks() {
 
         <button
           onClick={() => setModalOpen(true)}
-          className="self-start md:self-auto inline-flex items-center space-x-2 px-3.5 py-2 bg-[#f5f0e7] hover:bg-white text-[#0a0f1d] rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow font-mono cursor-pointer"
+          className="self-start md:self-auto inline-flex items-center space-x-2 px-3.5 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow font-mono cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>New Task</span>
@@ -167,7 +167,7 @@ export default function Tasks() {
       )}
 
       {/* Filters and Controls */}
-      <div className="bg-[#0d1527] p-3 rounded-lg border border-white/10 shadow-sm flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between">
+      <div className="bg-[#664631] p-3 rounded-lg border border-white/10 shadow-sm flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between">
         <div className="relative flex-1">
           <Search className="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -175,7 +175,7 @@ export default function Tasks() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search tasks or case #..."
-            className="w-full pl-9 pr-3 py-1.5 bg-[#0a0f1d] border border-white/10 rounded-md text-xs text-[#f5f0e7] placeholder-white/40 focus:border-white/30 focus:outline-none"
+            className="w-full pl-9 pr-3 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] placeholder-white/40 focus:border-white/30 focus:outline-none"
           />
         </div>
 
@@ -185,7 +185,7 @@ export default function Tasks() {
             <select
               value={selectedPriority}
               onChange={(e) => setSelectedPriority(e.target.value)}
-              className="px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 rounded-md text-xs text-[#f5f0e7] font-mono focus:border-white/30 focus:outline-none"
+              className="px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] font-mono focus:border-white/30 focus:outline-none"
             >
               <option value="">All Priorities</option>
               <option value="High">High Priority</option>
@@ -197,7 +197,7 @@ export default function Tasks() {
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 rounded-md text-xs text-[#f5f0e7] font-mono focus:border-white/30 focus:outline-none"
+            className="px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] font-mono focus:border-white/30 focus:outline-none"
           >
             <option value="">All Statuses</option>
             <option value="Pending">Pending</option>
@@ -205,17 +205,17 @@ export default function Tasks() {
             <option value="Completed">Completed</option>
           </select>
 
-          <div className="text-xs font-mono text-white/60 px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 rounded-md">
+          <div className="text-xs font-mono text-white/60 px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md">
             {filteredTasks.length} Tasks
           </div>
         </div>
       </div>
 
       {/* Tasks Table */}
-      <div className="bg-[#0d1527] rounded-xl border border-white/10 shadow-lg overflow-hidden">
+      <div className="bg-[#664631] rounded-xl border border-white/10 shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs text-white/80">
-            <thead className="bg-[#0a0f1d] text-white/50 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
+            <thead className="bg-[#5e412d] text-white/50 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
               <tr>
                 <th className="px-4 py-3 font-semibold">Priority</th>
                 <th className="px-4 py-3 font-semibold">Action Item</th>
@@ -286,7 +286,7 @@ export default function Tasks() {
                         className={`px-2 py-0.5 rounded text-xs font-mono border focus:outline-none ${
                           task.status === 'Completed' ? 'bg-emerald-950/60 text-emerald-300 border-emerald-500/30' :
                           task.status === 'In Progress' ? 'bg-blue-950/60 text-blue-200 border-blue-500/30' :
-                          'bg-[#0a0f1d] text-white/70 border-white/10'
+                          'bg-[#5e412d] text-white/70 border-white/10'
                         }`}
                       >
                         <option value="Pending">Pending</option>
@@ -315,8 +315,8 @@ export default function Tasks() {
       {/* Create Task Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#0d1527] rounded-xl shadow-2xl border border-white/15 max-w-md w-full overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#0a0f1d]">
+          <div className="bg-[#664631] rounded-xl shadow-2xl border border-white/15 max-w-md w-full overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#5e412d]">
               <div className="flex items-center gap-2">
                 <CheckSquare className="w-4 h-4 text-[#f5f0e7]" />
                 <h3 className="font-serif font-semibold text-[#f5f0e7] text-sm">
@@ -339,7 +339,7 @@ export default function Tasks() {
                 <select
                   value={formData.case_id}
                   onChange={(e) => setFormData({ ...formData, case_id: parseInt(e.target.value, 10) })}
-                  className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
+                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
                 >
                   {cases.map((c) => (
                     <option key={c.case_id} value={c.case_id}>
@@ -359,7 +359,7 @@ export default function Tasks() {
                   placeholder="e.g. Draft interrogatories for cross-examination"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
+                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
                 />
               </div>
 
@@ -373,7 +373,7 @@ export default function Tasks() {
                     required
                     value={formData.due_date}
                     onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
-                    className="w-full px-2 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
+                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
                   />
                 </div>
 
@@ -384,7 +384,7 @@ export default function Tasks() {
                   <select
                     value={formData.priority}
                     onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                    className="w-full px-2 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
+                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
                   >
                     <option value="High">High</option>
                     <option value="Medium">Medium</option>
@@ -402,7 +402,7 @@ export default function Tasks() {
                   placeholder="e.g. Consult senior counsel before submission."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
+                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
                 />
               </div>
 
@@ -416,7 +416,7 @@ export default function Tasks() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-[#f5f0e7] hover:bg-white text-[#0a0f1d] rounded-md text-xs font-semibold uppercase tracking-wider shadow font-mono transition-colors cursor-pointer"
+                  className="px-4 py-1.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-md text-xs font-semibold uppercase tracking-wider shadow font-mono transition-colors cursor-pointer"
                 >
                   Schedule Task
                 </button>

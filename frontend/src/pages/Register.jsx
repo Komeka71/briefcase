@@ -73,14 +73,14 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#070b14] text-[#f5f0e7] flex flex-col lg:flex-row antialiased selection:bg-[#1e293b] selection:text-white">
+    <div className="min-h-screen w-full bg-[#3f2b1e] text-[#f5f0e7] flex flex-col lg:flex-row antialiased selection:bg-[#7d5a41] selection:text-white">
       {/* Left Visual Column */}
-      <div className="relative hidden lg:flex lg:w-1/2 flex-col justify-between p-10 xl:p-14 overflow-hidden border-r border-white/10 bg-[#0a0f1d]">
+      <div className="relative hidden lg:flex lg:w-1/2 flex-col justify-between p-10 xl:p-14 overflow-hidden border-r border-white/10 bg-[#5e412d]">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-30 scale-105"
           style={{ backgroundImage: `url('/law_library.jpg')` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#070b14] via-[#0a0f1d]/85 to-[#070b14]/90" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#3f2b1e] via-[#5e412d]/85 to-[#3f2b1e]/90" />
 
         <div className="relative z-10 flex items-center justify-between">
           <Link to="/" className="inline-flex items-center">
@@ -88,7 +88,7 @@ export default function Register() {
           </Link>
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70 hover:text-white transition-colors py-1.5 px-3 rounded-sm border border-white/10 hover:border-white/25 bg-[#0d1527]/70 backdrop-blur-sm"
+            className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70 hover:text-white transition-colors py-1.5 px-3 rounded-sm border border-white/10 hover:border-white/25 bg-[#664631]/70 backdrop-blur-sm"
           >
             <Home className="w-3.5 h-3.5" />
             <span>Firm Website</span>
@@ -96,7 +96,7 @@ export default function Register() {
         </div>
 
         <div className="relative z-10 max-w-md my-auto space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0d1527] border border-white/15 text-[10px] font-mono tracking-widest text-[#f5f0e7]/80 uppercase">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#664631] border border-white/15 text-[10px] font-mono tracking-widest text-[#f5f0e7]/80 uppercase">
             <Shield className="w-3.5 h-3.5 text-white" />
             <span>Chambers Access Control</span>
           </div>
@@ -115,7 +115,7 @@ export default function Register() {
       </div>
 
       {/* Right Column: Register Form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 sm:px-12 md:px-16 py-8 relative bg-[#070b14]">
+      <div className="bc-cream w-full lg:w-1/2 flex flex-col justify-center px-6 sm:px-12 md:px-16 py-8 relative bg-[#3f2b1e]">
         <div className="max-w-md w-full mx-auto space-y-5">
           <div className="lg:hidden flex items-center justify-between pb-3 border-b border-white/10">
             <Logo size="sm" />
@@ -135,14 +135,14 @@ export default function Register() {
           </div>
 
           {error && (
-            <div className="p-3 bg-[#1e1517] border-l-4 border-red-500 rounded-sm text-red-200 text-xs flex items-start space-x-2.5">
+            <div className="p-3 bg-[#5c3030] border-l-4 border-red-500 rounded-sm text-red-200 text-xs flex items-start space-x-2.5">
               <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           {successMsg && (
-            <div className="p-3 bg-[#151e18] border-l-4 border-emerald-500 rounded-sm text-emerald-200 text-xs flex items-start space-x-2.5">
+            <div className="p-3 bg-[#2f4a35] border-l-4 border-emerald-500 rounded-sm text-emerald-200 text-xs flex items-start space-x-2.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
               <span>{successMsg}</span>
             </div>
@@ -161,7 +161,7 @@ export default function Register() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Adv. Priya Patel"
-                  className="w-full pl-10 pr-4 py-2 bg-[#0d1527] border border-white/10 rounded-sm text-xs text-white placeholder-[#f5f0e7]/30 focus:border-white focus:outline-none transition-colors"
+                  className="w-full pl-10 pr-4 py-2 bg-[#664631] border border-white/10 rounded-sm text-xs text-white placeholder-[#f5f0e7]/30 focus:border-white focus:outline-none transition-colors"
                 />
               </div>
             </div>
@@ -178,7 +178,7 @@ export default function Register() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="counsel@briefcase.in"
-                  className="w-full pl-10 pr-4 py-2 bg-[#0d1527] border border-white/10 rounded-sm text-xs font-mono text-white placeholder-[#f5f0e7]/30 focus:border-white focus:outline-none transition-colors"
+                  className="w-full pl-10 pr-4 py-2 bg-[#664631] border border-white/10 rounded-sm text-xs font-mono text-white placeholder-[#f5f0e7]/30 focus:border-white focus:outline-none transition-colors"
                 />
               </div>
             </div>
@@ -191,7 +191,7 @@ export default function Register() {
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#0d1527] border border-white/10 rounded-sm text-xs font-mono text-white focus:border-white focus:outline-none"
+                  className="w-full px-3 py-2 bg-[#664631] border border-white/10 rounded-sm text-xs font-mono text-white focus:border-white focus:outline-none"
                 >
                   <option value="Lawyer">Lawyer / Advocate</option>
                   <option value="Admin">Admin / Managing Partner</option>
@@ -211,7 +211,7 @@ export default function Register() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Min 6 chars"
-                    className="w-full pl-3 pr-8 py-2 bg-[#0d1527] border border-white/10 rounded-sm text-xs font-mono text-white placeholder-[#f5f0e7]/30 focus:border-white focus:outline-none"
+                    className="w-full pl-3 pr-8 py-2 bg-[#664631] border border-white/10 rounded-sm text-xs font-mono text-white placeholder-[#f5f0e7]/30 focus:border-white focus:outline-none"
                   />
                   <button
                     type="button"
@@ -234,21 +234,21 @@ export default function Register() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter password"
-                className="w-full px-3 py-2 bg-[#0d1527] border border-white/10 rounded-sm text-xs font-mono text-white placeholder-[#f5f0e7]/30 focus:border-white focus:outline-none"
+                className="w-full px-3 py-2 bg-[#664631] border border-white/10 rounded-sm text-xs font-mono text-white placeholder-[#f5f0e7]/30 focus:border-white focus:outline-none"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 bg-[#f5f0e7] hover:bg-white text-[#070b14] rounded-sm text-xs font-mono font-medium uppercase tracking-wider transition-all duration-200 shadow-xl shadow-black/40 flex items-center justify-center space-x-2 group hover:scale-[1.01] mt-2"
+              className="w-full py-2.5 px-4 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-mono font-medium uppercase tracking-wider transition-all duration-200 shadow-xl shadow-black/40 flex items-center justify-center space-x-2 group hover:scale-[1.01] mt-2"
             >
               {loading ? (
-                <div className="w-4 h-4 border-2 border-[#070b14] border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-[#3f2b1e] border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
                   <span>Create Account</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-[#070b14] transition-transform duration-200 group-hover:translate-x-1" />
+                  <ArrowRight className="w-3.5 h-3.5 text-[#3b2a1f] transition-transform duration-200 group-hover:translate-x-1" />
                 </>
               )}
             </button>

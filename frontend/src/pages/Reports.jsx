@@ -72,6 +72,7 @@ export default function Reports() {
 
   // Tab 6: High-Value Matters Subquery
   const [q6Threshold, setQ6Threshold] = useState(300000);
+  const [q7Operator, setQ7Operator] = useState('>');
   const [q6Data, setQ6Data] = useState([]);
 
   // Tab 7: Departmental Benchmark Subquery
@@ -204,7 +205,7 @@ export default function Reports() {
     setLoading(true);
     setError(null);
     try {
-      const res = await reportService.getQuery7();
+      const res = await reportService.getQuery7(q7Operator);
       setQ7Data(res.data.data || []);
       setExecutionTime(res.data.executionTimeMs);
     } catch (err) {
@@ -266,13 +267,13 @@ export default function Reports() {
   return (
     <div className="space-y-7 pb-12">
       {/* Editorial Header */}
-      <div className="relative overflow-hidden rounded-sm bg-gradient-to-r from-[#0a1020] via-[#0d1527] to-[#121c33] border border-white/10 p-7 md:p-9 shadow-2xl">
-        <div className="absolute top-0 right-0 w-96 h-full bg-gradient-to-l from-[#121c33]/20 to-transparent pointer-events-none" />
+      <div className="relative overflow-hidden rounded-sm bg-gradient-to-r from-[#553a28] via-[#664631] to-[#73513a] border border-white/10 p-7 md:p-9 shadow-2xl">
+        <div className="absolute top-0 right-0 w-96 h-full bg-gradient-to-l from-[#73513a]/20 to-transparent pointer-events-none" />
         <div className="absolute -bottom-10 -right-10 w-44 h-44 rounded-full bg-[#f5f0e7]/5 blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2.5 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase font-semibold bg-[#121c33] text-[#f5f0e7] border border-white/15">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase font-semibold bg-[#73513a] text-[#f5f0e7] border border-white/15">
               <Database className="w-3 h-3 text-white" />
               <span>Practice Intelligence & Analytics Engine</span>
             </div>
@@ -287,7 +288,7 @@ export default function Reports() {
           </div>
 
           {executionTime !== null && (
-            <div className="self-start md:self-auto flex items-center space-x-3 bg-[#060a12] border border-emerald-500/30 px-5 py-3 rounded-sm text-xs font-mono text-emerald-400 shadow-xl">
+            <div className="self-start md:self-auto flex items-center space-x-3 bg-[#4a3324] border border-emerald-500/30 px-5 py-3 rounded-sm text-xs font-mono text-emerald-400 shadow-xl">
               <Clock className="w-4 h-4 text-emerald-400" />
               <div>
                 <div className="text-[10px] uppercase tracking-wider text-[#f5f0e7]/70">Engine Latency</div>
@@ -299,14 +300,14 @@ export default function Reports() {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="bg-[#0a1020] border border-white/10 rounded-sm p-1.5 shadow-xl flex flex-wrap gap-1">
+      <div className="bg-[#553a28] border border-white/10 rounded-sm p-1.5 shadow-xl flex flex-wrap gap-1">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-3 py-2 rounded-sm text-xs font-mono transition-all duration-200 ${
               activeTab === tab.id
-                ? 'bg-[#121c33] text-[#f5f0e7] border border-white/20 font-semibold shadow-md'
+                ? 'bg-[#73513a] text-[#f5f0e7] border border-white/20 font-semibold shadow-md'
                 : 'text-[#f5f0e7]/70 hover:text-[#f5f0e7] hover:bg-white/5'
             }`}
           >
@@ -317,7 +318,7 @@ export default function Reports() {
 
       {/* Status Messages */}
       {error && (
-        <div className="p-4 bg-[#1e1517] border-l-4 border-[#dc2626] rounded-sm text-[#f5f0e7] flex items-start space-x-3 shadow-lg border border-[#dc2626]/20">
+        <div className="p-4 bg-[#5c3030] border-l-4 border-[#dc2626] rounded-sm text-[#f5f0e7] flex items-start space-x-3 shadow-lg border border-[#dc2626]/20">
           <AlertCircle className="w-5 h-5 text-[#f87171] flex-shrink-0 mt-0.5" />
           <div className="text-xs">
             <div className="font-semibold text-red-300 font-mono uppercase tracking-wider">
@@ -329,7 +330,7 @@ export default function Reports() {
       )}
 
       {success && (
-        <div className="p-4 bg-[#151e18] border-l-4 border-[#059669] rounded-sm text-[#f5f0e7] flex items-start space-x-3 shadow-lg border border-[#059669]/20">
+        <div className="p-4 bg-[#2f4a35] border-l-4 border-[#059669] rounded-sm text-[#f5f0e7] flex items-start space-x-3 shadow-lg border border-[#059669]/20">
           <CheckCircle2 className="w-5 h-5 text-[#34d399] flex-shrink-0 mt-0.5" />
           <div className="text-xs">
             <div className="font-semibold text-emerald-300 font-mono uppercase tracking-wider">
@@ -342,7 +343,7 @@ export default function Reports() {
 
       {/* TAB 1: CLIENT REGISTER & XML EXPORT */}
       {activeTab === 'q1' && (
-        <div className="bg-[#0a1020] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Directory Register</div>
@@ -357,7 +358,7 @@ export default function Reports() {
               <button
                 onClick={() => runQuery1('')}
                 disabled={loading}
-                className="inline-flex items-center space-x-1.5 px-4 py-2 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                className="inline-flex items-center space-x-1.5 px-4 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
               >
                 <Play className="w-3.5 h-3.5 fill-current" />
                 <span>Execute Query</span>
@@ -365,7 +366,7 @@ export default function Reports() {
               <button
                 onClick={() => runQuery1('xml')}
                 disabled={loading}
-                className="inline-flex items-center space-x-1.5 px-3 py-2 bg-[#121c33] hover:bg-[#1a294b] text-[#f5f0e7] border border-white/15 rounded-sm text-xs font-mono uppercase tracking-wider shadow-md transition-colors"
+                className="inline-flex items-center space-x-1.5 px-3 py-2 bg-[#73513a] hover:bg-[#7d5a41] text-[#f5f0e7] border border-white/15 rounded-sm text-xs font-mono uppercase tracking-wider shadow-md transition-colors"
               >
                 <FileCode className="w-3.5 h-3.5" />
                 <span>XML Export</span>
@@ -379,7 +380,7 @@ export default function Reports() {
                 <span>Generated XML Document:</span>
                 <button onClick={() => setQ1Xml(null)} className="text-[#f5f0e7]/70 hover:text-white">Close XML</button>
               </div>
-              <pre className="p-4 bg-[#060a12] border border-white/10 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto max-h-64">
+              <pre className="p-4 bg-[#4a3324] border border-white/10 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto max-h-64">
                 {q1Xml}
               </pre>
             </div>
@@ -387,7 +388,7 @@ export default function Reports() {
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
             <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#060a12] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3">ID</th>
                   <th className="px-4 py-3">Client Entity Name</th>
@@ -412,7 +413,7 @@ export default function Reports() {
                       <td className="px-4 py-3 font-serif font-semibold text-[#f5f0e7]">{c.name}</td>
                       <td className="px-4 py-3">
                         <span className={`px-2 py-0.5 rounded-sm text-[10px] ${
-                          c.client_type === 'Organization' ? 'bg-[#121c33]/50 text-[#f5f0e7] border border-white/15' : 'bg-stone-800 text-[#f5f0e7]/70'
+                          c.client_type === 'Organization' ? 'bg-[#73513a]/50 text-[#f5f0e7] border border-white/15' : 'bg-stone-800 text-[#f5f0e7]/70'
                         }`}>
                           {c.client_type}
                         </span>
@@ -432,7 +433,7 @@ export default function Reports() {
 
       {/* TAB 2: INTAKE INTEGRITY */}
       {activeTab === 'q2' && (
-        <div className="bg-[#0a1020] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="pb-4 border-b border-white/5">
             <div className="text-[10px] font-mono text-white uppercase tracking-wider">Transactional Intake</div>
             <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
@@ -454,7 +455,7 @@ export default function Reports() {
                   required
                   value={q2Form.client_name}
                   onChange={(e) => setQ2Form({ ...q2Form, client_name: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7]"
+                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7]"
                 />
               </div>
 
@@ -465,7 +466,7 @@ export default function Reports() {
                 <select
                   value={q2Form.client_type}
                   onChange={(e) => setQ2Form({ ...q2Form, client_type: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
+                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
                 >
                   <option value="Individual">Individual</option>
                   <option value="Organization">Organization</option>
@@ -481,7 +482,7 @@ export default function Reports() {
                   required
                   value={q2Form.client_email}
                   onChange={(e) => setQ2Form({ ...q2Form, client_email: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-[#f5f0e7]"
+                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-[#f5f0e7]"
                 />
               </div>
 
@@ -494,7 +495,7 @@ export default function Reports() {
                   required
                   value={q2Form.client_phone}
                   onChange={(e) => setQ2Form({ ...q2Form, client_phone: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-[#f5f0e7]"
+                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-[#f5f0e7]"
                 />
               </div>
             </div>
@@ -508,7 +509,7 @@ export default function Reports() {
                 required
                 value={q2Form.client_address}
                 onChange={(e) => setQ2Form({ ...q2Form, client_address: e.target.value })}
-                className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7]"
+                className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7]"
               />
             </div>
 
@@ -522,7 +523,7 @@ export default function Reports() {
                   required
                   value={q2Form.case_title}
                   onChange={(e) => setQ2Form({ ...q2Form, case_title: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7]"
+                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7]"
                 />
               </div>
 
@@ -536,7 +537,7 @@ export default function Reports() {
                   min="0"
                   value={q2Form.budget}
                   onChange={(e) => setQ2Form({ ...q2Form, budget: parseFloat(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-[#f5f0e7]"
+                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-[#f5f0e7]"
                 />
               </div>
 
@@ -547,7 +548,7 @@ export default function Reports() {
                 <select
                   value={q2Form.priority}
                   onChange={(e) => setQ2Form({ ...q2Form, priority: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
+                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
                 >
                   <option value="High">High</option>
                   <option value="Medium">Medium</option>
@@ -559,7 +560,7 @@ export default function Reports() {
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center space-x-1.5 px-5 py-2.5 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+              className="inline-flex items-center space-x-1.5 px-5 py-2.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
             >
               <Zap className="w-3.5 h-3.5" />
               <span>Submit Transactional Intake</span>
@@ -567,7 +568,7 @@ export default function Reports() {
           </form>
 
           {q2Result && (
-            <div className="p-4 bg-[#060a12] border border-white/15 rounded-sm text-xs font-mono space-y-1 mt-4 text-[#f5f0e7]/70">
+            <div className="p-4 bg-[#4a3324] border border-white/15 rounded-sm text-xs font-mono space-y-1 mt-4 text-[#f5f0e7]/70">
               <div className="font-bold text-[#f5f0e7] uppercase tracking-wider">
                 Intake Transaction Committed Successfully:
               </div>
@@ -581,7 +582,7 @@ export default function Reports() {
 
       {/* TAB 3: FINANCIAL AGGREGATES */}
       {activeTab === 'q3' && (
-        <div className="bg-[#0a1020] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Budget Analysis</div>
@@ -596,7 +597,7 @@ export default function Reports() {
               <select
                 value={q3Func}
                 onChange={(e) => setQ3Func(e.target.value)}
-                className="px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
               >
                 <option value="SUM">SUM (Total Budget)</option>
                 <option value="AVG">AVG (Average Budget)</option>
@@ -607,14 +608,14 @@ export default function Reports() {
               <button
                 onClick={() => runQuery3('')}
                 disabled={loading}
-                className="px-4 py-2 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                className="px-4 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
               >
                 Compute
               </button>
               <button
                 onClick={() => runQuery3('xml')}
                 disabled={loading}
-                className="px-3 py-2 bg-[#121c33] hover:bg-[#1a294b] text-[#f5f0e7] border border-white/15 rounded-sm text-xs font-mono uppercase tracking-wider shadow-md transition-colors"
+                className="px-3 py-2 bg-[#73513a] hover:bg-[#7d5a41] text-[#f5f0e7] border border-white/15 rounded-sm text-xs font-mono uppercase tracking-wider shadow-md transition-colors"
               >
                 XML
               </button>
@@ -627,14 +628,14 @@ export default function Reports() {
                 <span>Generated XML Aggregate Payload:</span>
                 <button onClick={() => setQ3Xml(null)} className="text-[#f5f0e7]/70 hover:text-white">Close XML</button>
               </div>
-              <pre className="p-4 bg-[#060a12] border border-white/10 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto max-h-48">
+              <pre className="p-4 bg-[#4a3324] border border-white/10 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto max-h-48">
                 {q3Xml}
               </pre>
             </div>
           )}
 
           {q3Result && (
-            <div className="p-6 bg-[#060a12] border border-white/15 rounded-sm flex items-center justify-between">
+            <div className="p-6 bg-[#4a3324] border border-white/15 rounded-sm flex items-center justify-between">
               <div>
                 <div className="text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70">
                   Aggregated Output ({q3Result.function} of CASES.budget):
@@ -651,7 +652,7 @@ export default function Reports() {
 
       {/* TAB 4: FILTERED EXPLORER */}
       {activeTab === 'q4' && (
-        <div className="bg-[#0a1020] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Dynamic Predicates</div>
@@ -666,7 +667,7 @@ export default function Reports() {
               <select
                 value={q4Column}
                 onChange={(e) => setQ4Column(e.target.value)}
-                className="px-2.5 py-2 bg-[#060a12] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="px-2.5 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
               >
                 <option value="client_type">client_type</option>
                 <option value="address">address</option>
@@ -676,7 +677,7 @@ export default function Reports() {
               <select
                 value={q4Operator}
                 onChange={(e) => setQ4Operator(e.target.value)}
-                className="px-2.5 py-2 bg-[#060a12] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="px-2.5 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
               >
                 <option value="=">=</option>
                 <option value="!=">!=</option>
@@ -688,20 +689,20 @@ export default function Reports() {
                 value={q4Value}
                 onChange={(e) => setQ4Value(e.target.value)}
                 placeholder="Value..."
-                className="w-28 px-2.5 py-2 bg-[#060a12] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="w-28 px-2.5 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
               />
 
               <button
                 onClick={() => runQuery4('')}
                 disabled={loading}
-                className="px-3.5 py-2 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                className="px-3.5 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
               >
                 Filter
               </button>
               <button
                 onClick={() => runQuery4('xml')}
                 disabled={loading}
-                className="px-2.5 py-2 bg-[#121c33] hover:bg-[#1a294b] text-[#f5f0e7] border border-white/15 rounded-sm text-xs font-mono uppercase tracking-wider transition-colors"
+                className="px-2.5 py-2 bg-[#73513a] hover:bg-[#7d5a41] text-[#f5f0e7] border border-white/15 rounded-sm text-xs font-mono uppercase tracking-wider transition-colors"
               >
                 XML
               </button>
@@ -709,14 +710,14 @@ export default function Reports() {
           </div>
 
           {q4Xml && (
-            <pre className="p-4 bg-[#060a12] border border-white/10 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto max-h-48">
+            <pre className="p-4 bg-[#4a3324] border border-white/10 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto max-h-48">
               {q4Xml}
             </pre>
           )}
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
             <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#060a12] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3">Client ID</th>
                   <th className="px-4 py-3">Client Entity</th>
@@ -753,7 +754,7 @@ export default function Reports() {
 
       {/* TAB 5: RELATIONAL JOINS */}
       {activeTab === 'q5' && (
-        <div className="bg-[#0a1020] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Relational Algebra</div>
@@ -768,7 +769,7 @@ export default function Reports() {
               <select
                 value={q5JoinType}
                 onChange={(e) => setQ5JoinType(e.target.value)}
-                className="px-3 py-2 bg-[#060a12] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="px-3 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
               >
                 <option value="INNER">INNER JOIN</option>
                 <option value="LEFT">LEFT OUTER JOIN</option>
@@ -777,7 +778,7 @@ export default function Reports() {
               <button
                 onClick={runQuery5}
                 disabled={loading}
-                className="px-4 py-2 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                className="px-4 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
               >
                 Execute Join
               </button>
@@ -786,7 +787,7 @@ export default function Reports() {
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
             <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#060a12] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3">Client Name</th>
                   <th className="px-4 py-3">Client Type</th>
@@ -825,7 +826,7 @@ export default function Reports() {
 
       {/* TAB 6: HIGH-VALUE MATTERS SUBQUERY */}
       {activeTab === 'q6' && (
-        <div className="bg-[#0a1020] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Subquery Logic</div>
@@ -837,17 +838,21 @@ export default function Reports() {
               </p>
             </div>
             <div className="flex items-center space-x-2">
-              <input
-                type="number"
-                step="50000"
+              <select
                 value={q6Threshold}
                 onChange={(e) => setQ6Threshold(parseFloat(e.target.value) || 0)}
-                className="w-32 px-3 py-2 bg-[#060a12] border border-white/10 rounded-sm text-xs font-mono text-[#f5f0e7]"
-              />
+                className="px-3 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs font-mono text-[#f5f0e7]"
+              >
+                <option value={100000}>Budget &gt; ₹1,00,000</option>
+                <option value={200000}>Budget &gt; ₹2,00,000</option>
+                <option value={300000}>Budget &gt; ₹3,00,000</option>
+                <option value={500000}>Budget &gt; ₹5,00,000</option>
+                <option value={1000000}>Budget &gt; ₹10,00,000</option>
+              </select>
               <button
                 onClick={runQuery6}
                 disabled={loading}
-                className="px-4 py-2 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                className="px-4 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
               >
                 Run Subquery
               </button>
@@ -856,7 +861,7 @@ export default function Reports() {
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
             <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#060a12] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3">Client ID</th>
                   <th className="px-4 py-3">Client Entity</th>
@@ -891,29 +896,41 @@ export default function Reports() {
 
       {/* TAB 7: PRACTICE BENCHMARKS (CORRELATED SUBQUERY) */}
       {activeTab === 'q7' && (
-        <div className="bg-[#0a1020] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Correlated Subquery</div>
               <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
-                Cases Exceeding Practice Group Average Budget
+                Cases Compared to Practice Group Average Budget
               </h2>
               <p className="text-xs text-[#f5f0e7]/70 font-mono mt-1">
-                SELECT c.* FROM CASES c WHERE c.budget &gt; (SELECT AVG(budget) FROM CASES WHERE case_type_id = c.case_type_id)
+                SELECT c.* FROM CASES c WHERE c.budget {q7Operator} (SELECT AVG(budget) FROM CASES WHERE case_type_id = c.case_type_id)
               </p>
             </div>
+            <div className="flex items-center space-x-2">
+            <select
+              value={q7Operator}
+              onChange={(e) => setQ7Operator(e.target.value)}
+              className="px-3 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs font-mono text-[#f5f0e7]"
+            >
+              <option value=">">Above group average (&gt;)</option>
+              <option value=">=">At or above average (&gt;=)</option>
+              <option value="<">Below group average (&lt;)</option>
+              <option value="<=">At or below average (&lt;=)</option>
+            </select>
             <button
               onClick={runQuery7}
               disabled={loading}
-              className="px-4 py-2 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+              className="px-4 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
             >
               Analyze Benchmarks
             </button>
+            </div>
           </div>
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
             <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#060a12] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3">Case Number</th>
                   <th className="px-4 py-3">Matter Title</th>
@@ -956,7 +973,7 @@ export default function Reports() {
 
       {/* TAB 8: BUDGET ADJUSTMENT & AUDIT MUTATION */}
       {activeTab === 'q8' && (
-        <div className="bg-[#0a1020] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="pb-4 border-b border-white/5">
             <div className="text-[10px] font-mono text-white uppercase tracking-wider">Matter Modification</div>
             <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
@@ -976,7 +993,7 @@ export default function Reports() {
                 required
                 value={q8CaseId}
                 onChange={(e) => setQ8CaseId(parseInt(e.target.value, 10) || 1)}
-                className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
               />
             </div>
 
@@ -988,7 +1005,7 @@ export default function Reports() {
                 required
                 value={q8Budget}
                 onChange={(e) => setQ8Budget(parseFloat(e.target.value) || 0)}
-                className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
               />
             </div>
 
@@ -999,21 +1016,21 @@ export default function Reports() {
                 required
                 value={q8Notes}
                 onChange={(e) => setQ8Notes(e.target.value)}
-                className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-serif"
+                className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-serif"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2.5 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+              className="px-5 py-2.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
             >
               Execute Budget Adjustment
             </button>
           </form>
 
           {q8Result && (
-            <div className="p-4 bg-[#060a12] border border-white/15 rounded-sm text-xs font-mono space-y-1 mt-4 text-[#f5f0e7]/70">
+            <div className="p-4 bg-[#4a3324] border border-white/15 rounded-sm text-xs font-mono space-y-1 mt-4 text-[#f5f0e7]/70">
               <div className="font-bold text-[#f5f0e7] uppercase tracking-wider">
                 Case Record Successfully Updated:
               </div>
@@ -1028,7 +1045,7 @@ export default function Reports() {
 
       {/* TAB 9: CONSOLIDATED VIEWS */}
       {activeTab === 'views' && (
-        <div className="bg-[#0a1020] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Materialized Relations</div>
@@ -1043,7 +1060,7 @@ export default function Reports() {
               <select
                 value={selectedView}
                 onChange={(e) => setSelectedView(e.target.value)}
-                className="px-3 py-2 bg-[#060a12] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="px-3 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
               >
                 <option value="vw_client_cases">vw_client_cases (Client + Matters + Status)</option>
                 <option value="vw_surat_clients">vw_surat_clients (Jurisdictional Seat View)</option>
@@ -1051,7 +1068,7 @@ export default function Reports() {
               <button
                 onClick={runView}
                 disabled={loading}
-                className="px-4 py-2 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                className="px-4 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
               >
                 Query View
               </button>
@@ -1060,7 +1077,7 @@ export default function Reports() {
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
             <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#060a12] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   {viewData.length > 0 &&
                     Object.keys(viewData[0]).map((key) => (
@@ -1096,7 +1113,7 @@ export default function Reports() {
 
       {/* TAB 10: INDEX OPTIMIZATION PROFILING */}
       {activeTab === 'indexes' && (
-        <div className="bg-[#0a1020] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="pb-4 border-b border-white/5">
             <div className="text-[10px] font-mono text-white uppercase tracking-wider">Engine Performance</div>
             <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
@@ -1109,7 +1126,7 @@ export default function Reports() {
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
             <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#060a12] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3.5">Query Operation</th>
                   <th className="px-4 py-3.5">Target B-Tree Index</th>

@@ -161,11 +161,11 @@ export default function Hearings() {
   return (
     <div className="space-y-4 pb-6">
       {/* Editorial Header */}
-      <div className="relative overflow-hidden rounded-xl bg-[#0d1527] border border-white/10 p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="relative overflow-hidden rounded-xl bg-[#664631] border border-white/10 p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
 
         <div className="relative z-10 space-y-1 max-w-xl">
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider uppercase font-semibold bg-[#121c33] text-[#f5f0e7] border border-white/15">
+          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider uppercase font-semibold bg-[#73513a] text-[#f5f0e7] border border-white/15">
             <Gavel className="w-3 h-3 text-white" />
             <span>Judicial Bench Cause List</span>
           </div>
@@ -181,7 +181,7 @@ export default function Hearings() {
 
         <button
           onClick={openAdd}
-          className="self-start md:self-auto inline-flex items-center space-x-2 px-3.5 py-2 bg-[#f5f0e7] hover:bg-white text-[#0a0f1d] rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow font-mono cursor-pointer"
+          className="self-start md:self-auto inline-flex items-center space-x-2 px-3.5 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow font-mono cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Schedule Hearing</span>
@@ -204,7 +204,7 @@ export default function Hearings() {
       )}
 
       {/* Filter and Search Bar */}
-      <div className="bg-[#0d1527] p-3 rounded-lg border border-white/10 shadow-sm flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between">
+      <div className="bg-[#664631] p-3 rounded-lg border border-white/10 shadow-sm flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between">
         <div className="relative flex-1">
           <Search className="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -212,7 +212,7 @@ export default function Hearings() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search by case title, case number, court, or legal purpose..."
-            className="w-full pl-9 pr-3 py-1.5 bg-[#0a0f1d] border border-white/10 rounded-md text-xs text-[#f5f0e7] placeholder-white/40 focus:border-white/30 focus:outline-none"
+            className="w-full pl-9 pr-3 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] placeholder-white/40 focus:border-white/30 focus:outline-none"
           />
         </div>
 
@@ -222,7 +222,7 @@ export default function Hearings() {
             <select
               value={selectedCourt}
               onChange={(e) => setSelectedCourt(e.target.value)}
-              className="px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 rounded-md text-xs text-[#f5f0e7] font-mono focus:border-white/30 focus:outline-none"
+              className="px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] font-mono focus:border-white/30 focus:outline-none"
             >
               <option value="">All Courts</option>
               {refData.courts.map((c) => (
@@ -231,17 +231,17 @@ export default function Hearings() {
             </select>
           </div>
 
-          <div className="text-xs font-mono text-white/60 px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 rounded-md">
+          <div className="text-xs font-mono text-white/60 px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md">
             {filteredHearings.length} Hearings
           </div>
         </div>
       </div>
 
       {/* Cause List Table */}
-      <div className="bg-[#0d1527] rounded-xl border border-white/10 shadow-lg overflow-hidden">
+      <div className="bg-[#664631] rounded-xl border border-white/10 shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs text-white/80">
-            <thead className="bg-[#0a0f1d] text-white/50 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
+            <thead className="bg-[#5e412d] text-white/50 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
               <tr>
                 <th className="px-4 py-3 font-semibold">Date & Time</th>
                 <th className="px-4 py-3 font-semibold">Matter & Docket #</th>
@@ -356,8 +356,8 @@ export default function Hearings() {
       {/* Schedule / Edit Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#0d1527] rounded-xl shadow-2xl border border-white/15 max-w-md w-full overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#0a0f1d]">
+          <div className="bg-[#664631] rounded-xl shadow-2xl border border-white/15 max-w-md w-full overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#5e412d]">
               <div className="flex items-center gap-2">
                 <Gavel className="w-4 h-4 text-[#f5f0e7]" />
                 <h3 className="font-serif font-semibold text-[#f5f0e7] text-sm">
@@ -380,7 +380,7 @@ export default function Hearings() {
                 <select
                   value={formData.case_id}
                   onChange={(e) => setFormData({ ...formData, case_id: parseInt(e.target.value, 10) })}
-                  className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
+                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
                 >
                   {refData.cases.map((c) => (
                     <option key={c.case_id} value={c.case_id}>
@@ -397,7 +397,7 @@ export default function Hearings() {
                 <select
                   value={formData.court_id}
                   onChange={(e) => setFormData({ ...formData, court_id: parseInt(e.target.value, 10) })}
-                  className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
+                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
                 >
                   {refData.courts.map((court) => (
                     <option key={court.court_id} value={court.court_id}>
@@ -417,7 +417,7 @@ export default function Hearings() {
                     required
                     value={formData.hearing_date}
                     onChange={(e) => setFormData({ ...formData, hearing_date: e.target.value })}
-                    className="w-full px-2 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
+                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -428,7 +428,7 @@ export default function Hearings() {
                     type="time"
                     value={formData.start_time}
                     onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
-                    className="w-full px-2 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
+                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -439,7 +439,7 @@ export default function Hearings() {
                     type="time"
                     value={formData.end_time}
                     onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
-                    className="w-full px-2 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
+                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
                   />
                 </div>
               </div>
@@ -454,7 +454,7 @@ export default function Hearings() {
                   placeholder="e.g. Cross-examination / Framing issues"
                   value={formData.purpose}
                   onChange={(e) => setFormData({ ...formData, purpose: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
+                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
                 />
               </div>
 
@@ -468,7 +468,7 @@ export default function Hearings() {
                     placeholder="e.g. Interim stay granted"
                     value={formData.outcome}
                     onChange={(e) => setFormData({ ...formData, outcome: e.target.value })}
-                    className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
+                    className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -479,7 +479,7 @@ export default function Hearings() {
                     type="date"
                     value={formData.next_hearing_date}
                     onChange={(e) => setFormData({ ...formData, next_hearing_date: e.target.value })}
-                    className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
+                    className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
                   />
                 </div>
               </div>
@@ -493,7 +493,7 @@ export default function Hearings() {
                   placeholder="e.g. Certified copy of plaint required."
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
+                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
                 />
               </div>
 
@@ -507,7 +507,7 @@ export default function Hearings() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-[#f5f0e7] hover:bg-white text-[#0a0f1d] rounded-md text-xs font-semibold uppercase tracking-wider shadow font-mono transition-colors cursor-pointer"
+                  className="px-4 py-1.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-md text-xs font-semibold uppercase tracking-wider shadow font-mono transition-colors cursor-pointer"
                 >
                   {isEditing ? 'Save' : 'Confirm'}
                 </button>

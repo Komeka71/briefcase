@@ -100,7 +100,7 @@ export default function PublicHome() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#060a12] text-[#f5f0e7] selection:bg-[#172442] selection:text-white antialiased font-sans">
+    <div className="min-h-screen bg-[#4a3324] text-[#f5f0e7] selection:bg-[#3a2c22] selection:text-white antialiased font-sans">
       {/* Navigation */}
       <PublicNavbar />
 
@@ -114,22 +114,22 @@ export default function PublicHome() {
             className="w-full h-full object-cover object-center filter brightness-[0.34] contrast-[1.15] scale-105"
           />
           {/* Midnight Navy & Obsidian Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#060a12]/95 via-[#080d1a]/85 to-[#060a12]/95" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#060a12] via-transparent to-[#060a12]/75" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#4a3324]/95 via-[#553a28]/85 to-[#4a3324]/95" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#4a3324] via-transparent to-[#4a3324]/75" />
           {/* Warm Espresso Shading */}
-          <div className="absolute inset-0 bg-[#14100d]/25 mix-blend-multiply pointer-events-none" />
+          <div className="absolute inset-0 bg-[#2a1c13]/25 mix-blend-multiply pointer-events-none" />
         </div>
 
         {/* Hero Content */}
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-5">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono tracking-widest uppercase font-semibold bg-[#0a1020]/90 text-[#f5f0e7] border border-white/15 backdrop-blur-md shadow-lg">
-            <span className="w-2 h-2 rounded-full bg-[#f5f0e7] animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono tracking-widest uppercase font-semibold bg-[#553a28]/90 text-[#ecdcc0] border border-[#ecdcc0]/40 backdrop-blur-md shadow-lg">
+            <span className="w-2 h-2 rounded-full bg-[#ecdcc0] animate-pulse" />
             BriefCase Chambers • Advocates & Legal Consultants
           </div>
 
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif font-normal text-white tracking-tight leading-[1.12]">
             Precision in Counsel. <br />
-            <span className="italic text-[#f5f0e7]/90 font-serif">Authority in the Courtroom.</span>
+            <span className="italic gold-text-gradient font-serif">Authority in the Courtroom.</span>
           </h1>
 
           <p className="text-sm sm:text-base md:text-lg text-[#f5f0e7]/85 font-serif leading-relaxed max-w-2xl mx-auto">
@@ -140,15 +140,15 @@ export default function PublicHome() {
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
               href="#contact"
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-mono font-medium uppercase tracking-wider transition-all duration-200 shadow-xl shadow-black/50 hover:scale-[1.02]"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-mono font-medium uppercase tracking-wider transition-all duration-200 shadow-xl shadow-black/50 hover:scale-[1.02]"
             >
               <span>Consult Chambers</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#060a12]" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#3b2a1f]" />
             </a>
 
             <button
               onClick={() => setResumeModalOpen(true)}
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-5 py-3 bg-[#0d1527]/90 hover:bg-[#121c33] border border-white/20 hover:border-white/40 text-[#f5f0e7] hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider transition-all duration-200 backdrop-blur-sm cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-5 py-3 bg-[#664631]/90 hover:bg-[#73513a] border border-white/20 hover:border-white/40 text-[#f5f0e7] hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider transition-all duration-200 backdrop-blur-sm cursor-pointer"
             >
               <FileText className="w-3.5 h-3.5 text-[#f5f0e7]" />
               <span>Chambers Resume & CV</span>
@@ -165,19 +165,19 @@ export default function PublicHome() {
 
           {/* Clean Metric Badges */}
           <div className="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto text-left">
-            <div className="p-3 rounded-sm bg-[#0a1020]/80 border border-white/10 backdrop-blur-sm">
+            <div className="p-3 rounded-sm bg-[#553a28]/80 border border-white/10 backdrop-blur-sm">
               <div className="text-xl font-serif font-bold text-white">22+</div>
               <div className="text-[11px] font-mono text-[#f5f0e7]/70 uppercase tracking-wider">Years Experience</div>
             </div>
-            <div className="p-3 rounded-sm bg-[#0a1020]/80 border border-white/10 backdrop-blur-sm">
+            <div className="p-3 rounded-sm bg-[#553a28]/80 border border-white/10 backdrop-blur-sm">
               <div className="text-xl font-serif font-bold text-white">1,200+</div>
               <div className="text-[11px] font-mono text-[#f5f0e7]/70 uppercase tracking-wider">Handled Dockets</div>
             </div>
-            <div className="p-3 rounded-sm bg-[#0a1020]/80 border border-white/10 backdrop-blur-sm">
+            <div className="p-3 rounded-sm bg-[#553a28]/80 border border-white/10 backdrop-blur-sm">
               <div className="text-xl font-serif font-bold text-white">6 Benches</div>
               <div className="text-[11px] font-mono text-[#f5f0e7]/70 uppercase tracking-wider">Judicial Coverage</div>
             </div>
-            <div className="p-3 rounded-sm bg-[#0a1020]/80 border border-white/10 backdrop-blur-sm">
+            <div className="p-3 rounded-sm bg-[#553a28]/80 border border-white/10 backdrop-blur-sm">
               <div className="text-xl font-serif font-bold text-white">100%</div>
               <div className="text-[11px] font-mono text-[#f5f0e7]/70 uppercase tracking-wider">Audit Security</div>
             </div>
@@ -186,28 +186,28 @@ export default function PublicHome() {
       </section>
 
       {/* SECTION A: THE FIRM & PHOTOGRAPHIC SHOWCASE */}
-      <section id="firm" className="py-16 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-[#080d1a]">
+      <section id="firm" className="bc-cream py-16 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-[#553a28]">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="space-y-4">
               <div className="text-xs font-mono uppercase tracking-widest text-[#f5f0e7]/70">The Firm</div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-white leading-snug">
                 Advocacy Rooted in Law, <br />
-                <span className="italic text-[#f5f0e7]/90">Executed with Precision.</span>
+                <span className="italic text-[#f3e3c7]">Executed with Precision.</span>
               </h2>
               <p className="text-sm sm:text-base text-[#f5f0e7]/80 font-serif leading-relaxed">
                 BriefCase represents individuals, corporate entities, and institutions before District Courts, High Courts, and Arbitral Tribunals. We combine deep statutory grounding with digital case management to ensure transparent, dependable counsel.
               </p>
               <div className="pt-2 flex flex-wrap gap-4 text-xs font-mono text-[#f5f0e7]/85">
-                <div className="flex items-center gap-1.5 bg-[#0a1020] px-3 py-1.5 rounded-sm border border-white/10">
+                <div className="flex items-center gap-1.5 bg-[#553a28] px-3 py-1.5 rounded-sm border border-white/10">
                   <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                   <span>Ethical Advocacy</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-[#0a1020] px-3 py-1.5 rounded-sm border border-white/10">
+                <div className="flex items-center gap-1.5 bg-[#553a28] px-3 py-1.5 rounded-sm border border-white/10">
                   <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                   <span>Fiduciary Trust</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-[#0a1020] px-3 py-1.5 rounded-sm border border-white/10">
+                <div className="flex items-center gap-1.5 bg-[#553a28] px-3 py-1.5 rounded-sm border border-white/10">
                   <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                   <span>Transparent Practice</span>
                 </div>
@@ -220,8 +220,8 @@ export default function PublicHome() {
                 alt="Law Chambers Research Library"
                 className="w-full h-72 object-cover filter brightness-[0.7] contrast-[1.1] transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#060a12] via-[#060a12]/30 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 p-3 bg-[#0a1020]/90 backdrop-blur-md rounded-sm border border-white/10 flex items-center justify-between">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#4a3324] via-[#4a3324]/30 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 p-3 bg-[#553a28]/90 backdrop-blur-md rounded-sm border border-white/10 flex items-center justify-between">
                 <div>
                   <div className="text-xs font-serif font-semibold text-white">Chambers Law Library & Research Desk</div>
                   <div className="text-[11px] font-mono text-[#f5f0e7]/70">Exhaustive judicial precedents & statutory authorities.</div>
@@ -239,7 +239,7 @@ export default function PublicHome() {
       </section>
 
       {/* SECTION B: PRACTICE AREAS - Less Content, High Clarity */}
-      <section id="practice-areas" className="py-16 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-[#060a12]">
+      <section id="practice-areas" className="py-16 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-[#4a3324]">
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
@@ -257,11 +257,11 @@ export default function PublicHome() {
               return (
                 <div
                   key={idx}
-                  className="bg-[#0a1020] p-5 rounded-sm border border-white/10 hover:border-white/30 transition-all duration-200 flex flex-col justify-between group"
+                  className="bg-[#553a28] p-5 rounded-sm border border-white/10 hover:border-white/30 transition-all duration-200 flex flex-col justify-between group"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <div className="w-9 h-9 rounded-sm bg-[#121c33] border border-white/15 flex items-center justify-center text-white">
+                      <div className="w-9 h-9 rounded-sm bg-[#73513a] border border-white/15 flex items-center justify-center text-white">
                         <Icon className="w-4 h-4" />
                       </div>
                       <span className="text-[10px] font-mono text-[#f5f0e7]/60 tracking-wider uppercase">{pa.tag}</span>
@@ -291,7 +291,7 @@ export default function PublicHome() {
       </section>
 
       {/* SECTION C: CHAMBERS RESUME & CREDENTIALS (DEDICATED SECTION) */}
-      <section id="resume" className="py-16 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-[#080d1a]">
+      <section id="resume" className="bc-cream py-16 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-[#553a28]">
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
@@ -300,18 +300,18 @@ export default function PublicHome() {
             </div>
             <button
               onClick={() => setResumeModalOpen(true)}
-              className="self-start sm:self-auto inline-flex items-center space-x-2 px-4 py-2 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-mono uppercase tracking-wider font-semibold shadow-md transition-all cursor-pointer"
+              className="self-start sm:self-auto inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-mono uppercase tracking-wider font-semibold shadow-md transition-all cursor-pointer"
             >
-              <FileText className="w-3.5 h-3.5 text-[#060a12]" />
+              <FileText className="w-3.5 h-3.5 text-[#3b2a1f]" />
               <span>Open Detailed Resume Modal</span>
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {/* Senior Counsel CV Highlights Card */}
-            <div className="bg-[#0a1020] p-6 rounded-sm border border-white/10 space-y-4">
+            <div className="bg-[#553a28] p-6 rounded-sm border border-white/10 space-y-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-sm bg-[#121c33] border border-white/20 flex items-center justify-center text-white font-serif font-bold text-base">
+                <div className="w-10 h-10 rounded-sm bg-[#73513a] border border-white/20 flex items-center justify-center text-white font-serif font-bold text-base">
                   RM
                 </div>
                 <div>
@@ -339,9 +339,9 @@ export default function PublicHome() {
             </div>
 
             {/* Counsel Priya Patel CV Card */}
-            <div className="bg-[#0a1020] p-6 rounded-sm border border-white/10 space-y-4">
+            <div className="bg-[#553a28] p-6 rounded-sm border border-white/10 space-y-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-sm bg-[#121c33] border border-white/20 flex items-center justify-center text-white font-serif font-bold text-base">
+                <div className="w-10 h-10 rounded-sm bg-[#73513a] border border-white/20 flex items-center justify-center text-white font-serif font-bold text-base">
                   PP
                 </div>
                 <div>
@@ -369,9 +369,9 @@ export default function PublicHome() {
             </div>
 
             {/* Counsel Vikramaditya Desai CV Card */}
-            <div className="bg-[#0a1020] p-6 rounded-sm border border-white/10 space-y-4">
+            <div className="bg-[#553a28] p-6 rounded-sm border border-white/10 space-y-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-sm bg-[#121c33] border border-white/20 flex items-center justify-center text-white font-serif font-bold text-base">
+                <div className="w-10 h-10 rounded-sm bg-[#73513a] border border-white/20 flex items-center justify-center text-white font-serif font-bold text-base">
                   VD
                 </div>
                 <div>
@@ -402,7 +402,7 @@ export default function PublicHome() {
       </section>
 
       {/* SECTION D: METHODOLOGY (4 STREAMLINED STEPS) */}
-      <section id="approach" className="py-16 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-[#060a12]">
+      <section id="approach" className="py-16 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-[#4a3324]">
         <div className="max-w-6xl mx-auto space-y-8">
           <div>
             <div className="text-xs font-mono uppercase tracking-widest text-[#f5f0e7]/70">Methodology</div>
@@ -413,7 +413,7 @@ export default function PublicHome() {
             {methodology.map((m, i) => (
               <div
                 key={i}
-                className="bg-[#0a1020] p-5 rounded-sm border border-white/10 hover:border-white/30 transition-all duration-200"
+                className="bg-[#553a28] p-5 rounded-sm border border-white/10 hover:border-white/30 transition-all duration-200"
               >
                 <div className="text-xl font-mono font-bold text-white/40">{m.step}</div>
                 <h3 className="font-serif font-semibold text-white text-base mt-2">{m.title}</h3>
@@ -425,9 +425,9 @@ export default function PublicHome() {
       </section>
 
       {/* SECTION E: CONTACT & CONSULTATION - Compact & Fit */}
-      <section id="contact" className="py-16 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-[#080d1a]">
+      <section id="contact" className="bc-cream py-16 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-[#553a28]">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-[#0a1020] border border-white/15 rounded-sm p-6 sm:p-8 shadow-2xl">
+          <div className="bg-[#553a28] border border-white/15 rounded-sm p-6 sm:p-8 shadow-2xl">
             <div className="text-center max-w-lg mx-auto space-y-2 mb-6">
               <div className="text-xs font-mono uppercase tracking-widest text-[#f5f0e7]/70">Confidential Inquiry</div>
               <h2 className="text-2xl sm:text-3xl font-serif text-white">Consult Our Chambers</h2>
@@ -437,7 +437,7 @@ export default function PublicHome() {
             </div>
 
             {contactSubmitted ? (
-              <div className="p-6 bg-[#060a12] border border-white/20 rounded-sm text-center space-y-2">
+              <div className="p-6 bg-[#4a3324] border border-white/20 rounded-sm text-center space-y-2">
                 <CheckCircle2 className="w-8 h-8 text-white mx-auto" />
                 <h3 className="text-base font-serif font-semibold text-white">Inquiry Registered</h3>
                 <p className="text-xs font-serif text-[#f5f0e7]/80 max-w-md mx-auto">
@@ -455,7 +455,7 @@ export default function PublicHome() {
                       placeholder="e.g. Sureshchandra Trivedi"
                       value={contactForm.name}
                       onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none"
+                      className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none"
                     />
                   </div>
                   <div>
@@ -466,7 +466,7 @@ export default function PublicHome() {
                       placeholder="name@organization.com"
                       value={contactForm.email}
                       onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
+                      className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
                     />
                   </div>
                 </div>
@@ -479,7 +479,7 @@ export default function PublicHome() {
                       placeholder="+91 98250 00000"
                       value={contactForm.phone}
                       onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
+                      className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
                     />
                   </div>
                   <div>
@@ -487,7 +487,7 @@ export default function PublicHome() {
                     <select
                       value={contactForm.practiceArea}
                       onChange={(e) => setContactForm({ ...contactForm, practiceArea: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs text-white font-mono focus:outline-none"
+                      className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-white font-mono focus:outline-none"
                     >
                       <option value="Civil Litigation">Civil & Commercial Litigation</option>
                       <option value="Corporate Law">Corporate & Arbitration</option>
@@ -505,14 +505,14 @@ export default function PublicHome() {
                     placeholder="Provide a concise summary of the legal matter..."
                     value={contactForm.message}
                     onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                    className="w-full px-3 py-2 bg-[#060a12] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none"
+                    className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none"
                   />
                 </div>
 
                 <div className="pt-2 text-center">
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-8 py-2.5 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-mono font-medium uppercase tracking-wider transition-all duration-200 shadow-lg cursor-pointer"
+                    className="w-full sm:w-auto px-8 py-2.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-mono font-medium uppercase tracking-wider transition-all duration-200 shadow-lg cursor-pointer"
                   >
                     Submit Privileged Inquiry
                   </button>
@@ -524,7 +524,7 @@ export default function PublicHome() {
       </section>
 
       {/* FOOTER */}
-      <footer className="py-8 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-[#04070e] text-[#f5f0e7]/70 text-xs">
+      <footer className="py-8 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-[#3a281b] text-[#f5f0e7]/70 text-xs">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <Logo size="sm" />
           <div className="font-mono text-[11px] text-center sm:text-left">
@@ -544,9 +544,9 @@ export default function PublicHome() {
       {/* INTERACTIVE CHAMBERS RESUME & CV MODAL */}
       {resumeModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative w-full max-w-2xl bg-[#0a1020] border border-white/20 rounded-sm shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+          <div className="relative w-full max-w-2xl bg-[#553a28] border border-white/20 rounded-sm shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
             {/* Header */}
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#060a12]">
+            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#4a3324]">
               <div className="flex items-center space-x-2.5">
                 <FileText className="w-5 h-5 text-white" />
                 <div>
@@ -563,7 +563,7 @@ export default function PublicHome() {
             </div>
 
             {/* Tabs */}
-            <div className="flex border-b border-white/10 bg-[#080d1a] px-6 text-xs font-mono">
+            <div className="flex border-b border-white/10 bg-[#553a28] px-6 text-xs font-mono">
               <button
                 onClick={() => setActiveResumeTab('profile')}
                 className={`py-2.5 px-3 border-b-2 transition-colors cursor-pointer ${
@@ -600,7 +600,7 @@ export default function PublicHome() {
             <div className="p-6 overflow-y-auto space-y-4 text-xs font-serif text-[#f5f0e7]/85 leading-relaxed">
               {activeResumeTab === 'profile' && (
                 <div className="space-y-4">
-                  <div className="p-3.5 rounded bg-[#060a12] border border-white/10">
+                  <div className="p-3.5 rounded bg-[#4a3324] border border-white/10">
                     <div className="flex justify-between items-start">
                       <div>
                         <h4 className="font-serif font-bold text-sm text-white">Adv. Rajesh Mehta, LL.M. (Cantab)</h4>
@@ -613,7 +613,7 @@ export default function PublicHome() {
                     </p>
                   </div>
 
-                  <div className="p-3.5 rounded bg-[#060a12] border border-white/10">
+                  <div className="p-3.5 rounded bg-[#4a3324] border border-white/10">
                     <div className="flex justify-between items-start">
                       <div>
                         <h4 className="font-serif font-bold text-sm text-white">Adv. Priya Patel, LL.B. (Hons) NLS</h4>
@@ -630,14 +630,14 @@ export default function PublicHome() {
 
               {activeResumeTab === 'precedents' && (
                 <div className="space-y-3">
-                  <div className="p-3 bg-[#060a12] border border-white/10 rounded">
+                  <div className="p-3 bg-[#4a3324] border border-white/10 rounded">
                     <div className="font-mono text-white text-xs font-semibold">Sterling Logistics vs. Port Infrastructure Corp (2024)</div>
                     <div className="text-[11px] font-mono text-emerald-400">High Court of Gujarat • Favorable Injunction Secured</div>
                     <p className="mt-1 text-xs text-[#f5f0e7]/75">
                       Successfully established breach of tender covenants and protected ₹42 Cr in maritime infrastructure assets through emergency interim relief.
                     </p>
                   </div>
-                  <div className="p-3 bg-[#060a12] border border-white/10 rounded">
+                  <div className="p-3 bg-[#4a3324] border border-white/10 rounded">
                     <div className="font-mono text-white text-xs font-semibold">M/s Horizon Developers vs. Municipal Corporation (2023)</div>
                     <div className="text-[11px] font-mono text-emerald-400">Commercial Division Bench • Decree in Favor of Client</div>
                     <p className="mt-1 text-xs text-[#f5f0e7]/75">
@@ -649,21 +649,21 @@ export default function PublicHome() {
 
               {activeResumeTab === 'academics' && (
                 <div className="space-y-3 font-mono text-xs">
-                  <div className="p-3 bg-[#060a12] border border-white/10 rounded flex items-center justify-between">
+                  <div className="p-3 bg-[#4a3324] border border-white/10 rounded flex items-center justify-between">
                     <div>
                       <div className="text-white font-semibold">Supreme Court Bar Association (SCBA)</div>
                       <div className="text-[#f5f0e7]/60 text-[11px]">Active Member in Good Standing</div>
                     </div>
                     <Award className="w-4 h-4 text-white" />
                   </div>
-                  <div className="p-3 bg-[#060a12] border border-white/10 rounded flex items-center justify-between">
+                  <div className="p-3 bg-[#4a3324] border border-white/10 rounded flex items-center justify-between">
                     <div>
                       <div className="text-white font-semibold">Bar Council of Gujarat & High Court Advocates Association</div>
                       <div className="text-[#f5f0e7]/60 text-[11px]">Enrolled 2005 • Continuous Practice Record</div>
                     </div>
                     <Award className="w-4 h-4 text-white" />
                   </div>
-                  <div className="p-3 bg-[#060a12] border border-white/10 rounded flex items-center justify-between">
+                  <div className="p-3 bg-[#4a3324] border border-white/10 rounded flex items-center justify-between">
                     <div>
                       <div className="text-white font-semibold">Chartered Institute of Arbitrators (CIArb)</div>
                       <div className="text-[#f5f0e7]/60 text-[11px]">Fellowship Credential in Commercial Dispute Resolution</div>
@@ -675,11 +675,11 @@ export default function PublicHome() {
             </div>
 
             {/* Modal Actions */}
-            <div className="px-6 py-3.5 border-t border-white/10 bg-[#060a12] flex items-center justify-between">
+            <div className="px-6 py-3.5 border-t border-white/10 bg-[#4a3324] flex items-center justify-between">
               <span className="text-[11px] font-mono text-[#f5f0e7]/60">Chambers Profile v2.6 • Verified Record</span>
               <button
                 onClick={handleDownloadResume}
-                className="inline-flex items-center space-x-1.5 px-4 py-1.5 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-mono uppercase tracking-wider font-semibold shadow transition-colors cursor-pointer"
+                className="inline-flex items-center space-x-1.5 px-4 py-1.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-mono uppercase tracking-wider font-semibold shadow transition-colors cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Print / Download Resume</span>

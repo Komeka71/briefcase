@@ -108,10 +108,10 @@ export default function DatabaseUsers() {
   return (
     <div className="space-y-7 pb-12">
       {/* Editorial Header */}
-      <div className="relative overflow-hidden rounded-sm bg-gradient-to-r from-[#0a1020] via-[#0d1527] to-[#121c33] border border-white/10 p-6 md:p-8 shadow-xl">
+      <div className="relative overflow-hidden rounded-sm bg-gradient-to-r from-[#553a28] via-[#664631] to-[#73513a] border border-white/10 p-6 md:p-8 shadow-xl">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono tracking-widest uppercase font-semibold bg-[#060a12] text-[#f5f0e7] border border-white/15">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono tracking-widest uppercase font-semibold bg-[#4a3324] text-[#f5f0e7] border border-white/15">
               <Shield className="w-3.5 h-3.5 text-white" />
               <span>Chambers Identity & RBAC Matrix</span>
             </div>
@@ -127,7 +127,7 @@ export default function DatabaseUsers() {
 
           <button
             onClick={() => setRegisterOpen(true)}
-            className="self-start md:self-auto inline-flex items-center space-x-2 px-5 py-2.5 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow-xl shadow-black/40 font-mono hover:scale-[1.02] cursor-pointer"
+            className="self-start md:self-auto inline-flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow-xl shadow-black/40 font-mono hover:scale-[1.02] cursor-pointer"
           >
             <UserPlus className="w-4 h-4 stroke-[2.5]" />
             <span>Create User Account</span>
@@ -164,10 +164,10 @@ export default function DatabaseUsers() {
           </span>
         </div>
 
-        <div className="bg-[#0a1020] rounded-sm border border-white/10 shadow-xl overflow-hidden">
+        <div className="bg-[#553a28] rounded-sm border border-white/10 shadow-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-[#f5f0e7]/75">
-              <thead className="bg-[#060a12] text-white/70 text-[11px] uppercase tracking-wider font-mono border-b border-white/10">
+              <thead className="bg-[#4a3324] text-white/70 text-[11px] uppercase tracking-wider font-mono border-b border-white/10">
                 <tr>
                   <th className="px-5 py-3.5 font-semibold">User ID</th>
                   <th className="px-5 py-3.5 font-semibold">Legal Name</th>
@@ -202,8 +202,8 @@ export default function DatabaseUsers() {
                       <td className="px-5 py-3.5 text-white/80">{u.email}</td>
                       <td className="px-5 py-3.5">
                         <span className={`px-2 py-0.5 rounded-sm text-[10px] font-semibold ${
-                          u.role === 'Admin' ? 'bg-[#121c33] text-white border border-white/20' :
-                          u.role === 'Lawyer' ? 'bg-[#0d1527] text-[#f5f0e7] border border-white/15' :
+                          u.role === 'Admin' ? 'bg-[#73513a] text-white border border-white/20' :
+                          u.role === 'Lawyer' ? 'bg-[#664631] text-[#f5f0e7] border border-white/15' :
                           'bg-white/5 text-[#f5f0e7]/70'
                         }`}>
                           {u.role}
@@ -252,14 +252,14 @@ export default function DatabaseUsers() {
           {dbAccounts.map((acc, idx) => (
             <div
               key={idx}
-              className="bg-[#0a1020] p-5 rounded-sm border border-white/10 shadow-xl space-y-3 relative overflow-hidden"
+              className="bg-[#553a28] p-5 rounded-sm border border-white/10 shadow-xl space-y-3 relative overflow-hidden"
             >
               <div className="flex items-start justify-between">
                 <div>
                   <h3 className="font-serif font-semibold text-white text-base">{acc.role}</h3>
                   <div className="text-[11px] font-mono text-[#f5f0e7]/70 mt-0.5">{acc.account}</div>
                 </div>
-                <span className="px-2 py-0.5 rounded-sm text-[10px] font-mono bg-[#121c33] text-white border border-white/20">
+                <span className="px-2 py-0.5 rounded-sm text-[10px] font-mono bg-[#73513a] text-white border border-white/20">
                   {acc.badge}
                 </span>
               </div>
@@ -267,7 +267,7 @@ export default function DatabaseUsers() {
               <div className="pt-2 border-t border-white/10 space-y-2 text-xs">
                 <div>
                   <div className="text-[10px] font-mono uppercase text-[#f5f0e7]/60">Grant Privileges:</div>
-                  <code className="text-xs font-mono text-emerald-400 block mt-0.5 bg-[#060a12] p-2 rounded-sm border border-white/10">
+                  <code className="text-xs font-mono text-emerald-400 block mt-0.5 bg-[#4a3324] p-2 rounded-sm border border-white/10">
                     {acc.privileges}
                   </code>
                 </div>
@@ -287,8 +287,8 @@ export default function DatabaseUsers() {
       {/* Registration Modal */}
       {registerOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#0a1020] rounded-sm shadow-2xl border border-white/20 max-w-md w-full overflow-hidden max-h-[90vh] flex flex-col">
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#060a12]">
+          <div className="bg-[#553a28] rounded-sm shadow-2xl border border-white/20 max-w-md w-full overflow-hidden max-h-[90vh] flex flex-col">
+            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#4a3324]">
               <div className="flex items-center gap-2.5">
                 <UserPlus className="w-4 h-4 text-white" />
                 <h3 className="font-serif font-semibold text-white text-base">
@@ -314,7 +314,7 @@ export default function DatabaseUsers() {
                   placeholder="e.g. Adv. Priya Patel"
                   value={regForm.name}
                   onChange={(e) => setRegForm({ ...regForm, name: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-[#060a12] border border-white/15 focus:border-white rounded-sm text-xs text-white focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-[#4a3324] border border-white/15 focus:border-white rounded-sm text-xs text-white focus:outline-none"
                 />
               </div>
 
@@ -328,7 +328,7 @@ export default function DatabaseUsers() {
                   placeholder="name@briefcase.law"
                   value={regForm.email}
                   onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-[#060a12] border border-white/15 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-[#4a3324] border border-white/15 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
                 />
               </div>
 
@@ -342,7 +342,7 @@ export default function DatabaseUsers() {
                   placeholder="••••••••••••"
                   value={regForm.password}
                   onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-[#060a12] border border-white/15 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-[#4a3324] border border-white/15 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
                 />
               </div>
 
@@ -354,7 +354,7 @@ export default function DatabaseUsers() {
                   <select
                     value={regForm.role}
                     onChange={(e) => setRegForm({ ...regForm, role: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#060a12] border border-white/15 focus:border-white rounded-sm text-xs text-white font-mono focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#4a3324] border border-white/15 focus:border-white rounded-sm text-xs text-white font-mono focus:outline-none"
                   >
                     <option value="Lawyer">Lawyer</option>
                     <option value="Admin">Admin</option>
@@ -370,7 +370,7 @@ export default function DatabaseUsers() {
                   <select
                     value={regForm.status}
                     onChange={(e) => setRegForm({ ...regForm, status: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#060a12] border border-white/15 focus:border-white rounded-sm text-xs text-white font-mono focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#4a3324] border border-white/15 focus:border-white rounded-sm text-xs text-white font-mono focus:outline-none"
                   >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
@@ -388,7 +388,7 @@ export default function DatabaseUsers() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#f5f0e7] hover:bg-white text-[#060a12] rounded-sm text-xs font-semibold uppercase tracking-wider shadow font-mono transition-colors cursor-pointer"
+                  className="px-5 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow font-mono transition-colors cursor-pointer"
                 >
                   Register Account
                 </button>

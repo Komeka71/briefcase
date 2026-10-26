@@ -172,16 +172,16 @@ export default function Clients() {
   return (
     <div className="space-y-5 pb-6">
       {/* Header - Compact & Responsive */}
-      <div className="bg-[#0a0f1d] border border-white/10 rounded-sm p-5 sm:p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#5e412d] border border-white/10 rounded-sm p-5 sm:p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center space-x-2">
-            <span className="px-2 py-0.5 rounded-full text-[9px] font-mono tracking-wider uppercase font-semibold bg-[#121c33] text-white border border-white/15">
+            <span className="px-2 py-0.5 rounded-full text-[9px] font-mono tracking-wider uppercase font-semibold bg-[#73513a] text-white border border-white/15">
               Client Registry
             </span>
           </div>
 
           <h1 className="text-xl sm:text-2xl font-serif text-white tracking-tight">
-            Institutional & Individual <span className="italic text-[#f5f0e7]/90">Client Registry</span>
+            Institutional & Individual <span className="italic text-[#f3e3c7]">Client Registry</span>
           </h1>
 
           <p className="text-xs text-[#f5f0e7]/70 font-sans max-w-xl">
@@ -193,7 +193,7 @@ export default function Clients() {
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => runCursor(null)}
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#070b14] hover:bg-[#121c33] text-[#f5f0e7]/80 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider border border-white/10 transition-colors"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#3f2b1e] hover:bg-[#73513a] text-[#f5f0e7]/80 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider border border-white/10 transition-colors"
           >
             <Database className="w-3.5 h-3.5" />
             <span>Cursor Batch</span>
@@ -201,7 +201,7 @@ export default function Clients() {
 
           <button
             onClick={fetchXml}
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#070b14] hover:bg-[#121c33] text-[#f5f0e7]/80 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider border border-white/10 transition-colors"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#3f2b1e] hover:bg-[#73513a] text-[#f5f0e7]/80 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider border border-white/10 transition-colors"
           >
             <FileCode className="w-3.5 h-3.5" />
             <span>Export XML</span>
@@ -209,7 +209,7 @@ export default function Clients() {
 
           <button
             onClick={openAddModal}
-            className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 bg-[#f5f0e7] hover:bg-white text-[#070b14] rounded-sm text-xs font-mono font-medium uppercase tracking-wider transition-all shadow-md"
+            className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-mono font-medium uppercase tracking-wider transition-all shadow-md"
           >
             <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
             <span>New Client</span>
@@ -219,28 +219,28 @@ export default function Clients() {
 
       {/* Alert Messages */}
       {error && (
-        <div className="p-3 bg-[#1e1517] border-l-4 border-red-500 rounded-sm text-red-200 text-xs flex items-start space-x-2.5">
+        <div className="p-3 bg-[#5c3030] border-l-4 border-red-500 rounded-sm text-red-200 text-xs flex items-start space-x-2.5">
           <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="p-3 bg-[#151e18] border-l-4 border-emerald-500 rounded-sm text-emerald-200 text-xs flex items-start space-x-2.5">
+        <div className="p-3 bg-[#2f4a35] border-l-4 border-emerald-500 rounded-sm text-emerald-200 text-xs flex items-start space-x-2.5">
           <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
           <span>{successMsg}</span>
         </div>
       )}
 
       {/* Search Toolbar */}
-      <div className="bg-[#0a0f1d] p-3 rounded-sm border border-white/10 shadow-md flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="bg-[#5e412d] p-3 rounded-sm border border-white/10 shadow-md flex flex-col sm:flex-row items-center justify-between gap-3">
         <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80">
           <input
             type="text"
             placeholder="Search by name, email, or classification..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 bg-[#070b14] border border-white/10 rounded-sm text-xs text-white placeholder-[#f5f0e7]/30 focus:border-white focus:outline-none transition-colors"
+            className="w-full pl-8 pr-3 py-1.5 bg-[#3f2b1e] border border-white/10 rounded-sm text-xs text-white placeholder-[#f5f0e7]/30 focus:border-white focus:outline-none transition-colors"
           />
           <Search className="w-3.5 h-3.5 text-[#f5f0e7]/40 absolute left-2.5 top-2" />
         </form>
@@ -254,7 +254,7 @@ export default function Clients() {
                 setPageSize(Number(e.target.value));
                 setPage(1);
               }}
-              className="border border-white/10 rounded-sm px-2 py-1 bg-[#070b14] text-white font-mono text-xs focus:outline-none"
+              className="border border-white/10 rounded-sm px-2 py-1 bg-[#3f2b1e] text-white font-mono text-xs focus:outline-none"
             >
               <option value="5">5</option>
               <option value="10">10</option>
@@ -268,10 +268,10 @@ export default function Clients() {
       </div>
 
       {/* Clients Data Table */}
-      <div className="bg-[#0a0f1d] rounded-sm border border-white/10 shadow-lg overflow-hidden">
+      <div className="bg-[#5e412d] rounded-sm border border-white/10 shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs text-[#f5f0e7]/75">
-            <thead className="bg-[#070b14] text-[#f5f0e7]/60 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
+            <thead className="bg-[#3f2b1e] text-[#f5f0e7]/60 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
               <tr>
                 <th className="px-4 py-3">ID</th>
                 <th className="px-4 py-3">Client Legal Name</th>
@@ -307,8 +307,8 @@ export default function Clients() {
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center space-x-1 px-2 py-0.5 rounded-sm text-[10px] font-mono ${
                         c.client_type === 'Organization'
-                          ? 'bg-[#121c33] text-white border border-white/20'
-                          : 'bg-[#070b14] text-[#f5f0e7]/70 border border-white/10'
+                          ? 'bg-[#73513a] text-white border border-white/20'
+                          : 'bg-[#3f2b1e] text-[#f5f0e7]/70 border border-white/10'
                       }`}>
                         {c.client_type === 'Organization' ? <Building2 className="w-3 h-3 text-white" /> : <User className="w-3 h-3" />}
                         <span>{c.client_type}</span>
@@ -348,7 +348,7 @@ export default function Clients() {
         </div>
 
         {/* Pagination Bar */}
-        <div className="px-4 py-3 border-t border-white/10 flex items-center justify-between text-xs font-mono text-[#f5f0e7]/60 bg-[#070b14]">
+        <div className="px-4 py-3 border-t border-white/10 flex items-center justify-between text-xs font-mono text-[#f5f0e7]/60 bg-[#3f2b1e]">
           <div>
             Page <span className="text-white font-medium">{page}</span> of{' '}
             <span className="text-white font-medium">{totalPages}</span>
@@ -378,8 +378,8 @@ export default function Clients() {
       {/* Add / Edit Client Modal */}
       {formModalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#0a0f1d] rounded-sm shadow-2xl border border-white/20 max-w-lg w-full overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#070b14]">
+          <div className="bg-[#5e412d] rounded-sm shadow-2xl border border-white/20 max-w-lg w-full overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#3f2b1e]">
               <h3 className="font-serif font-semibold text-white text-base">
                 {isEditing ? 'Update Client Record' : 'Enroll New Client'}
               </h3>
@@ -402,7 +402,7 @@ export default function Clients() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. Ramesh Patel or Reliance Industries Ltd"
-                  className="w-full px-3 py-2 bg-[#070b14] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none"
+                  className="w-full px-3 py-2 bg-[#3f2b1e] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none"
                 />
               </div>
 
@@ -413,7 +413,7 @@ export default function Clients() {
                 <select
                   value={formData.client_type}
                   onChange={(e) => setFormData({ ...formData, client_type: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#070b14] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none font-mono"
+                  className="w-full px-3 py-2 bg-[#3f2b1e] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none font-mono"
                 >
                   <option value="Individual">Individual</option>
                   <option value="Organization">Organization</option>
@@ -428,7 +428,7 @@ export default function Clients() {
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="+91 98980 12345"
-                    className="w-full px-3 py-2 bg-[#070b14] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
+                    className="w-full px-3 py-2 bg-[#3f2b1e] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
                   />
                 </div>
                 <div>
@@ -438,7 +438,7 @@ export default function Clients() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="client@domain.com"
-                    className="w-full px-3 py-2 bg-[#070b14] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
+                    className="w-full px-3 py-2 bg-[#3f2b1e] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
                   />
                 </div>
               </div>
@@ -450,7 +450,7 @@ export default function Clients() {
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   placeholder="Street, City, State"
-                  className="w-full px-3 py-2 bg-[#070b14] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none"
+                  className="w-full px-3 py-2 bg-[#3f2b1e] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none"
                 />
               </div>
 
@@ -464,7 +464,7 @@ export default function Clients() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-[#f5f0e7] hover:bg-white text-[#070b14] rounded-sm text-xs font-mono font-medium uppercase tracking-wider shadow-md"
+                  className="px-4 py-1.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-mono font-medium uppercase tracking-wider shadow-md"
                 >
                   {isEditing ? 'Save Changes' : 'Confirm Enrollment'}
                 </button>
@@ -477,8 +477,8 @@ export default function Clients() {
       {/* Explicit Cursor Results Modal */}
       {cursorModalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#0a0f1d] rounded-sm shadow-2xl border border-white/20 max-w-xl w-full max-h-[80vh] flex flex-col overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#070b14]">
+          <div className="bg-[#5e412d] rounded-sm shadow-2xl border border-white/20 max-w-xl w-full max-h-[80vh] flex flex-col overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#3f2b1e]">
               <div className="flex items-center space-x-2">
                 <Database className="w-4 h-4 text-white" />
                 <h3 className="font-serif font-semibold text-white text-sm">{cursorType} Batch Stream</h3>
@@ -491,7 +491,7 @@ export default function Clients() {
             <div className="p-4 overflow-y-auto space-y-3">
               <div className="border border-white/10 rounded-sm overflow-hidden">
                 <table className="w-full text-left text-xs text-[#f5f0e7]/75 font-mono">
-                  <thead className="bg-[#070b14] text-[#f5f0e7]/60 text-[10px] uppercase border-b border-white/10">
+                  <thead className="bg-[#3f2b1e] text-[#f5f0e7]/60 text-[10px] uppercase border-b border-white/10">
                     <tr>
                       <th className="px-3 py-2">Seq</th>
                       <th className="px-3 py-2">ID</th>
@@ -519,10 +519,10 @@ export default function Clients() {
               </div>
             </div>
 
-            <div className="px-5 py-2.5 border-t border-white/10 bg-[#070b14] flex justify-end">
+            <div className="px-5 py-2.5 border-t border-white/10 bg-[#3f2b1e] flex justify-end">
               <button
                 onClick={() => setCursorModalOpen(false)}
-                className="px-3.5 py-1.5 bg-[#121c33] hover:bg-[#1e293b] text-white border border-white/10 rounded-sm text-xs font-mono uppercase tracking-wider"
+                className="px-3.5 py-1.5 bg-[#73513a] hover:bg-[#7d5a41] text-white border border-white/10 rounded-sm text-xs font-mono uppercase tracking-wider"
               >
                 Close Viewer
               </button>
@@ -534,8 +534,8 @@ export default function Clients() {
       {/* XML Viewer Modal */}
       {xmlModalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#0a0f1d] rounded-sm shadow-2xl border border-white/20 max-w-xl w-full max-h-[80vh] flex flex-col overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#070b14]">
+          <div className="bg-[#5e412d] rounded-sm shadow-2xl border border-white/20 max-w-xl w-full max-h-[80vh] flex flex-col overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#3f2b1e]">
               <div className="flex items-center space-x-2">
                 <FileCode className="w-4 h-4 text-white" />
                 <h3 className="font-serif font-semibold text-white text-sm">XML Serialized Payload</h3>
@@ -546,15 +546,15 @@ export default function Clients() {
             </div>
 
             <div className="p-4 overflow-y-auto">
-              <pre className="bg-[#070b14] text-emerald-300 p-3 rounded-sm font-mono text-xs overflow-x-auto border border-white/10">
+              <pre className="bg-[#3f2b1e] text-emerald-300 p-3 rounded-sm font-mono text-xs overflow-x-auto border border-white/10">
                 {xmlContent}
               </pre>
             </div>
 
-            <div className="px-5 py-2.5 border-t border-white/10 bg-[#070b14] flex justify-end">
+            <div className="px-5 py-2.5 border-t border-white/10 bg-[#3f2b1e] flex justify-end">
               <button
                 onClick={() => setXmlModalOpen(false)}
-                className="px-3.5 py-1.5 bg-[#121c33] hover:bg-[#1e293b] text-white border border-white/10 rounded-sm text-xs font-mono uppercase tracking-wider"
+                className="px-3.5 py-1.5 bg-[#73513a] hover:bg-[#7d5a41] text-white border border-white/10 rounded-sm text-xs font-mono uppercase tracking-wider"
               >
                 Close
               </button>

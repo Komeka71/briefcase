@@ -76,11 +76,11 @@ export default function Finances() {
   return (
     <div className="space-y-4 pb-6">
       {/* Editorial Header */}
-      <div className="relative overflow-hidden rounded-xl bg-[#0d1527] border border-white/10 p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="relative overflow-hidden rounded-xl bg-[#664631] border border-white/10 p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
 
         <div className="relative z-10 space-y-1 max-w-xl">
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider uppercase font-semibold bg-[#121c33] text-[#f5f0e7] border border-white/15">
+          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider uppercase font-semibold bg-[#73513a] text-[#f5f0e7] border border-white/15">
             <Receipt className="w-3 h-3 text-white" />
             <span>Accounts & Billing Ledger</span>
           </div>
@@ -97,7 +97,7 @@ export default function Finances() {
 
       {/* Financial KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="bg-[#0d1527] p-4 rounded-xl border border-white/10 shadow-sm relative overflow-hidden">
+        <div className="bg-[#664631] p-4 rounded-xl border border-white/10 shadow-sm relative overflow-hidden">
           <div className="text-[10px] font-mono uppercase tracking-wider text-white/50">Total Invoiced Fees</div>
           <div className="text-xl font-serif font-bold text-[#f5f0e7] mt-1">
             ₹{Number(totalInvoiced).toLocaleString('en-IN')}
@@ -105,7 +105,7 @@ export default function Finances() {
           <div className="text-[11px] font-mono text-white/60 mt-0.5">{invoices.length} Invoices Issued</div>
         </div>
 
-        <div className="bg-[#0d1527] p-4 rounded-xl border border-white/10 shadow-sm relative overflow-hidden">
+        <div className="bg-[#664631] p-4 rounded-xl border border-white/10 shadow-sm relative overflow-hidden">
           <div className="text-[10px] font-mono uppercase tracking-wider text-white/50">Cleared Receipts</div>
           <div className="text-xl font-serif font-bold text-emerald-400 mt-1">
             ₹{Number(totalPaid).toLocaleString('en-IN')}
@@ -113,7 +113,7 @@ export default function Finances() {
           <div className="text-[11px] font-mono text-emerald-400/80 mt-0.5">{payments.length} Payments Realized</div>
         </div>
 
-        <div className="bg-[#0d1527] p-4 rounded-xl border border-white/10 shadow-sm relative overflow-hidden">
+        <div className="bg-[#664631] p-4 rounded-xl border border-white/10 shadow-sm relative overflow-hidden">
           <div className="text-[10px] font-mono uppercase tracking-wider text-white/50">Pending Receivables</div>
           <div className="text-xl font-serif font-bold text-blue-300 mt-1">
             ₹{Number(totalOutstanding).toLocaleString('en-IN')}
@@ -128,7 +128,7 @@ export default function Finances() {
           onClick={() => setActiveTab('invoices')}
           className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
             activeTab === 'invoices'
-              ? 'bg-[#f5f0e7] text-[#0a0f1d] font-semibold shadow'
+              ? 'bg-gradient-to-b from-[#e6cfa9] to-[#a47a52] text-[#3b2a1f] font-semibold shadow'
               : 'text-white/60 hover:text-white hover:bg-white/5'
           }`}
         >
@@ -138,7 +138,7 @@ export default function Finances() {
           onClick={() => setActiveTab('payments')}
           className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
             activeTab === 'payments'
-              ? 'bg-[#f5f0e7] text-[#0a0f1d] font-semibold shadow'
+              ? 'bg-gradient-to-b from-[#e6cfa9] to-[#a47a52] text-[#3b2a1f] font-semibold shadow'
               : 'text-white/60 hover:text-white hover:bg-white/5'
           }`}
         >
@@ -147,7 +147,7 @@ export default function Finances() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-[#0d1527] p-3 rounded-lg border border-white/10 shadow-sm flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between">
+      <div className="bg-[#664631] p-3 rounded-lg border border-white/10 shadow-sm flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between">
         <div className="relative flex-1">
           <Search className="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -155,7 +155,7 @@ export default function Finances() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder={`Search ${activeTab === 'invoices' ? 'invoices by #, client, matter...' : 'payments by client, method...'}`}
-            className="w-full pl-9 pr-3 py-1.5 bg-[#0a0f1d] border border-white/10 rounded-md text-xs text-[#f5f0e7] placeholder-white/40 focus:border-white/30 focus:outline-none"
+            className="w-full pl-9 pr-3 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] placeholder-white/40 focus:border-white/30 focus:outline-none"
           />
         </div>
 
@@ -165,7 +165,7 @@ export default function Finances() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-2.5 py-1.5 bg-[#0a0f1d] border border-white/10 rounded-md text-xs text-[#f5f0e7] font-mono focus:border-white/30 focus:outline-none"
+              className="px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] font-mono focus:border-white/30 focus:outline-none"
             >
               <option value="">All Statuses</option>
               <option value="Paid">Paid</option>
@@ -177,10 +177,10 @@ export default function Finances() {
 
       {/* Invoices Table */}
       {activeTab === 'invoices' && (
-        <div className="bg-[#0d1527] rounded-xl border border-white/10 shadow-lg overflow-hidden">
+        <div className="bg-[#664631] rounded-xl border border-white/10 shadow-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-white/80">
-              <thead className="bg-[#0a0f1d] text-white/50 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
+              <thead className="bg-[#5e412d] text-white/50 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3 font-semibold">Invoice #</th>
                   <th className="px-4 py-3 font-semibold">Client Name</th>
@@ -252,10 +252,10 @@ export default function Finances() {
 
       {/* Payments Table */}
       {activeTab === 'payments' && (
-        <div className="bg-[#0d1527] rounded-xl border border-white/10 shadow-lg overflow-hidden">
+        <div className="bg-[#664631] rounded-xl border border-white/10 shadow-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-white/80">
-              <thead className="bg-[#0a0f1d] text-white/50 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
+              <thead className="bg-[#5e412d] text-white/50 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3 font-semibold">Payment ID</th>
                   <th className="px-4 py-3 font-semibold">Client Name</th>
