@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { clientService, plsqlService, auditService } from '../services/api';
-import { Database, Play, ArrowUpRight, ShieldAlert, CheckCircle2, Timer, Code2 } from 'lucide-react';
+import { Database, Play, ArrowUpRight, ShieldAlert, CheckCircle2, Timer, Code2, Scale } from 'lucide-react';
 
 /**
  * Lab Assignment 10 — PL/SQL Backend Logic
  * One card per requirement (10.1 – 10.10). Each card shows the SQL it runs,
  * a Run button that executes it live against MySQL, and the result.
+ * Styled in The Courtroom aesthetic.
  */
 
 const REQUIREMENTS = [
@@ -117,15 +118,15 @@ function ResultTable({ rows }) {
   if (!rows || rows.length === 0) return null;
   const cols = Object.keys(rows[0]).filter((c) => typeof rows[0][c] !== 'object' || rows[0][c] === null).slice(0, 7);
   return (
-    <div className="overflow-x-auto mt-2 border border-white/10 rounded-sm max-h-56">
-      <table className="w-full text-[11px] font-mono">
-        <thead className="bg-[#73513a] text-[#f5f0e7]/80 sticky top-0">
-          <tr>{cols.map((c) => <th key={c} className="px-2 py-1.5 text-left whitespace-nowrap">{c}</th>)}</tr>
+    <div className="overflow-x-auto mt-2.5 border border-[#2B2D32] rounded-[3px] max-h-56">
+      <table className="court-table text-[11px] font-mono">
+        <thead className="sticky top-0 bg-[#1E1F23]">
+          <tr>{cols.map((c) => <th key={c} className="px-2.5 py-1.5 text-left whitespace-nowrap">{c}</th>)}</tr>
         </thead>
         <tbody>
           {rows.map((r, i) => (
-            <tr key={i} className="border-t border-white/5 text-[#f5f0e7]/85">
-              {cols.map((c) => <td key={c} className="px-2 py-1 whitespace-nowrap">{r[c] === null ? '—' : String(r[c])}</td>)}
+            <tr key={i}>
+              {cols.map((c) => <td key={c} className="px-2.5 py-1 whitespace-nowrap text-[#F6F4EF]">{r[c] === null ? '—' : String(r[c])}</td>)}
             </tr>
           ))}
         </tbody>
@@ -152,111 +153,119 @@ function RequirementCard({ req }) {
   const rows = pickRows(res);
 
   return (
-    <div className="bc-card bg-[#5e412d] border border-white/10 rounded-sm p-4 shadow-md flex flex-col">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded-sm bg-[#ecdcc0]/10 border border-[#ecdcc0]/40 text-[#ecdcc0]">{req.id}</span>
-          <h3 className="mt-2 text-sm font-serif font-semibold text-white">{req.title}</h3>
-          <p className="text-[11px] text-[#f5f0e7]/65 mt-1">{req.desc}</p>
+    <div className="court-card p-4 sm:p-5 flex flex-col justify-between">
+      <div>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-[2px] bg-[#B8975A]/15 border border-[#B8975A]/40 text-[#D4B97E] font-semibold">{req.id}</span>
+            <h3 className="mt-2 text-sm font-serif font-semibold text-white">{req.title}</h3>
+            <p className="text-xs text-[#B4B7BC] font-sans mt-1 leading-relaxed">{req.desc}</p>
+          </div>
+          {state.ms && (
+            <span className="text-[10px] font-mono text-[#72C095] flex items-center gap-1 shrink-0 px-2 py-0.5 rounded-[2px] bg-[#141416] border border-[#3F7D5C]/30">
+              <Timer className="w-3 h-3" />{state.ms} ms
+            </span>
+          )}
         </div>
+
+        <pre className="mt-3 p-2.5 bg-[#0A0A0B] border border-[#2B2D32] rounded-[3px] text-[11px] font-mono text-[#D4B97E] overflow-x-auto whitespace-pre-wrap leading-relaxed">
+          {req.sql}
+        </pre>
       </div>
 
-      <pre className="mt-3 p-2.5 bg-[#4a3324] border border-white/5 rounded-sm text-[10.5px] font-mono text-[#e6cfa9] whitespace-pre-wrap">{req.sql}</pre>
+      <div className="mt-4 pt-3 border-t border-[#2B2D32]/80">
+        <div className="flex flex-wrap items-center gap-2">
+          {req.run && (
+            <button
+              onClick={() => execute(req.run)}
+              disabled={state.loading}
+              className="court-btn-brass px-3 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm"
+            >
+              <Play className="w-3 h-3 text-[#0A0A0B] fill-current" />
+              <span>{state.loading ? 'Executing...' : 'Run Query'}</span>
+            </button>
+          )}
 
-      <div className="mt-3 flex flex-wrap gap-2">
-        {req.run && (
-          <button onClick={() => execute(req.run)} disabled={state.loading}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-[11px] font-mono font-semibold uppercase tracking-wider disabled:opacity-50">
-            <Play className="w-3 h-3" /> {state.loading ? 'Running…' : 'Run'}
-          </button>
+          {req.extra && (
+            <button
+              onClick={() => execute(req.extra.run)}
+              disabled={state.loading}
+              className="court-btn-outline px-3 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider transition-all"
+            >
+              <span>{req.extra.label}</span>
+            </button>
+          )}
+
+          {req.link && (
+            <Link
+              to={req.link.to}
+              className="court-btn-outline px-3 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider flex items-center gap-1.5 transition-all"
+            >
+              <span>{req.link.label}</span>
+              <ArrowUpRight className="w-3 h-3 text-[#B8975A]" />
+            </Link>
+          )}
+        </div>
+
+        {state.error && (
+          <div className="mt-3 p-2.5 rounded-[3px] bg-[#9B2C2C]/20 border border-[#9B2C2C]/60 text-[#E67272] text-xs flex items-start gap-2 font-mono">
+            <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
+            <span className="break-all">{state.error}</span>
+          </div>
         )}
-        {req.extra && (
-          <button onClick={() => execute(req.extra.run)} disabled={state.loading}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#73513a] hover:bg-[#7d5a41] text-[#f5f0e7] border border-white/15 rounded-sm text-[11px] font-mono uppercase tracking-wider">
-            <Play className="w-3 h-3" /> {req.extra.label}
-          </button>
-        )}
-        {req.link && (
-          <Link to={req.link.to}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#73513a] hover:bg-[#7d5a41] text-[#f5f0e7] border border-white/15 rounded-sm text-[11px] font-mono uppercase tracking-wider">
-            {req.link.label} <ArrowUpRight className="w-3 h-3" />
-          </Link>
+
+        {res && !state.error && (
+          <div className="mt-3 space-y-1.5">
+            <div className="text-[10px] font-mono text-[#72C095] flex items-center gap-1 font-semibold uppercase tracking-wider">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>Execution Verified Successfully</span>
+            </div>
+            {res.message && <div className="text-xs text-white font-sans">{res.message}</div>}
+            {res.data && typeof res.data !== 'object' && (
+              <div className="text-xs font-mono text-white p-2 bg-[#0A0A0B] border border-[#2B2D32] rounded-[3px]">
+                Result: <span className="text-[#D4B97E] font-bold">{String(res.data)}</span>
+              </div>
+            )}
+            <ResultTable rows={rows} />
+          </div>
         )}
       </div>
-
-      {state.ms !== null && (
-        <div className="mt-3 text-[10px] font-mono text-emerald-400 flex items-center gap-1">
-          <Timer className="w-3 h-3" /> Execution time: {state.ms} ms
-        </div>
-      )}
-
-      {state.error && (
-        <div className="mt-2 p-2 text-[11px] bg-red-950/40 border border-red-500/30 rounded-sm text-red-200 flex gap-2">
-          <ShieldAlert className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" /> {state.error}
-        </div>
-      )}
-
-      {res && res.message && (
-        <div className={`mt-2 p-2 text-[11px] rounded-sm flex gap-2 border ${res.blocked ? 'bg-red-950/40 border-red-500/30 text-red-200' : 'bg-emerald-950/40 border-emerald-500/30 text-emerald-200'}`}>
-          {res.blocked ? <ShieldAlert className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" /> : <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />}
-          <span>{res.blocked ? `Trigger ${res.trigger} blocked the row: ` : ''}{res.message}</span>
-        </div>
-      )}
-
-      {res && !res.message && rows.length === 0 && (
-        <div className="mt-2 text-[11px] text-[#f5f0e7]/60">No rows returned.</div>
-      )}
-
-      {res?.pagination && (
-        <div className="mt-2 text-[10px] font-mono text-[#f5f0e7]/70">
-          Page {res.pagination.current_page} of {res.pagination.total_pages} · {res.pagination.total_records} matching records
-        </div>
-      )}
-      {res?.cursorType && <div className="mt-2 text-[10px] font-mono text-[#f5f0e7]/70">{res.cursorType} · {res.count} rows fetched</div>}
-
-      <ResultTable rows={rows} />
     </div>
   );
 }
 
 export default function PlsqlLab() {
-  const [catalog, setCatalog] = useState(null);
-
-  useEffect(() => {
-    plsqlService.getCatalog().then((r) => setCatalog(r.data)).catch(() => setCatalog(null));
-  }, []);
-
   return (
-    <div className="space-y-6 pb-6">
-      <div className="rounded-sm border border-white/10 bg-gradient-to-r from-[#5e412d] via-[#664631] to-[#73513a] p-5 sm:p-6 shadow-xl">
-        <div className="inline-flex items-center gap-1.5 text-[10px] font-mono tracking-widest uppercase text-[#ecdcc0]">
-          <Database className="w-3.5 h-3.5 text-white" /> Lab Assignment 10 · CS203 DBMS
+    <div className="space-y-6 pb-12 animate-fadeIn">
+      {/* Editorial Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#2B2D32]">
+        <div>
+          <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8975A] flex items-center gap-1.5">
+            <Database className="w-3.5 h-3.5" />
+            <span>Lab Assignment 10 • Stored Procedures & Triggers</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-tight mt-1 font-semibold">
+            PL/SQL Execution Laboratory
+          </h2>
+          <p className="text-xs text-[#B4B7BC] font-sans mt-0.5">
+            10 practical requirements (10.1 – 10.10) running directly against MySQL 8.0 with real-time execution timing.
+          </p>
         </div>
-        <h1 className="mt-1.5 text-2xl sm:text-3xl font-serif text-white tracking-tight">
-          PL/SQL Backend Logic <span className="italic text-[#f3e3c7]">Lab</span>
-        </h1>
-        <p className="text-xs text-[#f5f0e7]/75 mt-1 max-w-2xl">
-          Every requirement from 10.1 to 10.10, executed live against MySQL. Trigger tests run inside a transaction
-          that is rolled back, so no test data is saved.
-        </p>
+
+        <Link
+          to="/app/reports"
+          className="court-btn-outline px-4 py-2 rounded-[3px] text-xs font-mono uppercase tracking-wider flex items-center gap-2 self-start sm:self-auto"
+        >
+          <span>SQL Lab 11 (Queries)</span>
+          <ArrowUpRight className="w-4 h-4 text-[#B8975A]" />
+        </Link>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {REQUIREMENTS.map((r) => <RequirementCard key={r.id} req={r} />)}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {REQUIREMENTS.map((req) => (
+          <RequirementCard key={req.id} req={req} />
+        ))}
       </div>
-
-      {catalog && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="bg-[#5e412d] border border-white/10 rounded-sm p-4">
-            <h3 className="text-sm font-serif font-semibold text-white flex items-center gap-2"><Code2 className="w-4 h-4" /> Stored Procedures & Functions ({catalog.routines.length})</h3>
-            <ResultTable rows={catalog.routines} />
-          </div>
-          <div className="bg-[#5e412d] border border-white/10 rounded-sm p-4">
-            <h3 className="text-sm font-serif font-semibold text-white flex items-center gap-2"><ShieldAlert className="w-4 h-4" /> Triggers ({catalog.triggers.length})</h3>
-            <ResultTable rows={catalog.triggers} />
-          </div>
-        </div>
-      )}
     </div>
   );
 }

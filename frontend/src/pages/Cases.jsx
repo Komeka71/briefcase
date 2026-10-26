@@ -14,9 +14,8 @@ import {
   X,
   Eye,
   Filter,
-  Layers,
   Scale,
-  Landmark,
+  Building,
   Clock,
   DollarSign
 } from 'lucide-react';
@@ -180,201 +179,196 @@ export default function Cases() {
     }
   };
 
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case 'Hearing':
-        return 'bg-blue-500/15 text-blue-200 border border-blue-500/30';
-      case 'Settled':
-      case 'Closed':
-        return 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
-      case 'Filed':
-        return 'bg-[#73513a] text-[#f5f0e7] border border-white/20';
-      default:
-        return 'bg-[#664631] text-white/70 border border-white/10';
-    }
+  const getStatusBadgeClass = (statusName = '') => {
+    const s = statusName.toLowerCase();
+    if (s.includes('settled') || s.includes('closed') || s.includes('disposed')) return 'badge-success';
+    if (s.includes('hearing') || s.includes('pending') || s.includes('trial')) return 'badge-warning';
+    if (s.includes('dismissed') || s.includes('rejected')) return 'badge-danger';
+    return 'badge-info';
+  };
+
+  const getPriorityBadgeClass = (p = '') => {
+    if (p === 'High') return 'badge-danger';
+    if (p === 'Medium') return 'badge-warning';
+    return 'badge-info';
   };
 
   return (
-    <div className="space-y-4 pb-6">
+    <div className="space-y-6 pb-6 animate-fadeIn">
       {/* Editorial Header */}
-      <div className="bg-[#664631] border border-white/10 rounded-xl p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-72 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
-
-        <div className="relative z-10 space-y-1">
-          <div className="flex items-center space-x-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono tracking-wider font-semibold bg-[#73513a] text-[#f5f0e7] border border-white/15">
-              Litigation Dockets
-            </span>
-            <span className="text-[11px] text-white/50 font-mono hidden sm:inline">
-              BriefCase Active Cases
-            </span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#2B2D32]">
+        <div>
+          <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8975A] flex items-center gap-1.5">
+            <Scale className="w-3.5 h-3.5" />
+            <span>Litigation & Matter Dockets</span>
           </div>
-
-          <h1 className="text-xl sm:text-2xl font-serif text-[#f5f0e7] tracking-tight">
-            Case Matters & <span className="italic text-white font-medium">Dossiers</span>
-          </h1>
-
-          <p className="text-xs text-white/60 font-sans max-w-xl">
-            Track active chambers litigation, counsel appointments, court dates, and statutory budgets.
+          <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-tight mt-1 font-semibold">
+            Legal Cases Registry
+          </h2>
+          <p className="text-xs text-[#B4B7BC] font-sans mt-0.5">
+            Track matter lifecycles, allocated budgets, counsel rosters, and cause list schedules.
           </p>
         </div>
 
         <button
           onClick={openAdd}
-          className="relative z-10 inline-flex items-center space-x-2 px-3.5 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow-md font-mono cursor-pointer"
+          className="court-btn-brass px-4 py-2 rounded-[3px] text-xs font-mono uppercase tracking-wider flex items-center gap-2 self-start sm:self-auto shadow-md"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span>New Matter</span>
+          <Plus className="w-4 h-4 text-[#0A0A0B]" />
+          <span>Register New Case</span>
         </button>
       </div>
 
+      {/* Alerts */}
       {error && (
-        <div className="p-3 bg-red-950/60 border border-red-500/40 rounded-lg text-[#f5f0e7] flex items-start space-x-2.5">
-          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs">{error}</div>
+        <div className="p-3.5 bg-[#9B2C2C]/20 border border-[#9B2C2C]/60 rounded-[3px] text-[#E67272] text-xs flex items-start gap-2.5">
+          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="p-3 bg-emerald-950/60 border border-emerald-500/40 rounded-lg text-[#f5f0e7] flex items-start space-x-2.5">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs">{success}</div>
+        <div className="p-3.5 bg-[#3F7D5C]/20 border border-[#3F7D5C]/60 rounded-[3px] text-[#72C095] text-xs flex items-start gap-2.5">
+          <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span>{success}</span>
         </div>
       )}
 
-      {/* Filter Bar */}
-      <div className="bg-[#664631] p-3 rounded-lg border border-white/10 shadow-sm grid grid-cols-1 sm:grid-cols-4 gap-2.5">
-        <div className="relative">
+      {/* Filter Toolbar */}
+      <div className="court-card p-3.5 flex flex-wrap items-center gap-3">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="w-3.5 h-3.5 text-[#6B6F76] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search case # or title..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] placeholder-white/40 focus:outline-none"
+            placeholder="Search by case #, title, or client..."
+            className="w-full pl-9 pr-3 py-1.5 court-input text-xs text-white placeholder-[#6B6F76] font-sans"
           />
-          <Search className="w-3.5 h-3.5 text-white/40 absolute left-2.5 top-2" />
         </div>
 
-        <div>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
-          >
-            <option value="">All Statuses</option>
-            {refData.caseStatuses.map((s) => (
-              <option key={s.status_id} value={s.status_name}>{s.status_name}</option>
-            ))}
-          </select>
-        </div>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="court-input px-3 py-1.5 text-xs text-white"
+        >
+          <option value="" className="bg-[#141416]">All Statuses</option>
+          {refData.caseStatuses.map((s) => (
+            <option key={s.status_id} value={s.status_name} className="bg-[#141416]">{s.status_name}</option>
+          ))}
+        </select>
 
-        <div>
-          <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-            className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
-          >
-            <option value="">All Practice Areas</option>
-            {refData.caseTypes.map((t) => (
-              <option key={t.case_type_id} value={t.type_name}>{t.type_name}</option>
-            ))}
-          </select>
-        </div>
+        <select
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          className="court-input px-3 py-1.5 text-xs text-white"
+        >
+          <option value="" className="bg-[#141416]">All Practice Areas</option>
+          {refData.caseTypes.map((t) => (
+            <option key={t.type_id} value={t.type_name} className="bg-[#141416]">{t.type_name}</option>
+          ))}
+        </select>
 
-        <div>
-          <select
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value)}
-            className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
-          >
-            <option value="">All Priorities</option>
-            <option value="High">High Priority</option>
-            <option value="Medium">Medium Priority</option>
-            <option value="Low">Low Priority</option>
-          </select>
-        </div>
+        <select
+          value={priorityFilter}
+          onChange={(e) => setPriorityFilter(e.target.value)}
+          className="court-input px-3 py-1.5 text-xs text-white"
+        >
+          <option value="" className="bg-[#141416]">All Priorities</option>
+          <option value="High" className="bg-[#141416]">High Priority</option>
+          <option value="Medium" className="bg-[#141416]">Medium Priority</option>
+          <option value="Low" className="bg-[#141416]">Low Priority</option>
+        </select>
       </div>
 
-      {/* Cases Data Table */}
-      <div className="bg-[#664631] rounded-xl border border-white/10 shadow-lg overflow-hidden">
+      {/* Cases Table */}
+      <div className="court-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-white/80">
-            <thead className="bg-[#5e412d] text-white/50 text-[11px] uppercase tracking-wider font-mono border-b border-white/10">
+          <table className="court-table">
+            <thead>
               <tr>
-                <th className="px-4 py-3">Docket #</th>
-                <th className="px-4 py-3">Matter Title</th>
-                <th className="px-4 py-3">Client</th>
-                <th className="px-4 py-3">Area</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Budget</th>
-                <th className="px-4 py-3 text-right">Actions</th>
+                <th>Case Number</th>
+                <th>Matter Title</th>
+                <th>Client Name</th>
+                <th>Practice Area</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Budget (INR)</th>
+                <th>Filed Date</th>
+                <th className="text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-8 text-white/50 font-serif">
-                    Querying legal matters from MySQL database...
+                  <td colSpan={9} className="text-center py-10 text-xs font-mono text-[#B4B7BC]">
+                    Retrieving matter dockets from database...
                   </td>
                 </tr>
               ) : cases.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-8 text-white/50 font-serif">
-                    No cases found matching the specified criteria.
+                  <td colSpan={9} className="text-center py-12 text-xs font-serif text-[#6B6F76]">
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <Scale className="w-8 h-8 text-[#B8975A]/40" />
+                      <p>No legal matters found matching the current search criteria.</p>
+                    </div>
                   </td>
                 </tr>
               ) : (
                 cases.map((c) => (
-                  <tr key={c.case_id} className="hover:bg-white/[0.03] transition-colors group">
-                    <td className="px-4 py-3 font-mono text-xs font-semibold text-[#f5f0e7]">
+                  <tr key={c.case_id}>
+                    <td className="font-mono text-xs font-semibold text-[#D4B97E]">
                       {c.case_number}
                     </td>
-                    <td className="px-4 py-3 max-w-xs">
-                      <div className="font-serif font-medium text-[#f5f0e7] text-sm">
-                        {c.title}
-                      </div>
-                      <div className="text-[11px] text-white/40 truncate mt-0.5">
-                        {c.description || 'No description recorded'}
-                      </div>
+                    <td className="font-serif font-medium text-white max-w-xs truncate">
+                      {c.title}
                     </td>
-                    <td className="px-4 py-3 text-xs text-white/90">
-                      {c.client_name}
+                    <td className="text-xs text-[#F6F4EF]">
+                      {c.client_name || '—'}
                     </td>
-                    <td className="px-4 py-3">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#73513a] text-white/70 border border-white/10">
-                        {c.case_type || 'General'}
+                    <td className="text-xs text-[#B4B7BC] font-sans">
+                      {c.case_type || '—'}
+                    </td>
+                    <td>
+                      <span className={`px-2 py-0.5 rounded-[2px] font-mono text-[9.5px] uppercase ${getStatusBadgeClass(c.status_name)}`}>
+                        {c.status_name || 'Pending'}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-medium ${getStatusBadge(c.case_status)}`}>
-                        {c.case_status || 'New'}
+                    <td>
+                      <span className={`px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase ${getPriorityBadgeClass(c.priority)}`}>
+                        {c.priority}
                       </span>
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-[#f5f0e7]">
+                    <td className="font-mono text-xs text-[#F6F4EF]">
                       ₹{Number(c.budget || 0).toLocaleString('en-IN')}
                     </td>
-                    <td className="px-4 py-3 text-right space-x-1">
-                      <button
-                        onClick={() => viewDetails(c.case_id)}
-                        title="View Dossier"
-                        className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer"
-                      >
-                        <Eye className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => openEdit(c)}
-                        title="Edit Case"
-                        className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(c.case_id)}
-                        title="Delete Case"
-                        className="p-1.5 text-white/60 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors cursor-pointer"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                    <td className="font-mono text-xs text-[#6B6F76]">
+                      {c.filed_date ? String(c.filed_date).slice(0, 10) : '—'}
+                    </td>
+                    <td className="text-right">
+                      <div className="flex items-center justify-end space-x-1.5">
+                        <button
+                          onClick={() => viewDetails(c.case_id)}
+                          className="p-1.5 rounded-[3px] text-[#B4B7BC] hover:text-[#D4B97E] hover:bg-[#1E1F23] transition-colors cursor-pointer"
+                          title="View Case File Dossier"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => openEdit(c)}
+                          className="p-1.5 rounded-[3px] text-[#B4B7BC] hover:text-white hover:bg-[#1E1F23] transition-colors cursor-pointer"
+                          title="Edit Matter"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(c.case_id)}
+                          className="p-1.5 rounded-[3px] text-[#6B6F76] hover:text-[#E67272] hover:bg-[#9B2C2C]/10 transition-colors cursor-pointer"
+                          title="Delete Matter"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -386,142 +380,188 @@ export default function Cases() {
 
       {/* Create / Edit Case Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#664631] rounded-xl shadow-2xl border border-white/15 max-w-lg w-full max-h-[85vh] overflow-y-auto">
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#5e412d] sticky top-0">
-              <h3 className="font-serif font-semibold text-[#f5f0e7] text-sm">
-                {isEditing ? 'Update Legal Matter' : 'Register New Legal Matter'}
-              </h3>
-              <button onClick={() => setModalOpen(false)} className="text-white/60 hover:text-white cursor-pointer">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="court-card-elevated max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="px-5 py-3.5 border-b border-[#2B2D32] flex items-center justify-between bg-[#141416] sticky top-0 z-10">
+              <div className="flex items-center space-x-2">
+                <Briefcase className="w-4 h-4 text-[#B8975A]" />
+                <h3 className="font-serif font-semibold text-white text-sm">
+                  {isEditing ? `Edit Matter: ${formData.case_number}` : 'Register New Legal Matter'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setModalOpen(false)}
+                className="text-[#6B6F76] hover:text-white cursor-pointer"
+              >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmitForm} className="p-5 space-y-3.5">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleSubmitForm} className="p-5 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Case Number *</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Case Docket Number *
+                  </label>
                   <input
                     type="text"
                     required
-                    disabled={isEditing}
                     value={formData.case_number}
                     onChange={(e) => setFormData({ ...formData, case_number: e.target.value })}
-                    className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] disabled:opacity-50"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Client Entity *</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Client Representation *
+                  </label>
                   <select
                     value={formData.client_id}
-                    onChange={(e) => setFormData({ ...formData, client_id: parseInt(e.target.value, 10) })}
-                    className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono"
+                    onChange={(e) => setFormData({ ...formData, client_id: Number(e.target.value) })}
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   >
                     {refData.clients.map((cl) => (
-                      <option key={cl.client_id} value={cl.client_id}>{cl.name} ({cl.client_type})</option>
+                      <option key={cl.client_id} value={cl.client_id} className="bg-[#141416]">
+                        {cl.name} ({cl.client_type})
+                      </option>
                     ))}
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Case Title *</label>
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Matter Title *
+                </label>
                 <input
                   type="text"
                   required
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="e.g. Surat Metro Rail Land Challenge"
-                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7]"
+                  placeholder="e.g. Reliance vs Union of India"
+                  className="w-full px-3 py-1.5 court-input text-xs text-white"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Description</label>
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Brief Description & Pleadings
+                </label>
                 <textarea
-                  rows="2"
+                  rows={3}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7]"
-                ></textarea>
+                  placeholder="Summary of controversy, bench notes, and cause of action..."
+                  className="w-full px-3 py-1.5 court-input text-xs text-white"
+                />
               </div>
 
-              <div className="grid grid-cols-3 gap-2.5">
+              <div className="court-hairline my-2" />
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Type</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Practice Area
+                  </label>
                   <select
                     value={formData.case_type_id}
-                    onChange={(e) => setFormData({ ...formData, case_type_id: parseInt(e.target.value, 10) })}
-                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono"
+                    onChange={(e) => setFormData({ ...formData, case_type_id: Number(e.target.value) })}
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   >
                     {refData.caseTypes.map((t) => (
-                      <option key={t.case_type_id} value={t.case_type_id}>{t.type_name}</option>
+                      <option key={t.type_id} value={t.type_id} className="bg-[#141416]">
+                        {t.type_name}
+                      </option>
                     ))}
                   </select>
                 </div>
+
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Status</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Current Status
+                  </label>
                   <select
                     value={formData.current_status_id}
-                    onChange={(e) => setFormData({ ...formData, current_status_id: parseInt(e.target.value, 10) })}
-                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono"
+                    onChange={(e) => setFormData({ ...formData, current_status_id: Number(e.target.value) })}
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   >
                     {refData.caseStatuses.map((s) => (
-                      <option key={s.status_id} value={s.status_id}>{s.status_name}</option>
+                      <option key={s.status_id} value={s.status_id} className="bg-[#141416]">
+                        {s.status_name}
+                      </option>
                     ))}
                   </select>
                 </div>
+
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Priority</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Priority
+                  </label>
                   <select
                     value={formData.priority}
                     onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   >
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
+                    <option value="High" className="bg-[#141416]">High Priority</option>
+                    <option value="Medium" className="bg-[#141416]">Medium Priority</option>
+                    <option value="Low" className="bg-[#141416]">Low Priority</option>
                   </select>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Budget (INR) *</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Retainer Budget (₹)
+                  </label>
                   <input
                     type="number"
-                    step="5000"
-                    min="0"
-                    required
+                    step="0.01"
                     value={formData.budget}
-                    onChange={(e) => setFormData({ ...formData, budget: parseFloat(e.target.value) })}
-                    className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7]"
+                    onChange={(e) => setFormData({ ...formData, budget: parseFloat(e.target.value) || 0 })}
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Filing Date</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Filing Date
+                  </label>
                   <input
                     type="date"
                     value={formData.filed_date}
                     onChange={(e) => setFormData({ ...formData, filed_date: e.target.value })}
-                    className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7]"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Expected Closure
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.expected_closure_date}
+                    onChange={(e) => setFormData({ ...formData, expected_closure_date: e.target.value })}
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   />
                 </div>
               </div>
 
-              <div className="pt-3 flex justify-end space-x-2.5 border-t border-white/10">
+              <div className="pt-3 flex justify-end space-x-2.5 border-t border-[#2B2D32]">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-3.5 py-1.5 border border-white/15 text-white/70 hover:text-white rounded-md text-xs font-mono uppercase tracking-wider hover:bg-white/5 cursor-pointer"
+                  className="court-btn-outline px-4 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-md text-xs font-semibold uppercase tracking-wider shadow font-mono transition-all cursor-pointer"
+                  className="court-btn-brass px-5 py-1.5 rounded-[3px] text-xs font-mono font-semibold uppercase tracking-wider shadow"
                 >
-                  {isEditing ? 'Save' : 'Create'}
+                  {isEditing ? 'Update Docket' : 'Register Matter'}
                 </button>
               </div>
             </form>
@@ -529,61 +569,73 @@ export default function Cases() {
         </div>
       )}
 
-      {/* Case Details Dossier Modal */}
+      {/* Case Details Dossier Modal - "Case File" Feel */}
       {detailsModalOpen && selectedCase && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#664631] rounded-xl shadow-2xl border border-white/15 max-w-xl w-full max-h-[85vh] overflow-y-auto">
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#5e412d] sticky top-0">
-              <div className="flex items-center space-x-2">
-                <Briefcase className="w-4 h-4 text-[#f5f0e7]" />
-                <h3 className="font-serif font-semibold text-[#f5f0e7] text-sm">{selectedCase.case_number}</h3>
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="court-card-elevated max-w-xl w-full max-h-[85vh] overflow-y-auto">
+            <div className="px-5 py-3.5 border-b border-[#2B2D32] flex items-center justify-between bg-[#141416] sticky top-0 z-10">
+              <div className="flex items-center space-x-2.5">
+                <Scale className="w-4 h-4 text-[#B8975A]" />
+                <span className="font-mono text-xs font-bold text-[#D4B97E] tracking-wider">
+                  {selectedCase.case_number}
+                </span>
+                <span className={`px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase ${getStatusBadgeClass(selectedCase.current_status || selectedCase.status_name)}`}>
+                  {selectedCase.current_status || selectedCase.status_name || 'Active'}
+                </span>
+                <span className={`px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase ${getPriorityBadgeClass(selectedCase.priority)}`}>
+                  {selectedCase.priority}
+                </span>
               </div>
-              <button onClick={() => setDetailsModalOpen(false)} className="text-white/60 hover:text-white cursor-pointer">
+              <button
+                onClick={() => setDetailsModalOpen(false)}
+                className="text-[#6B6F76] hover:text-white cursor-pointer"
+              >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="p-5 space-y-4">
               <div>
-                <h2 className="text-lg font-serif text-[#f5f0e7]">{selectedCase.title}</h2>
-                <p className="text-xs text-white/60 font-sans mt-1 leading-relaxed">
-                  {selectedCase.description || 'No detailed brief available.'}
+                <h2 className="text-xl font-serif text-white font-medium">{selectedCase.title}</h2>
+                <p className="text-xs text-[#B4B7BC] font-sans mt-1.5 leading-relaxed">
+                  {selectedCase.description || 'No detailed brief available for this matter.'}
                 </p>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 p-3 bg-[#5e412d] rounded-lg border border-white/10 text-xs">
+              {/* Case Attributes Card */}
+              <div className="grid grid-cols-3 gap-2.5 p-3.5 bg-[#141416] rounded-[3px] border border-[#2B2D32] text-xs">
                 <div>
-                  <span className="text-white/50 block font-mono text-[10px] uppercase">Client</span>
-                  <span className="font-serif font-medium text-[#f5f0e7]">{selectedCase.client_name}</span>
+                  <span className="text-[#6B6F76] block font-mono text-[9.5px] uppercase">Client</span>
+                  <span className="font-serif font-medium text-white">{selectedCase.client_name || '—'}</span>
                 </div>
                 <div>
-                  <span className="text-white/50 block font-mono text-[10px] uppercase">Budget</span>
-                  <span className="font-mono text-[#f5f0e7]">₹{Number(selectedCase.budget).toLocaleString('en-IN')}</span>
+                  <span className="text-[#6B6F76] block font-mono text-[9.5px] uppercase">Retainer Budget</span>
+                  <span className="font-mono text-[#D4B97E]">₹{Number(selectedCase.budget || 0).toLocaleString('en-IN')}</span>
                 </div>
                 <div>
-                  <span className="text-white/50 block font-mono text-[10px] uppercase">Area</span>
-                  <span className="font-mono text-white/80">{selectedCase.case_type}</span>
+                  <span className="text-[#6B6F76] block font-mono text-[9.5px] uppercase">Practice Area</span>
+                  <span className="font-sans text-[#F6F4EF]">{selectedCase.case_type || '—'}</span>
                 </div>
               </div>
 
-              {/* Assigned Lawyers */}
+              {/* Assigned Counsel */}
               <div>
-                <h4 className="text-[11px] font-mono text-white/80 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
+                <h4 className="text-[11px] font-mono text-[#B8975A] uppercase tracking-wider mb-2 flex items-center space-x-1.5">
                   <UserCheck className="w-3.5 h-3.5" />
-                  <span>Assigned Counsel</span>
+                  <span>Assigned Chambers Counsel</span>
                 </h4>
-                <div className="border border-white/10 rounded-lg divide-y divide-white/5 overflow-hidden text-xs">
+                <div className="border border-[#2B2D32] rounded-[3px] divide-y divide-[#2B2D32] overflow-hidden text-xs">
                   {(!selectedCase.lawyers || selectedCase.lawyers.length === 0) ? (
-                    <p className="p-3 text-white/50 font-serif text-center">No counsel currently assigned.</p>
+                    <p className="p-3 text-[#6B6F76] font-serif text-center">No counsel currently assigned to this matter.</p>
                   ) : (
                     selectedCase.lawyers.map((l) => (
-                      <div key={l.lawyer_id} className="p-2.5 bg-[#5e412d] flex items-center justify-between">
+                      <div key={l.lawyer_id} className="p-3 bg-[#141416] flex items-center justify-between">
                         <div>
-                          <div className="font-serif font-medium text-[#f5f0e7] text-xs">{l.name}</div>
-                          <div className="text-[10px] text-white/50 font-mono">Bar: {l.bar_registration_no}</div>
+                          <div className="font-serif font-medium text-white text-xs">{l.name}</div>
+                          <div className="text-[10px] text-[#6B6F76] font-mono">Bar Reg: {l.bar_registration_no}</div>
                         </div>
-                        <span className="px-2 py-0.5 rounded bg-[#73513a] text-white/80 border border-white/15 text-[10px] font-mono">
-                          {l.role} {l.is_primary ? '• Lead' : ''}
+                        <span className="px-2 py-0.5 rounded-[2px] bg-[#1E1F23] text-[#D4B97E] border border-[#B8975A]/30 text-[9.5px] font-mono">
+                          {l.role} {l.is_primary ? '• Lead Counsel' : ''}
                         </span>
                       </div>
                     ))
@@ -591,25 +643,25 @@ export default function Cases() {
                 </div>
               </div>
 
-              {/* Hearings Schedule */}
+              {/* Hearings Cause List Schedule */}
               <div>
-                <h4 className="text-[11px] font-mono text-white/80 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
+                <h4 className="text-[11px] font-mono text-[#B8975A] uppercase tracking-wider mb-2 flex items-center space-x-1.5">
                   <Calendar className="w-3.5 h-3.5" />
-                  <span>Hearings Schedule</span>
+                  <span>Cause List Hearings Timeline</span>
                 </h4>
-                <div className="border border-white/10 rounded-lg divide-y divide-white/5 overflow-hidden text-xs">
+                <div className="border border-[#2B2D32] rounded-[3px] divide-y divide-[#2B2D32] overflow-hidden text-xs">
                   {(!selectedCase.hearings || selectedCase.hearings.length === 0) ? (
-                    <p className="p-3 text-white/50 font-serif text-center">No hearings scheduled.</p>
+                    <p className="p-3 text-[#6B6F76] font-serif text-center">No bench hearings scheduled.</p>
                   ) : (
                     selectedCase.hearings.map((h) => (
-                      <div key={h.hearing_id} className="p-2.5 bg-[#5e412d] flex items-center justify-between">
+                      <div key={h.hearing_id} className="p-3 bg-[#141416] flex items-center justify-between">
                         <div>
-                          <div className="font-serif font-medium text-[#f5f0e7] text-xs">{h.purpose || 'Trial Hearing'}</div>
-                          <div className="text-[10px] text-white/60">{h.court_name} ({h.city})</div>
+                          <div className="font-serif font-medium text-white text-xs">{h.purpose || 'Trial Hearing'}</div>
+                          <div className="text-[10px] text-[#B4B7BC]">{h.court_name} ({h.city})</div>
                         </div>
                         <div className="text-right">
-                          <span className="font-mono text-[#f5f0e7] font-semibold text-xs">{h.hearing_date}</span>
-                          <div className="text-[10px] text-white/50 font-mono">{h.start_time || '10:30 AM'}</div>
+                          <span className="font-mono text-[#D4B97E] font-semibold text-xs">{h.hearing_date}</span>
+                          <div className="text-[10px] text-[#6B6F76] font-mono">{h.start_time || '10:30 AM'}</div>
                         </div>
                       </div>
                     ))
@@ -618,12 +670,12 @@ export default function Cases() {
               </div>
             </div>
 
-            <div className="px-5 py-2.5 border-t border-white/10 bg-[#5e412d] flex justify-end">
+            <div className="px-5 py-3 border-t border-[#2B2D32] bg-[#141416] flex justify-end">
               <button
                 onClick={() => setDetailsModalOpen(false)}
-                className="px-3.5 py-1.5 bg-[#73513a] hover:bg-[#7d5a41] text-[#f5f0e7] border border-white/15 rounded-md text-xs font-mono uppercase tracking-wider cursor-pointer"
+                className="court-btn-outline px-4 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider"
               >
-                Close
+                Close Dossier
               </button>
             </div>
           </div>

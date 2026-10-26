@@ -9,11 +9,10 @@ import {
   CheckCircle2,
   Clock,
   AlertCircle,
-  TrendingUp,
   Download,
   IndianRupee,
   Building,
-  ArrowUpRight
+  Scale
 } from 'lucide-react';
 
 export default function Finances() {
@@ -68,178 +67,208 @@ export default function Finances() {
       searchTerm === '' ||
       p.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.invoice_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.method_name?.toLowerCase().includes(searchTerm.toLowerCase());
+      p.payment_reference?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.payment_method?.toLowerCase().includes(searchTerm.toLowerCase());
 
     return matchesSearch;
   });
 
   return (
-    <div className="space-y-4 pb-6">
+    <div className="space-y-6 pb-6 animate-fadeIn">
       {/* Editorial Header */}
-      <div className="relative overflow-hidden rounded-xl bg-[#664631] border border-white/10 p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
-
-        <div className="relative z-10 space-y-1 max-w-xl">
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider uppercase font-semibold bg-[#73513a] text-[#f5f0e7] border border-white/15">
-            <Receipt className="w-3 h-3 text-white" />
-            <span>Accounts & Billing Ledger</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#2B2D32]">
+        <div>
+          <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8975A] flex items-center gap-1.5">
+            <Receipt className="w-3.5 h-3.5" />
+            <span>Chambers Ledgers & Retainers</span>
           </div>
-
-          <h1 className="text-xl sm:text-2xl font-serif text-[#f5f0e7] tracking-tight">
-            Invoices, Retainers & <span className="italic text-white font-medium">Fee Receipts</span>
-          </h1>
-
-          <p className="text-xs text-white/60 font-sans leading-relaxed">
-            Retainer billings, commercial invoices, statutory tax receipts, and payment settlements.
+          <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-tight mt-1 font-semibold">
+            Billing & Financial Registers
+          </h2>
+          <p className="text-xs text-[#B4B7BC] font-sans mt-0.5">
+            Legal counsel fee invoices, retainer accounting, client disbursements, and transaction logs.
           </p>
         </div>
-      </div>
 
-      {/* Financial KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="bg-[#664631] p-4 rounded-xl border border-white/10 shadow-sm relative overflow-hidden">
-          <div className="text-[10px] font-mono uppercase tracking-wider text-white/50">Total Invoiced Fees</div>
-          <div className="text-xl font-serif font-bold text-[#f5f0e7] mt-1">
-            ₹{Number(totalInvoiced).toLocaleString('en-IN')}
-          </div>
-          <div className="text-[11px] font-mono text-white/60 mt-0.5">{invoices.length} Invoices Issued</div>
-        </div>
-
-        <div className="bg-[#664631] p-4 rounded-xl border border-white/10 shadow-sm relative overflow-hidden">
-          <div className="text-[10px] font-mono uppercase tracking-wider text-white/50">Cleared Receipts</div>
-          <div className="text-xl font-serif font-bold text-emerald-400 mt-1">
-            ₹{Number(totalPaid).toLocaleString('en-IN')}
-          </div>
-          <div className="text-[11px] font-mono text-emerald-400/80 mt-0.5">{payments.length} Payments Realized</div>
-        </div>
-
-        <div className="bg-[#664631] p-4 rounded-xl border border-white/10 shadow-sm relative overflow-hidden">
-          <div className="text-[10px] font-mono uppercase tracking-wider text-white/50">Pending Receivables</div>
-          <div className="text-xl font-serif font-bold text-blue-300 mt-1">
-            ₹{Number(totalOutstanding).toLocaleString('en-IN')}
-          </div>
-          <div className="text-[11px] font-mono text-blue-300/80 mt-0.5">Pending Clearance</div>
-        </div>
-      </div>
-
-      {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-white/10 pb-1">
         <button
-          onClick={() => setActiveTab('invoices')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
-            activeTab === 'invoices'
-              ? 'bg-gradient-to-b from-[#e6cfa9] to-[#a47a52] text-[#3b2a1f] font-semibold shadow'
-              : 'text-white/60 hover:text-white hover:bg-white/5'
-          }`}
+          onClick={() => alert('Exporting Chambers Ledger as formal PDF receipt...')}
+          className="court-btn-outline px-4 py-2 rounded-[3px] text-xs font-mono uppercase tracking-wider flex items-center gap-2 self-start sm:self-auto"
         >
-          Invoices ({invoices.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('payments')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
-            activeTab === 'payments'
-              ? 'bg-gradient-to-b from-[#e6cfa9] to-[#a47a52] text-[#3b2a1f] font-semibold shadow'
-              : 'text-white/60 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          Receipts ({payments.length})
+          <Download className="w-4 h-4 text-[#B8975A]" />
+          <span>Export Audit Ledger</span>
         </button>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="bg-[#664631] p-3 rounded-lg border border-white/10 shadow-sm flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between">
-        <div className="relative flex-1">
-          <Search className="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder={`Search ${activeTab === 'invoices' ? 'invoices by #, client, matter...' : 'payments by client, method...'}`}
-            className="w-full pl-9 pr-3 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] placeholder-white/40 focus:border-white/30 focus:outline-none"
-          />
+      {/* Financial Stat Cards Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+        <div className="court-card p-4">
+          <div className="text-[10px] font-mono uppercase text-[#6B6F76] tracking-wider flex items-center justify-between">
+            <span>Total Invoiced Fees</span>
+            <FileSpreadsheet className="w-4 h-4 text-[#B8975A]" />
+          </div>
+          <div className="text-2xl font-serif font-bold text-white mt-1.5">
+            ₹ {totalInvoiced.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+          </div>
+          <div className="text-[10px] font-mono text-[#B4B7BC] mt-0.5">
+            {invoices.length} Chambers Invoices
+          </div>
         </div>
 
-        {activeTab === 'invoices' && (
-          <div className="flex items-center gap-2">
-            <Filter className="w-3.5 h-3.5 text-white/50" />
+        <div className="court-card p-4">
+          <div className="text-[10px] font-mono uppercase text-[#6B6F76] tracking-wider flex items-center justify-between">
+            <span>Cleared Collections</span>
+            <CheckCircle2 className="w-4 h-4 text-[#3F7D5C]" />
+          </div>
+          <div className="text-2xl font-serif font-bold text-[#72C095] mt-1.5">
+            ₹ {totalPaid.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+          </div>
+          <div className="text-[10px] font-mono text-[#72C095]/80 mt-0.5">
+            {payments.length} Cleared Receipts
+          </div>
+        </div>
+
+        <div className="court-card p-4">
+          <div className="text-[10px] font-mono uppercase text-[#6B6F76] tracking-wider flex items-center justify-between">
+            <span>Outstanding Retainer Balance</span>
+            <Clock className="w-4 h-4 text-[#C08A2E]" />
+          </div>
+          <div className="text-2xl font-serif font-bold text-[#D4B97E] mt-1.5">
+            ₹ {totalOutstanding.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+          </div>
+          <div className="text-[10px] font-mono text-[#E2B056] mt-0.5">
+            Pending Resolution
+          </div>
+        </div>
+      </div>
+
+      {/* Alerts */}
+      {error && (
+        <div className="p-3.5 bg-[#9B2C2C]/20 border border-[#9B2C2C]/60 rounded-[3px] text-[#E67272] text-xs flex items-start gap-2.5">
+          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      {/* Tabs and Filter Toolbar */}
+      <div className="court-card p-3.5 flex flex-wrap items-center justify-between gap-3">
+        {/* Tab Switcher */}
+        <div className="flex items-center space-x-1 p-0.5 rounded-[3px] bg-[#0A0A0B] border border-[#2B2D32]">
+          <button
+            onClick={() => setActiveTab('invoices')}
+            className={`px-3.5 py-1.5 rounded-[2px] text-xs font-mono uppercase tracking-wider transition-all cursor-pointer ${
+              activeTab === 'invoices'
+                ? 'court-btn-brass'
+                : 'text-[#B4B7BC] hover:text-white'
+            }`}
+          >
+            Invoices Register ({invoices.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('payments')}
+            className={`px-3.5 py-1.5 rounded-[2px] text-xs font-mono uppercase tracking-wider transition-all cursor-pointer ${
+              activeTab === 'payments'
+                ? 'court-btn-brass'
+                : 'text-[#B4B7BC] hover:text-white'
+            }`}
+          >
+            Payment Receipts ({payments.length})
+          </button>
+        </div>
+
+        {/* Filter Controls */}
+        <div className="flex items-center space-x-2 flex-1 max-w-md justify-end">
+          <div className="relative flex-1 min-w-[180px]">
+            <Search className="w-3.5 h-3.5 text-[#6B6F76] absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Filter by invoice, client, or matter..."
+              className="w-full pl-9 pr-3 py-1.5 court-input text-xs text-white placeholder-[#6B6F76] font-sans"
+            />
+          </div>
+
+          {activeTab === 'invoices' && (
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] font-mono focus:border-white/30 focus:outline-none"
+              className="court-input px-3 py-1.5 text-xs text-white"
             >
-              <option value="">All Statuses</option>
-              <option value="Paid">Paid</option>
-              <option value="Unpaid">Unpaid</option>
+              <option value="" className="bg-[#141416]">All Statuses</option>
+              <option value="Paid" className="bg-[#141416]">Paid</option>
+              <option value="Partially Paid" className="bg-[#141416]">Partially Paid</option>
+              <option value="Unpaid" className="bg-[#141416]">Unpaid</option>
+              <option value="Overdue" className="bg-[#141416]">Overdue</option>
             </select>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Invoices Table */}
-      {activeTab === 'invoices' && (
-        <div className="bg-[#664631] rounded-xl border border-white/10 shadow-lg overflow-hidden">
+      {/* Main Tab Content */}
+      {activeTab === 'invoices' ? (
+        <div className="court-card overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-white/80">
-              <thead className="bg-[#5e412d] text-white/50 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
+            <table className="court-table">
+              <thead>
                 <tr>
-                  <th className="px-4 py-3 font-semibold">Invoice #</th>
-                  <th className="px-4 py-3 font-semibold">Client Name</th>
-                  <th className="px-4 py-3 font-semibold">Matter Docket</th>
-                  <th className="px-4 py-3 font-semibold">Date</th>
-                  <th className="px-4 py-3 font-semibold">Due</th>
-                  <th className="px-4 py-3 font-semibold">Amount</th>
-                  <th className="px-4 py-3 font-semibold text-right">Status</th>
+                  <th>Invoice Number</th>
+                  <th>Legal Matter Docket</th>
+                  <th>Client Representation</th>
+                  <th>Total Fee (INR)</th>
+                  <th>Payment Status</th>
+                  <th>Issue Date</th>
+                  <th>Due Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 font-mono">
+              <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="7" className="text-center py-10 text-white/50 font-serif">
-                      Querying invoices from accounts ledger...
+                    <td colSpan={7} className="text-center py-10 text-xs font-mono text-[#B4B7BC]">
+                      Accessing chambers billing ledger...
                     </td>
                   </tr>
                 ) : filteredInvoices.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="text-center py-10 text-white/50 font-serif">
-                      No invoices match search criteria.
+                    <td colSpan={7} className="text-center py-12 text-xs font-serif text-[#6B6F76]">
+                      <div className="flex flex-col items-center justify-center space-y-2">
+                        <Receipt className="w-8 h-8 text-[#B8975A]/40" />
+                        <p>No billing invoices found matching the current criteria.</p>
+                      </div>
                     </td>
                   </tr>
                 ) : (
                   filteredInvoices.map((inv) => (
-                    <tr key={inv.invoice_id} className="hover:bg-white/[0.03] transition-colors group">
-                      <td className="px-4 py-3 text-[#f5f0e7] font-bold">
+                    <tr key={inv.invoice_id}>
+                      <td className="font-mono text-xs font-semibold text-[#D4B97E]">
                         {inv.invoice_number}
                       </td>
-
-                      <td className="px-4 py-3 font-serif font-medium text-[#f5f0e7]">
+                      <td>
+                        <div className="font-serif font-medium text-white text-xs max-w-xs truncate">
+                          {inv.case_title}
+                        </div>
+                        <div className="font-mono text-[10px] text-[#6B6F76] mt-0.5">
+                          {inv.case_number}
+                        </div>
+                      </td>
+                      <td className="text-xs text-[#F6F4EF]">
                         {inv.client_name}
                       </td>
-
-                      <td className="px-4 py-3">
-                        <div className="font-serif text-[#f5f0e7] truncate max-w-xs">{inv.case_title}</div>
-                        <div className="text-[10px] text-white/50 mt-0.5">{inv.case_number}</div>
+                      <td className="font-mono text-xs text-white font-semibold">
+                        ₹ {Number(inv.amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                       </td>
-
-                      <td className="px-4 py-3 text-white/70">
-                        {inv.invoice_date ? String(inv.invoice_date).slice(0, 10) : '—'}
-                      </td>
-
-                      <td className="px-4 py-3 text-white/50">
-                        {inv.due_date ? String(inv.due_date).slice(0, 10) : '—'}
-                      </td>
-
-                      <td className="px-4 py-3 font-bold text-[#f5f0e7]">
-                        ₹{Number(inv.amount).toLocaleString('en-IN')}
-                      </td>
-
-                      <td className="px-4 py-3 text-right">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
-                          inv.status === 'Paid'
-                            ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30'
-                            : 'bg-blue-950/60 text-blue-300 border border-blue-500/30'
+                      <td>
+                        <span className={`px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase ${
+                          inv.status === 'Paid' ? 'badge-success' :
+                          inv.status === 'Overdue' ? 'badge-danger' : 'badge-warning'
                         }`}>
                           {inv.status}
                         </span>
+                      </td>
+                      <td className="font-mono text-xs text-[#6B6F76]">
+                        {inv.issue_date ? String(inv.issue_date).slice(0, 10) : '—'}
+                      </td>
+                      <td className="font-mono text-xs text-[#B4B7BC]">
+                        {inv.due_date ? String(inv.due_date).slice(0, 10) : '—'}
                       </td>
                     </tr>
                   ))
@@ -248,68 +277,58 @@ export default function Finances() {
             </table>
           </div>
         </div>
-      )}
-
-      {/* Payments Table */}
-      {activeTab === 'payments' && (
-        <div className="bg-[#664631] rounded-xl border border-white/10 shadow-lg overflow-hidden">
+      ) : (
+        <div className="court-card overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-white/80">
-              <thead className="bg-[#5e412d] text-white/50 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
+            <table className="court-table">
+              <thead>
                 <tr>
-                  <th className="px-4 py-3 font-semibold">Payment ID</th>
-                  <th className="px-4 py-3 font-semibold">Client Name</th>
-                  <th className="px-4 py-3 font-semibold">Date</th>
-                  <th className="px-4 py-3 font-semibold">Invoice Ref</th>
-                  <th className="px-4 py-3 font-semibold">Channel</th>
-                  <th className="px-4 py-3 font-semibold">Amount</th>
-                  <th className="px-4 py-3 font-semibold text-right">Status</th>
+                  <th>Receipt Reference</th>
+                  <th>Invoice Link</th>
+                  <th>Client</th>
+                  <th>Cleared Amount (INR)</th>
+                  <th>Payment Method</th>
+                  <th>Transaction Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 font-mono">
+              <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="7" className="text-center py-10 text-white/50 font-serif">
-                      Querying payment receipts from ledger...
+                    <td colSpan={6} className="text-center py-10 text-xs font-mono text-[#B4B7BC]">
+                      Accessing payment transaction receipts...
                     </td>
                   </tr>
                 ) : filteredPayments.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="text-center py-10 text-white/50 font-serif">
-                      No cleared payments found matching current filters.
+                    <td colSpan={6} className="text-center py-12 text-xs font-serif text-[#6B6F76]">
+                      <div className="flex flex-col items-center justify-center space-y-2">
+                        <CreditCard className="w-8 h-8 text-[#B8975A]/40" />
+                        <p>No cleared payments found matching the current search.</p>
+                      </div>
                     </td>
                   </tr>
                 ) : (
                   filteredPayments.map((pay) => (
-                    <tr key={pay.payment_id} className="hover:bg-white/[0.03] transition-colors">
-                      <td className="px-4 py-3 text-[#f5f0e7] font-bold">
-                        #{pay.payment_id}
+                    <tr key={pay.payment_id}>
+                      <td className="font-mono text-xs text-[#D4B97E] font-semibold">
+                        {pay.payment_reference || `REC-${pay.payment_id}`}
                       </td>
-
-                      <td className="px-4 py-3 font-serif font-medium text-[#f5f0e7]">
+                      <td className="font-mono text-xs text-[#B4B7BC]">
+                        {pay.invoice_number}
+                      </td>
+                      <td className="text-xs text-[#F6F4EF]">
                         {pay.client_name}
                       </td>
-
-                      <td className="px-4 py-3 text-white/70">
-                        {pay.payment_date ? String(pay.payment_date).slice(0, 10) : '—'}
+                      <td className="font-mono text-xs text-[#72C095] font-semibold">
+                        ₹ {Number(pay.amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                       </td>
-
-                      <td className="px-4 py-3 text-white/80">
-                        {pay.invoice_number || 'Direct Retainer'}
-                      </td>
-
-                      <td className="px-4 py-3 text-white/60">
-                        {pay.method_name || 'Bank Transfer'}
-                      </td>
-
-                      <td className="px-4 py-3 font-bold text-emerald-400">
-                        ₹{Number(pay.amount).toLocaleString('en-IN')}
-                      </td>
-
-                      <td className="px-4 py-3 text-right">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-950/60 text-emerald-300 border border-emerald-500/30">
-                          {pay.payment_status || 'Completed'}
+                      <td>
+                        <span className="px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase badge-info">
+                          {pay.payment_method || 'NEFT / RTGS'}
                         </span>
+                      </td>
+                      <td className="font-mono text-xs text-[#6B6F76]">
+                        {pay.payment_date ? String(pay.payment_date).slice(0, 10) : '—'}
                       </td>
                     </tr>
                   ))

@@ -103,5 +103,12 @@ export const practiceService = {
   getAppointments: () => api.get('/practice/appointments')
 };
 
+export const plsqlService = {
+  getAggregate: (mode = 'total') => api.get(`/plsql/aggregate?mode=${mode}`),
+  runTriggerTest: (test) => api.post('/plsql/trigger-test', { test }),
+  getTableStats: () => api.get('/plsql/table-stats'),
+  getCatalog: () => api.get('/plsql/catalog')
+};
+
 export default api;
 

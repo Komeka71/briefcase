@@ -15,7 +15,8 @@ import {
   X,
   Play,
   Building2,
-  User
+  User,
+  Scale
 } from 'lucide-react';
 
 export default function Clients() {
@@ -170,175 +171,194 @@ export default function Clients() {
   };
 
   return (
-    <div className="space-y-5 pb-6">
-      {/* Header - Compact & Responsive */}
-      <div className="bg-[#5e412d] border border-white/10 rounded-sm p-5 sm:p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center space-x-2">
-            <span className="px-2 py-0.5 rounded-full text-[9px] font-mono tracking-wider uppercase font-semibold bg-[#73513a] text-white border border-white/15">
-              Client Registry
-            </span>
+    <div className="space-y-6 pb-6 animate-fadeIn">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#2B2D32]">
+        <div>
+          <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8975A] flex items-center gap-1.5">
+            <Users className="w-3.5 h-3.5" />
+            <span>Retained Representation</span>
           </div>
-
-          <h1 className="text-xl sm:text-2xl font-serif text-white tracking-tight">
-            Institutional & Individual <span className="italic text-[#f3e3c7]">Client Registry</span>
-          </h1>
-
-          <p className="text-xs text-[#f5f0e7]/70 font-sans max-w-xl">
-            Principal legal relationships managed via MySQL stored procedures and validation triggers.
+          <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-tight mt-1 font-semibold">
+            Clients Registry
+          </h2>
+          <p className="text-xs text-[#B4B7BC] font-sans mt-0.5">
+            Enterprise and individual client records powered by MySQL 8.0 Stored Procedures, cursors & pagination.
           </p>
         </div>
 
-        {/* Action Controls */}
+        <button
+          onClick={openAddModal}
+          className="court-btn-brass px-4 py-2 rounded-[3px] text-xs font-mono uppercase tracking-wider flex items-center gap-2 self-start sm:self-auto shadow-md"
+        >
+          <Plus className="w-4 h-4 text-[#0A0A0B]" />
+          <span>Enrol New Client</span>
+        </button>
+      </div>
+
+      {/* Stored Procedure & Cursor Operations Strip */}
+      <div className="court-card p-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2 text-xs">
+          <Database className="w-4 h-4 text-[#B8975A]" />
+          <span className="font-serif font-medium text-white">Stored Procedure Engine:</span>
+          <span className="text-[11px] font-mono text-[#B4B7BC]">PaginateClients & DisplayAllClients</span>
+        </div>
+
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => runCursor(null)}
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#3f2b1e] hover:bg-[#73513a] text-[#f5f0e7]/80 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider border border-white/10 transition-colors"
+            disabled={cursorLoading}
+            className="court-btn-outline px-3 py-1.5 rounded-[3px] text-xs font-mono flex items-center gap-1.5 transition-all"
+            title="Execute CALL DisplayAllClients() procedure"
           >
-            <Database className="w-3.5 h-3.5" />
-            <span>Cursor Batch</span>
+            <Play className="w-3 h-3 text-[#D4B97E]" />
+            <span>Cursor (Full)</span>
+          </button>
+
+          <button
+            onClick={() => runCursor(5)}
+            disabled={cursorLoading}
+            className="court-btn-outline px-3 py-1.5 rounded-[3px] text-xs font-mono flex items-center gap-1.5 transition-all"
+            title="Execute CALL DisplayClientsWithLimit(5)"
+          >
+            <Play className="w-3 h-3 text-[#D4B97E]" />
+            <span>Cursor (Limit 5)</span>
           </button>
 
           <button
             onClick={fetchXml}
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#3f2b1e] hover:bg-[#73513a] text-[#f5f0e7]/80 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider border border-white/10 transition-colors"
+            className="court-btn-outline px-3 py-1.5 rounded-[3px] text-xs font-mono flex items-center gap-1.5 transition-all"
+            title="Serialize clients to XML stream"
           >
-            <FileCode className="w-3.5 h-3.5" />
-            <span>Export XML</span>
-          </button>
-
-          <button
-            onClick={openAddModal}
-            className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-mono font-medium uppercase tracking-wider transition-all shadow-md"
-          >
-            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>New Client</span>
+            <FileCode className="w-3 h-3 text-[#72C095]" />
+            <span>XML Stream</span>
           </button>
         </div>
       </div>
 
-      {/* Alert Messages */}
+      {/* Alerts */}
       {error && (
-        <div className="p-3 bg-[#5c3030] border-l-4 border-red-500 rounded-sm text-red-200 text-xs flex items-start space-x-2.5">
-          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+        <div className="p-3.5 bg-[#9B2C2C]/20 border border-[#9B2C2C]/60 rounded-[3px] text-[#E67272] text-xs flex items-start gap-2.5">
+          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="p-3 bg-[#2f4a35] border-l-4 border-emerald-500 rounded-sm text-emerald-200 text-xs flex items-start space-x-2.5">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+        <div className="p-3.5 bg-[#3F7D5C]/20 border border-[#3F7D5C]/60 rounded-[3px] text-[#72C095] text-xs flex items-start gap-2.5">
+          <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <span>{successMsg}</span>
         </div>
       )}
 
-      {/* Search Toolbar */}
-      <div className="bg-[#5e412d] p-3 rounded-sm border border-white/10 shadow-md flex flex-col sm:flex-row items-center justify-between gap-3">
-        <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80">
+      {/* Filter and Search Bar */}
+      <form onSubmit={handleSearchSubmit} className="court-card p-3.5 flex flex-wrap items-center justify-between gap-3">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="w-3.5 h-3.5 text-[#6B6F76] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search by name, email, or classification..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 bg-[#3f2b1e] border border-white/10 rounded-sm text-xs text-white placeholder-[#f5f0e7]/30 focus:border-white focus:outline-none transition-colors"
+            placeholder="Search by client name, email, phone, or address..."
+            className="w-full pl-9 pr-3 py-1.5 court-input text-xs text-white placeholder-[#6B6F76] font-sans"
           />
-          <Search className="w-3.5 h-3.5 text-[#f5f0e7]/40 absolute left-2.5 top-2" />
-        </form>
-
-        <div className="flex items-center space-x-3 text-xs font-mono text-[#f5f0e7]/70">
-          <div className="flex items-center space-x-1.5">
-            <span>Rows:</span>
-            <select
-              value={pageSize}
-              onChange={(e) => {
-                setPageSize(Number(e.target.value));
-                setPage(1);
-              }}
-              className="border border-white/10 rounded-sm px-2 py-1 bg-[#3f2b1e] text-white font-mono text-xs focus:outline-none"
-            >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-            </select>
-          </div>
-          <span className="text-white border-l border-white/10 pl-3">
-            Total: {totalRecords}
-          </span>
         </div>
-      </div>
 
-      {/* Clients Data Table */}
-      <div className="bg-[#5e412d] rounded-sm border border-white/10 shadow-lg overflow-hidden">
+        <div className="flex items-center space-x-2 text-xs">
+          <span className="text-[#6B6F76] font-mono text-[11px]">Rows:</span>
+          <select
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+              setPage(1);
+            }}
+            className="court-input px-2.5 py-1 text-xs text-white"
+          >
+            <option value={5} className="bg-[#141416]">5 / page</option>
+            <option value={10} className="bg-[#141416]">10 / page</option>
+            <option value={25} className="bg-[#141416]">25 / page</option>
+          </select>
+        </div>
+      </form>
+
+      {/* Clients Table */}
+      <div className="court-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-[#f5f0e7]/75">
-            <thead className="bg-[#3f2b1e] text-[#f5f0e7]/60 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
+          <table className="court-table">
+            <thead>
               <tr>
-                <th className="px-4 py-3">ID</th>
-                <th className="px-4 py-3">Client Legal Name</th>
-                <th className="px-4 py-3">Type</th>
-                <th className="px-4 py-3">Contact</th>
-                <th className="px-4 py-3">Address</th>
-                <th className="px-4 py-3">Registration</th>
-                <th className="px-4 py-3 text-right">Actions</th>
+                <th>ID</th>
+                <th>Client Name</th>
+                <th>Classification</th>
+                <th>Telephone</th>
+                <th>Official Email</th>
+                <th>Address</th>
+                <th>Enrolled Date</th>
+                <th className="text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-10 text-[#f5f0e7]/60">
-                    Loading client records...
+                  <td colSpan={8} className="text-center py-10 text-xs font-mono text-[#B4B7BC]">
+                    Invoking PaginateClients procedure...
                   </td>
                 </tr>
               ) : clients.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-10 text-[#f5f0e7]/60 font-serif">
-                    No matching client records found.
+                  <td colSpan={8} className="text-center py-12 text-xs font-serif text-[#6B6F76]">
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <Users className="w-8 h-8 text-[#B8975A]/40" />
+                      <p>No client records match the current filter.</p>
+                    </div>
                   </td>
                 </tr>
               ) : (
                 clients.map((c) => (
-                  <tr key={c.client_id} className="hover:bg-white/[0.02] transition-colors group">
-                    <td className="px-4 py-3 font-mono text-xs font-bold text-white">
+                  <tr key={c.client_id}>
+                    <td className="font-mono text-xs text-[#D4B97E] font-semibold">
                       #{c.client_id}
                     </td>
-                    <td className="px-4 py-3 font-serif font-semibold text-white text-xs">
+                    <td className="font-serif font-medium text-white text-xs">
                       {c.name}
                     </td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex items-center space-x-1 px-2 py-0.5 rounded-sm text-[10px] font-mono ${
-                        c.client_type === 'Organization'
-                          ? 'bg-[#73513a] text-white border border-white/20'
-                          : 'bg-[#3f2b1e] text-[#f5f0e7]/70 border border-white/10'
+                    <td>
+                      <span className={`px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase inline-flex items-center gap-1 ${
+                        c.client_type === 'Organization' ? 'badge-info' : 'badge-warning'
                       }`}>
-                        {c.client_type === 'Organization' ? <Building2 className="w-3 h-3 text-white" /> : <User className="w-3 h-3" />}
+                        {c.client_type === 'Organization' ? <Building2 className="w-2.5 h-2.5" /> : <User className="w-2.5 h-2.5" />}
                         <span>{c.client_type}</span>
                       </span>
                     </td>
-                    <td className="px-4 py-3 font-mono text-[11px]">
-                      <div className="text-white">{c.phone || '—'}</div>
-                      <div className="text-[#f5f0e7]/50">{c.email || '—'}</div>
+                    <td className="font-mono text-xs text-[#B4B7BC]">
+                      {c.phone || '—'}
                     </td>
-                    <td className="px-4 py-3 text-xs font-serif text-[#f5f0e7]/70 max-w-xs truncate">
+                    <td className="font-mono text-xs text-[#F6F4EF]">
+                      {c.email || '—'}
+                    </td>
+                    <td className="text-xs text-[#B4B7BC] max-w-xs truncate">
                       {c.address || '—'}
                     </td>
-                    <td className="px-4 py-3 text-xs font-mono text-[#f5f0e7]/70">
-                      {c.date_of_registration}
+                    <td className="font-mono text-xs text-[#6B6F76]">
+                      {c.created_at ? String(c.created_at).slice(0, 10) : '—'}
                     </td>
-                    <td className="px-4 py-3 text-right space-x-1">
-                      <button
-                        onClick={() => openEditModal(c)}
-                        title="Update Client"
-                        className="p-1 text-[#f5f0e7]/60 hover:text-white hover:bg-white/10 rounded transition-colors"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(c.client_id)}
-                        title="Delete Client"
-                        className="p-1 text-[#f5f0e7]/60 hover:text-red-400 hover:bg-red-950/40 rounded transition-colors"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                    <td className="text-right">
+                      <div className="flex items-center justify-end space-x-1.5">
+                        <button
+                          onClick={() => openEditModal(c)}
+                          className="p-1.5 rounded-[3px] text-[#B4B7BC] hover:text-white hover:bg-[#1E1F23] transition-colors cursor-pointer"
+                          title="Edit Client"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(c.client_id)}
+                          className="p-1.5 rounded-[3px] text-[#6B6F76] hover:text-[#E67272] hover:bg-[#9B2C2C]/10 transition-colors cursor-pointer"
+                          title="Delete Client"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -348,28 +368,27 @@ export default function Clients() {
         </div>
 
         {/* Pagination Bar */}
-        <div className="px-4 py-3 border-t border-white/10 flex items-center justify-between text-xs font-mono text-[#f5f0e7]/60 bg-[#3f2b1e]">
-          <div>
-            Page <span className="text-white font-medium">{page}</span> of{' '}
-            <span className="text-white font-medium">{totalPages}</span>
-            <span className="text-white/20 mx-2">|</span>
-            <span>{clients.length} of {totalRecords} records</span>
+        <div className="px-4 py-3 bg-[#141416] border-t border-[#2B2D32] flex items-center justify-between text-xs">
+          <div className="text-[#6B6F76] font-mono text-[11px]">
+            Showing Page <span className="text-white font-medium">{page}</span> of{' '}
+            <span className="text-white font-medium">{totalPages}</span> ({totalRecords} records)
           </div>
 
           <div className="flex items-center space-x-1.5">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="p-1 rounded-sm border border-white/10 hover:border-white/30 disabled:opacity-30 disabled:pointer-events-none text-white"
+              className="p-1.5 rounded-[3px] border border-[#2B2D32] text-[#B4B7BC] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
             >
-              <ChevronLeft className="w-3.5 h-3.5" />
+              <ChevronLeft className="w-4 h-4" />
             </button>
+            <span className="px-2 font-mono text-[#D4B97E] text-xs font-semibold">{page}</span>
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page >= totalPages}
-              className="p-1 rounded-sm border border-white/10 hover:border-white/30 disabled:opacity-30 disabled:pointer-events-none text-white"
+              className="p-1.5 rounded-[3px] border border-[#2B2D32] text-[#B4B7BC] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
             >
-              <ChevronRight className="w-3.5 h-3.5" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -378,23 +397,26 @@ export default function Clients() {
       {/* Add / Edit Client Modal */}
       {formModalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#5e412d] rounded-sm shadow-2xl border border-white/20 max-w-lg w-full overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#3f2b1e]">
-              <h3 className="font-serif font-semibold text-white text-base">
-                {isEditing ? 'Update Client Record' : 'Enroll New Client'}
-              </h3>
+          <div className="court-card-elevated max-w-lg w-full">
+            <div className="px-5 py-3.5 border-b border-[#2B2D32] flex items-center justify-between bg-[#141416]">
+              <div className="flex items-center space-x-2">
+                <Users className="w-4 h-4 text-[#B8975A]" />
+                <h3 className="font-serif font-semibold text-white text-sm">
+                  {isEditing ? `Edit Client Record #${editId}` : 'Enrol New Client'}
+                </h3>
+              </div>
               <button
                 onClick={() => setFormModalOpen(false)}
-                className="text-[#f5f0e7]/60 hover:text-white"
+                className="text-[#6B6F76] hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmitForm} className="p-5 space-y-3.5">
+            <form onSubmit={handleSubmitForm} className="p-5 space-y-4">
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1">
-                  Client Legal Name *
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Full Name / Entity Title *
                 </label>
                 <input
                   type="text"
@@ -402,71 +424,80 @@ export default function Clients() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. Ramesh Patel or Reliance Industries Ltd"
-                  className="w-full px-3 py-2 bg-[#3f2b1e] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none"
+                  className="w-full px-3 py-1.5 court-input text-xs text-white"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1">
-                  Classification *
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Client Classification
                 </label>
                 <select
                   value={formData.client_type}
                   onChange={(e) => setFormData({ ...formData, client_type: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#3f2b1e] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none font-mono"
+                  className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                 >
-                  <option value="Individual">Individual</option>
-                  <option value="Organization">Organization</option>
+                  <option value="Individual" className="bg-[#141416]">Individual</option>
+                  <option value="Organization" className="bg-[#141416]">Organization / Corporate Entity</option>
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1">Phone</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Telephone (10 Digits) *
+                  </label>
                   <input
-                    type="text"
+                    type="tel"
+                    required
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="+91 98980 12345"
-                    className="w-full px-3 py-2 bg-[#3f2b1e] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
+                    placeholder="9876543210"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1">Email</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Email Address *
+                  </label>
                   <input
                     type="email"
+                    required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="client@domain.com"
-                    className="w-full px-3 py-2 bg-[#3f2b1e] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
+                    placeholder="client@domain.in"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1">Address / Jurisdiction</label>
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Chambers / Residential Address
+                </label>
                 <textarea
-                  rows="2"
+                  rows={2}
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  placeholder="Street, City, State"
-                  className="w-full px-3 py-2 bg-[#3f2b1e] border border-white/10 focus:border-white rounded-sm text-xs text-white focus:outline-none"
+                  placeholder="Street, City, Pin Code"
+                  className="w-full px-3 py-1.5 court-input text-xs text-white"
                 />
               </div>
 
-              <div className="pt-2 flex items-center justify-end space-x-2.5 border-t border-white/10">
+              <div className="pt-3 flex justify-end space-x-2.5 border-t border-[#2B2D32]">
                 <button
                   type="button"
                   onClick={() => setFormModalOpen(false)}
-                  className="px-3.5 py-1.5 border border-white/10 text-[#f5f0e7]/70 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider"
+                  className="court-btn-outline px-4 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-mono font-medium uppercase tracking-wider shadow-md"
+                  className="court-btn-brass px-5 py-1.5 rounded-[3px] text-xs font-mono font-semibold uppercase tracking-wider shadow"
                 >
-                  {isEditing ? 'Save Changes' : 'Confirm Enrollment'}
+                  {isEditing ? 'Save Changes' : 'Enrol Client'}
                 </button>
               </div>
             </form>
@@ -474,44 +505,49 @@ export default function Clients() {
         </div>
       )}
 
-      {/* Explicit Cursor Results Modal */}
+      {/* Explicit Cursor Procedure Output Modal */}
       {cursorModalOpen && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#5e412d] rounded-sm shadow-2xl border border-white/20 max-w-xl w-full max-h-[80vh] flex flex-col overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#3f2b1e]">
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="court-card-elevated max-w-2xl w-full max-h-[85vh] overflow-y-auto">
+            <div className="px-5 py-3.5 border-b border-[#2B2D32] flex items-center justify-between bg-[#141416]">
               <div className="flex items-center space-x-2">
-                <Database className="w-4 h-4 text-white" />
-                <h3 className="font-serif font-semibold text-white text-sm">{cursorType} Batch Stream</h3>
+                <Database className="w-4 h-4 text-[#B8975A]" />
+                <h3 className="font-serif font-semibold text-white text-sm">
+                  MySQL Explicit Cursor Telemetry: {cursorType}
+                </h3>
               </div>
-              <button onClick={() => setCursorModalOpen(false)} className="text-[#f5f0e7]/60 hover:text-white">
+              <button
+                onClick={() => setCursorModalOpen(false)}
+                className="text-[#6B6F76] hover:text-white cursor-pointer"
+              >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-4 overflow-y-auto space-y-3">
-              <div className="border border-white/10 rounded-sm overflow-hidden">
-                <table className="w-full text-left text-xs text-[#f5f0e7]/75 font-mono">
-                  <thead className="bg-[#3f2b1e] text-[#f5f0e7]/60 text-[10px] uppercase border-b border-white/10">
+            <div className="p-5 space-y-3">
+              <p className="text-xs text-[#B4B7BC] font-sans">
+                Iterated row-by-row via server-side MySQL stored procedure cursor cursor_client:
+              </p>
+
+              <div className="border border-[#2B2D32] rounded-[3px] overflow-hidden">
+                <table className="court-table text-xs">
+                  <thead>
                     <tr>
-                      <th className="px-3 py-2">Seq</th>
-                      <th className="px-3 py-2">ID</th>
-                      <th className="px-3 py-2">Client Name</th>
-                      <th className="px-3 py-2">Type</th>
-                      <th className="px-3 py-2">Status</th>
+                      <th>Cursor Row</th>
+                      <th>Client Name</th>
+                      <th>Classification</th>
+                      <th>Phone</th>
+                      <th>Email</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
-                    {cursorData.map((row, idx) => (
-                      <tr key={idx} className="hover:bg-white/[0.02]">
-                        <td className="px-3 py-2 text-white font-bold">{row.cursor_seq_no}</td>
-                        <td className="px-3 py-2 text-[#f5f0e7]/60">#{row.client_id}</td>
-                        <td className="px-3 py-2 text-white">{row.client_name}</td>
-                        <td className="px-3 py-2 text-[#f5f0e7]/60">{row.client_type}</td>
-                        <td className="px-3 py-2">
-                          <span className="px-1.5 py-0.5 rounded-sm bg-emerald-950/60 text-emerald-300 border border-emerald-500/30 text-[9px]">
-                            FETCHED
-                          </span>
-                        </td>
+                  <tbody>
+                    {cursorData.map((c, i) => (
+                      <tr key={c.client_id || i}>
+                        <td className="font-mono text-[10px] text-[#B8975A]">#{i + 1}</td>
+                        <td className="font-serif font-medium text-white">{c.name}</td>
+                        <td className="font-mono text-[10px]">{c.client_type}</td>
+                        <td className="font-mono text-[11px]">{c.phone}</td>
+                        <td className="font-mono text-[11px]">{c.email}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -519,44 +555,49 @@ export default function Clients() {
               </div>
             </div>
 
-            <div className="px-5 py-2.5 border-t border-white/10 bg-[#3f2b1e] flex justify-end">
+            <div className="px-5 py-3 border-t border-[#2B2D32] bg-[#141416] flex justify-end">
               <button
                 onClick={() => setCursorModalOpen(false)}
-                className="px-3.5 py-1.5 bg-[#73513a] hover:bg-[#7d5a41] text-white border border-white/10 rounded-sm text-xs font-mono uppercase tracking-wider"
+                className="court-btn-outline px-4 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider"
               >
-                Close Viewer
+                Dismiss
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* XML Viewer Modal */}
+      {/* XML Stream Output Modal */}
       {xmlModalOpen && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#5e412d] rounded-sm shadow-2xl border border-white/20 max-w-xl w-full max-h-[80vh] flex flex-col overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#3f2b1e]">
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="court-card-elevated max-w-2xl w-full max-h-[85vh] overflow-y-auto">
+            <div className="px-5 py-3.5 border-b border-[#2B2D32] flex items-center justify-between bg-[#141416]">
               <div className="flex items-center space-x-2">
-                <FileCode className="w-4 h-4 text-white" />
-                <h3 className="font-serif font-semibold text-white text-sm">XML Serialized Payload</h3>
+                <FileCode className="w-4 h-4 text-[#72C095]" />
+                <h3 className="font-serif font-semibold text-white text-sm">
+                  XML Document Serialization Stream
+                </h3>
               </div>
-              <button onClick={() => setXmlModalOpen(false)} className="text-[#f5f0e7]/60 hover:text-white">
+              <button
+                onClick={() => setXmlModalOpen(false)}
+                className="text-[#6B6F76] hover:text-white cursor-pointer"
+              >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-4 overflow-y-auto">
-              <pre className="bg-[#3f2b1e] text-emerald-300 p-3 rounded-sm font-mono text-xs overflow-x-auto border border-white/10">
+            <div className="p-5 space-y-3">
+              <pre className="p-4 bg-[#0A0A0B] border border-[#2B2D32] rounded-[3px] text-[11px] font-mono text-[#D4B97E] overflow-x-auto max-h-96 leading-relaxed">
                 {xmlContent}
               </pre>
             </div>
 
-            <div className="px-5 py-2.5 border-t border-white/10 bg-[#3f2b1e] flex justify-end">
+            <div className="px-5 py-3 border-t border-[#2B2D32] bg-[#141416] flex justify-end">
               <button
                 onClick={() => setXmlModalOpen(false)}
-                className="px-3.5 py-1.5 bg-[#73513a] hover:bg-[#7d5a41] text-white border border-white/10 rounded-sm text-xs font-mono uppercase tracking-wider"
+                className="court-btn-outline px-4 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider"
               >
-                Close
+                Close Stream
               </button>
             </div>
           </div>

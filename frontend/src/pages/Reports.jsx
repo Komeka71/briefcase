@@ -267,32 +267,32 @@ export default function Reports() {
   return (
     <div className="space-y-7 pb-12">
       {/* Editorial Header */}
-      <div className="relative overflow-hidden rounded-sm bg-gradient-to-r from-[#553a28] via-[#664631] to-[#73513a] border border-white/10 p-7 md:p-9 shadow-2xl">
-        <div className="absolute top-0 right-0 w-96 h-full bg-gradient-to-l from-[#73513a]/20 to-transparent pointer-events-none" />
-        <div className="absolute -bottom-10 -right-10 w-44 h-44 rounded-full bg-[#f5f0e7]/5 blur-3xl pointer-events-none" />
+      <div className="relative overflow-hidden rounded-sm bg-gradient-to-r from-[#000000] via-[#141416] to-[#1E1F23] border border-[#B8975A]/25 border border-white/10 p-7 md:p-9 shadow-2xl">
+        <div className="absolute top-0 right-0 w-96 h-full bg-gradient-to-l from-[#24262B]/20 to-transparent pointer-events-none" />
+        <div className="absolute -bottom-10 -right-10 w-44 h-44 rounded-full bg-[#F6F4EF]/5 blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2.5 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase font-semibold bg-[#73513a] text-[#f5f0e7] border border-white/15">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase font-semibold bg-[#24262B] text-[#F6F4EF] border border-white/15">
               <Database className="w-3 h-3 text-white" />
               <span>Practice Intelligence & Analytics Engine</span>
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-serif font-normal text-[#f5f0e7] tracking-tight">
+            <h1 className="text-3xl md:text-4xl font-serif font-normal text-[#F6F4EF] tracking-tight">
               Reports, Queries & <span className="italic text-white">Practice Analytics</span>
             </h1>
 
-            <p className="text-xs md:text-sm text-[#f5f0e7]/70 font-serif leading-relaxed">
+            <p className="text-xs md:text-sm text-[#F6F4EF]/70 font-serif leading-relaxed">
               Real-time transactional query engine executing relational joins, multi-table subqueries, correlated budget benchmarks, XML exports, and index execution plans.
             </p>
           </div>
 
           {executionTime !== null && (
-            <div className="self-start md:self-auto flex items-center space-x-3 bg-[#4a3324] border border-emerald-500/30 px-5 py-3 rounded-sm text-xs font-mono text-emerald-400 shadow-xl">
+            <div className="self-start md:self-auto flex items-center space-x-3 bg-[#141416] border border-emerald-500/30 px-5 py-3 rounded-sm text-xs font-mono text-emerald-400 shadow-xl">
               <Clock className="w-4 h-4 text-emerald-400" />
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-[#f5f0e7]/70">Engine Latency</div>
-                <div className="font-bold text-[#f5f0e7] text-sm">{executionTime} ms</div>
+                <div className="text-[10px] uppercase tracking-wider text-[#F6F4EF]/70">Engine Latency</div>
+                <div className="font-bold text-[#F6F4EF] text-sm">{executionTime} ms</div>
               </div>
             </div>
           )}
@@ -300,15 +300,15 @@ export default function Reports() {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="bg-[#553a28] border border-white/10 rounded-sm p-1.5 shadow-xl flex flex-wrap gap-1">
+      <div className="bg-[#141416] border border-white/10 rounded-sm p-1.5 shadow-xl flex flex-wrap gap-1">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-3 py-2 rounded-sm text-xs font-mono transition-all duration-200 ${
               activeTab === tab.id
-                ? 'bg-[#73513a] text-[#f5f0e7] border border-white/20 font-semibold shadow-md'
-                : 'text-[#f5f0e7]/70 hover:text-[#f5f0e7] hover:bg-white/5'
+                ? 'bg-[#24262B] text-[#F6F4EF] border border-white/20 font-semibold shadow-md'
+                : 'text-[#F6F4EF]/70 hover:text-[#F6F4EF] hover:bg-white/5'
             }`}
           >
             {tab.label}
@@ -318,39 +318,39 @@ export default function Reports() {
 
       {/* Status Messages */}
       {error && (
-        <div className="p-4 bg-[#5c3030] border-l-4 border-[#dc2626] rounded-sm text-[#f5f0e7] flex items-start space-x-3 shadow-lg border border-[#dc2626]/20">
+        <div className="p-4 bg-[#3A1A1A] border-l-4 border-[#dc2626] rounded-sm text-[#F6F4EF] flex items-start space-x-3 shadow-lg border border-[#dc2626]/20">
           <AlertCircle className="w-5 h-5 text-[#f87171] flex-shrink-0 mt-0.5" />
           <div className="text-xs">
             <div className="font-semibold text-red-300 font-mono uppercase tracking-wider">
               Query Error / Constraint Notice:
             </div>
-            <div className="mt-1 text-[#f5f0e7] font-serif text-sm">{error}</div>
+            <div className="mt-1 text-[#F6F4EF] font-serif text-sm">{error}</div>
           </div>
         </div>
       )}
 
       {success && (
-        <div className="p-4 bg-[#2f4a35] border-l-4 border-[#059669] rounded-sm text-[#f5f0e7] flex items-start space-x-3 shadow-lg border border-[#059669]/20">
+        <div className="p-4 bg-[#1A2E22] border-l-4 border-[#059669] rounded-sm text-[#F6F4EF] flex items-start space-x-3 shadow-lg border border-[#059669]/20">
           <CheckCircle2 className="w-5 h-5 text-[#34d399] flex-shrink-0 mt-0.5" />
           <div className="text-xs">
             <div className="font-semibold text-emerald-300 font-mono uppercase tracking-wider">
               Execution Succeeded:
             </div>
-            <div className="mt-1 text-[#f5f0e7] font-serif text-sm">{success}</div>
+            <div className="mt-1 text-[#F6F4EF] font-serif text-sm">{success}</div>
           </div>
         </div>
       )}
 
       {/* TAB 1: CLIENT REGISTER & XML EXPORT */}
       {activeTab === 'q1' && (
-        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#141416] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Directory Register</div>
-              <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
+              <h2 className="text-xl font-serif font-semibold text-[#F6F4EF] mt-0.5">
                 Master Client Register & Technical XML Export
               </h2>
-              <p className="text-xs text-[#f5f0e7]/70 font-mono mt-1">
+              <p className="text-xs text-[#F6F4EF]/70 font-mono mt-1">
                 SELECT * FROM CLIENT ORDER BY client_id ASC
               </p>
             </div>
@@ -358,7 +358,7 @@ export default function Reports() {
               <button
                 onClick={() => runQuery1('')}
                 disabled={loading}
-                className="inline-flex items-center space-x-1.5 px-4 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                className="inline-flex items-center space-x-1.5 px-4 py-2 court-btn-brass hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#0A0A0B] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
               >
                 <Play className="w-3.5 h-3.5 fill-current" />
                 <span>Execute Query</span>
@@ -366,7 +366,7 @@ export default function Reports() {
               <button
                 onClick={() => runQuery1('xml')}
                 disabled={loading}
-                className="inline-flex items-center space-x-1.5 px-3 py-2 bg-[#73513a] hover:bg-[#7d5a41] text-[#f5f0e7] border border-white/15 rounded-sm text-xs font-mono uppercase tracking-wider shadow-md transition-colors"
+                className="inline-flex items-center space-x-1.5 px-3 py-2 bg-[#24262B] hover:bg-[#7d5a41] text-[#F6F4EF] border border-white/15 rounded-sm text-xs font-mono uppercase tracking-wider shadow-md transition-colors"
               >
                 <FileCode className="w-3.5 h-3.5" />
                 <span>XML Export</span>
@@ -378,17 +378,17 @@ export default function Reports() {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs font-mono text-white">
                 <span>Generated XML Document:</span>
-                <button onClick={() => setQ1Xml(null)} className="text-[#f5f0e7]/70 hover:text-white">Close XML</button>
+                <button onClick={() => setQ1Xml(null)} className="text-[#F6F4EF]/70 hover:text-white">Close XML</button>
               </div>
-              <pre className="p-4 bg-[#4a3324] border border-white/10 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto max-h-64">
+              <pre className="p-4 bg-[#141416] border border-white/10 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto max-h-64">
                 {q1Xml}
               </pre>
             </div>
           )}
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
-            <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+            <table className="w-full text-left text-xs text-[#F6F4EF]/70">
+              <thead className="bg-[#141416] text-[#F6F4EF] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3">ID</th>
                   <th className="px-4 py-3">Client Entity Name</th>
@@ -402,7 +402,7 @@ export default function Reports() {
               <tbody className="divide-y divide-white/5 font-mono">
                 {q1Data.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="text-center py-12 text-[#f5f0e7]/70 font-serif">
+                    <td colSpan="7" className="text-center py-12 text-[#F6F4EF]/70 font-serif">
                       Click "Execute Query" to inspect all registered clients from database.
                     </td>
                   </tr>
@@ -410,10 +410,10 @@ export default function Reports() {
                   q1Data.map((c) => (
                     <tr key={c.client_id} className="hover:bg-white/[0.02]">
                       <td className="px-4 py-3 text-white">#{c.client_id}</td>
-                      <td className="px-4 py-3 font-serif font-semibold text-[#f5f0e7]">{c.name}</td>
+                      <td className="px-4 py-3 font-serif font-semibold text-[#F6F4EF]">{c.name}</td>
                       <td className="px-4 py-3">
                         <span className={`px-2 py-0.5 rounded-sm text-[10px] ${
-                          c.client_type === 'Organization' ? 'bg-[#73513a]/50 text-[#f5f0e7] border border-white/15' : 'bg-stone-800 text-[#f5f0e7]/70'
+                          c.client_type === 'Organization' ? 'bg-[#24262B]/50 text-[#F6F4EF] border border-white/15' : 'bg-stone-800 text-[#F6F4EF]/70'
                         }`}>
                           {c.client_type}
                         </span>
@@ -433,13 +433,13 @@ export default function Reports() {
 
       {/* TAB 2: INTAKE INTEGRITY */}
       {activeTab === 'q2' && (
-        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#141416] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="pb-4 border-b border-white/5">
             <div className="text-[10px] font-mono text-white uppercase tracking-wider">Transactional Intake</div>
-            <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
+            <h2 className="text-xl font-serif font-semibold text-[#F6F4EF] mt-0.5">
               Client & Legal Matter Creation with Foreign Key Validation
             </h2>
-            <p className="text-xs text-[#f5f0e7]/70 font-serif mt-1">
+            <p className="text-xs text-[#F6F4EF]/70 font-serif mt-1">
               Demonstrates atomic dual-entity insertion into CLIENT and CASES tables while enforcing validation triggers and referential foreign key dependencies.
             </p>
           </div>
@@ -447,7 +447,7 @@ export default function Reports() {
           <form onSubmit={runQuery2} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70 mb-1">
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#F6F4EF]/70 mb-1">
                   Client Legal Name *
                 </label>
                 <input
@@ -455,18 +455,18 @@ export default function Reports() {
                   required
                   value={q2Form.client_name}
                   onChange={(e) => setQ2Form({ ...q2Form, client_name: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7]"
+                  className="w-full px-3 py-2 bg-[#141416] border border-white/10 focus:border-white rounded-sm text-xs text-[#F6F4EF]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70 mb-1">
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#F6F4EF]/70 mb-1">
                   Client Classification *
                 </label>
                 <select
                   value={q2Form.client_type}
                   onChange={(e) => setQ2Form({ ...q2Form, client_type: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
+                  className="w-full px-3 py-2 bg-[#141416] border border-white/10 focus:border-white rounded-sm text-xs text-[#F6F4EF] font-mono"
                 >
                   <option value="Individual">Individual</option>
                   <option value="Organization">Organization</option>
@@ -474,7 +474,7 @@ export default function Reports() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70 mb-1">
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#F6F4EF]/70 mb-1">
                   Email Address *
                 </label>
                 <input
@@ -482,12 +482,12 @@ export default function Reports() {
                   required
                   value={q2Form.client_email}
                   onChange={(e) => setQ2Form({ ...q2Form, client_email: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-[#f5f0e7]"
+                  className="w-full px-3 py-2 bg-[#141416] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-[#F6F4EF]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70 mb-1">
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#F6F4EF]/70 mb-1">
                   Phone Number *
                 </label>
                 <input
@@ -495,13 +495,13 @@ export default function Reports() {
                   required
                   value={q2Form.client_phone}
                   onChange={(e) => setQ2Form({ ...q2Form, client_phone: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-[#f5f0e7]"
+                  className="w-full px-3 py-2 bg-[#141416] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-[#F6F4EF]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70 mb-1">
+              <label className="block text-xs font-mono uppercase tracking-wider text-[#F6F4EF]/70 mb-1">
                 Client Address *
               </label>
               <input
@@ -509,13 +509,13 @@ export default function Reports() {
                 required
                 value={q2Form.client_address}
                 onChange={(e) => setQ2Form({ ...q2Form, client_address: e.target.value })}
-                className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7]"
+                className="w-full px-3 py-2 bg-[#141416] border border-white/10 focus:border-white rounded-sm text-xs text-[#F6F4EF]"
               />
             </div>
 
             <div className="pt-2 border-t border-white/5 grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70 mb-1">
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#F6F4EF]/70 mb-1">
                   Case Title *
                 </label>
                 <input
@@ -523,12 +523,12 @@ export default function Reports() {
                   required
                   value={q2Form.case_title}
                   onChange={(e) => setQ2Form({ ...q2Form, case_title: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7]"
+                  className="w-full px-3 py-2 bg-[#141416] border border-white/10 focus:border-white rounded-sm text-xs text-[#F6F4EF]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70 mb-1">
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#F6F4EF]/70 mb-1">
                   Allocated Budget (₹) *
                 </label>
                 <input
@@ -537,18 +537,18 @@ export default function Reports() {
                   min="0"
                   value={q2Form.budget}
                   onChange={(e) => setQ2Form({ ...q2Form, budget: parseFloat(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-[#f5f0e7]"
+                  className="w-full px-3 py-2 bg-[#141416] border border-white/10 focus:border-white rounded-sm text-xs font-mono text-[#F6F4EF]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70 mb-1">
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#F6F4EF]/70 mb-1">
                   Priority Rating *
                 </label>
                 <select
                   value={q2Form.priority}
                   onChange={(e) => setQ2Form({ ...q2Form, priority: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
+                  className="w-full px-3 py-2 bg-[#141416] border border-white/10 focus:border-white rounded-sm text-xs text-[#F6F4EF] font-mono"
                 >
                   <option value="High">High</option>
                   <option value="Medium">Medium</option>
@@ -560,7 +560,7 @@ export default function Reports() {
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center space-x-1.5 px-5 py-2.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+              className="inline-flex items-center space-x-1.5 px-5 py-2.5 court-btn-brass hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#0A0A0B] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
             >
               <Zap className="w-3.5 h-3.5" />
               <span>Submit Transactional Intake</span>
@@ -568,12 +568,12 @@ export default function Reports() {
           </form>
 
           {q2Result && (
-            <div className="p-4 bg-[#4a3324] border border-white/15 rounded-sm text-xs font-mono space-y-1 mt-4 text-[#f5f0e7]/70">
-              <div className="font-bold text-[#f5f0e7] uppercase tracking-wider">
+            <div className="p-4 bg-[#141416] border border-white/15 rounded-sm text-xs font-mono space-y-1 mt-4 text-[#F6F4EF]/70">
+              <div className="font-bold text-[#F6F4EF] uppercase tracking-wider">
                 Intake Transaction Committed Successfully:
               </div>
-              <div>• Created Client ID: <span className="text-[#f5f0e7]">#{q2Result.client_id}</span> ({q2Result.client_name})</div>
-              <div>• Created Case ID: <span className="text-[#f5f0e7]">#{q2Result.case_id}</span> ({q2Result.case_number})</div>
+              <div>• Created Client ID: <span className="text-[#F6F4EF]">#{q2Result.client_id}</span> ({q2Result.client_name})</div>
+              <div>• Created Case ID: <span className="text-[#F6F4EF]">#{q2Result.case_id}</span> ({q2Result.case_number})</div>
               <div>• Title: {q2Result.case_title}</div>
             </div>
           )}
@@ -582,14 +582,14 @@ export default function Reports() {
 
       {/* TAB 3: FINANCIAL AGGREGATES */}
       {activeTab === 'q3' && (
-        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#141416] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Budget Analysis</div>
-              <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
+              <h2 className="text-xl font-serif font-semibold text-[#F6F4EF] mt-0.5">
                 Practice Financial Aggregates & Distribution
               </h2>
-              <p className="text-xs text-[#f5f0e7]/70 font-mono mt-1">
+              <p className="text-xs text-[#F6F4EF]/70 font-mono mt-1">
                 SELECT {q3Func}(budget) FROM CASES
               </p>
             </div>
@@ -597,7 +597,7 @@ export default function Reports() {
               <select
                 value={q3Func}
                 onChange={(e) => setQ3Func(e.target.value)}
-                className="px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="px-3 py-2 bg-[#141416] border border-white/10 focus:border-white rounded-sm text-xs text-[#F6F4EF] font-mono"
               >
                 <option value="SUM">SUM (Total Budget)</option>
                 <option value="AVG">AVG (Average Budget)</option>
@@ -608,14 +608,14 @@ export default function Reports() {
               <button
                 onClick={() => runQuery3('')}
                 disabled={loading}
-                className="px-4 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                className="px-4 py-2 court-btn-brass hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#0A0A0B] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
               >
                 Compute
               </button>
               <button
                 onClick={() => runQuery3('xml')}
                 disabled={loading}
-                className="px-3 py-2 bg-[#73513a] hover:bg-[#7d5a41] text-[#f5f0e7] border border-white/15 rounded-sm text-xs font-mono uppercase tracking-wider shadow-md transition-colors"
+                className="px-3 py-2 bg-[#24262B] hover:bg-[#7d5a41] text-[#F6F4EF] border border-white/15 rounded-sm text-xs font-mono uppercase tracking-wider shadow-md transition-colors"
               >
                 XML
               </button>
@@ -626,21 +626,21 @@ export default function Reports() {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs font-mono text-white">
                 <span>Generated XML Aggregate Payload:</span>
-                <button onClick={() => setQ3Xml(null)} className="text-[#f5f0e7]/70 hover:text-white">Close XML</button>
+                <button onClick={() => setQ3Xml(null)} className="text-[#F6F4EF]/70 hover:text-white">Close XML</button>
               </div>
-              <pre className="p-4 bg-[#4a3324] border border-white/10 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto max-h-48">
+              <pre className="p-4 bg-[#141416] border border-white/10 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto max-h-48">
                 {q3Xml}
               </pre>
             </div>
           )}
 
           {q3Result && (
-            <div className="p-6 bg-[#4a3324] border border-white/15 rounded-sm flex items-center justify-between">
+            <div className="p-6 bg-[#141416] border border-white/15 rounded-sm flex items-center justify-between">
               <div>
-                <div className="text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70">
+                <div className="text-xs font-mono uppercase tracking-wider text-[#F6F4EF]/70">
                   Aggregated Output ({q3Result.function} of CASES.budget):
                 </div>
-                <div className="text-3xl font-serif font-bold text-[#f5f0e7] mt-1">
+                <div className="text-3xl font-serif font-bold text-[#F6F4EF] mt-1">
                   {q3Result.function === 'COUNT' ? q3Result.result : `₹ ${Number(q3Result.result || 0).toLocaleString('en-IN')}`}
                 </div>
               </div>
@@ -652,14 +652,14 @@ export default function Reports() {
 
       {/* TAB 4: FILTERED EXPLORER */}
       {activeTab === 'q4' && (
-        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#141416] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Dynamic Predicates</div>
-              <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
+              <h2 className="text-xl font-serif font-semibold text-[#F6F4EF] mt-0.5">
                 Dynamic Conditional Record Filtering
               </h2>
-              <p className="text-xs text-[#f5f0e7]/70 font-mono mt-1">
+              <p className="text-xs text-[#F6F4EF]/70 font-mono mt-1">
                 SELECT * FROM CLIENT WHERE {q4Column} {q4Operator} '{q4Value}'
               </p>
             </div>
@@ -667,7 +667,7 @@ export default function Reports() {
               <select
                 value={q4Column}
                 onChange={(e) => setQ4Column(e.target.value)}
-                className="px-2.5 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="px-2.5 py-2 bg-[#141416] border border-white/10 rounded-sm text-xs text-[#F6F4EF] font-mono"
               >
                 <option value="client_type">client_type</option>
                 <option value="address">address</option>
@@ -677,7 +677,7 @@ export default function Reports() {
               <select
                 value={q4Operator}
                 onChange={(e) => setQ4Operator(e.target.value)}
-                className="px-2.5 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="px-2.5 py-2 bg-[#141416] border border-white/10 rounded-sm text-xs text-[#F6F4EF] font-mono"
               >
                 <option value="=">=</option>
                 <option value="!=">!=</option>
@@ -689,20 +689,20 @@ export default function Reports() {
                 value={q4Value}
                 onChange={(e) => setQ4Value(e.target.value)}
                 placeholder="Value..."
-                className="w-28 px-2.5 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="w-28 px-2.5 py-2 bg-[#141416] border border-white/10 rounded-sm text-xs text-[#F6F4EF] font-mono"
               />
 
               <button
                 onClick={() => runQuery4('')}
                 disabled={loading}
-                className="px-3.5 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                className="px-3.5 py-2 court-btn-brass hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#0A0A0B] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
               >
                 Filter
               </button>
               <button
                 onClick={() => runQuery4('xml')}
                 disabled={loading}
-                className="px-2.5 py-2 bg-[#73513a] hover:bg-[#7d5a41] text-[#f5f0e7] border border-white/15 rounded-sm text-xs font-mono uppercase tracking-wider transition-colors"
+                className="px-2.5 py-2 bg-[#24262B] hover:bg-[#7d5a41] text-[#F6F4EF] border border-white/15 rounded-sm text-xs font-mono uppercase tracking-wider transition-colors"
               >
                 XML
               </button>
@@ -710,14 +710,14 @@ export default function Reports() {
           </div>
 
           {q4Xml && (
-            <pre className="p-4 bg-[#4a3324] border border-white/10 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto max-h-48">
+            <pre className="p-4 bg-[#141416] border border-white/10 rounded-sm text-xs font-mono text-emerald-300 overflow-x-auto max-h-48">
               {q4Xml}
             </pre>
           )}
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
-            <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+            <table className="w-full text-left text-xs text-[#F6F4EF]/70">
+              <thead className="bg-[#141416] text-[#F6F4EF] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3">Client ID</th>
                   <th className="px-4 py-3">Client Entity</th>
@@ -730,7 +730,7 @@ export default function Reports() {
               <tbody className="divide-y divide-white/5 font-mono">
                 {q4Data.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="text-center py-10 text-[#f5f0e7]/70 font-serif">
+                    <td colSpan="6" className="text-center py-10 text-[#F6F4EF]/70 font-serif">
                       Apply predicate criteria above and execute filter.
                     </td>
                   </tr>
@@ -738,7 +738,7 @@ export default function Reports() {
                   q4Data.map((c) => (
                     <tr key={c.client_id} className="hover:bg-white/[0.02]">
                       <td className="px-4 py-3 text-white">#{c.client_id}</td>
-                      <td className="px-4 py-3 font-serif font-semibold text-[#f5f0e7]">{c.name}</td>
+                      <td className="px-4 py-3 font-serif font-semibold text-[#F6F4EF]">{c.name}</td>
                       <td className="px-4 py-3">{c.client_type}</td>
                       <td className="px-4 py-3">{c.email}</td>
                       <td className="px-4 py-3">{c.phone}</td>
@@ -754,14 +754,14 @@ export default function Reports() {
 
       {/* TAB 5: RELATIONAL JOINS */}
       {activeTab === 'q5' && (
-        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#141416] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Relational Algebra</div>
-              <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
+              <h2 className="text-xl font-serif font-semibold text-[#F6F4EF] mt-0.5">
                 Cross-Entity Relational JOIN Operations
               </h2>
-              <p className="text-xs text-[#f5f0e7]/70 font-mono mt-1">
+              <p className="text-xs text-[#F6F4EF]/70 font-mono mt-1">
                 SELECT * FROM {q5Table1} {q5JoinType} JOIN {q5Table2}
               </p>
             </div>
@@ -769,7 +769,7 @@ export default function Reports() {
               <select
                 value={q5JoinType}
                 onChange={(e) => setQ5JoinType(e.target.value)}
-                className="px-3 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="px-3 py-2 bg-[#141416] border border-white/10 rounded-sm text-xs text-[#F6F4EF] font-mono"
               >
                 <option value="INNER">INNER JOIN</option>
                 <option value="LEFT">LEFT OUTER JOIN</option>
@@ -778,7 +778,7 @@ export default function Reports() {
               <button
                 onClick={runQuery5}
                 disabled={loading}
-                className="px-4 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                className="px-4 py-2 court-btn-brass hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#0A0A0B] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
               >
                 Execute Join
               </button>
@@ -786,8 +786,8 @@ export default function Reports() {
           </div>
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
-            <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+            <table className="w-full text-left text-xs text-[#F6F4EF]/70">
+              <thead className="bg-[#141416] text-[#F6F4EF] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3">Client Name</th>
                   <th className="px-4 py-3">Client Type</th>
@@ -800,19 +800,19 @@ export default function Reports() {
               <tbody className="divide-y divide-white/5 font-mono">
                 {q5Data.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="text-center py-10 text-[#f5f0e7]/70 font-serif">
+                    <td colSpan="6" className="text-center py-10 text-[#F6F4EF]/70 font-serif">
                       Select join type and execute query.
                     </td>
                   </tr>
                 ) : (
                   q5Data.map((row, idx) => (
                     <tr key={idx} className="hover:bg-white/[0.02]">
-                      <td className="px-4 py-3 font-serif font-semibold text-[#f5f0e7]">{row.client_name || '—'}</td>
+                      <td className="px-4 py-3 font-serif font-semibold text-[#F6F4EF]">{row.client_name || '—'}</td>
                       <td className="px-4 py-3">{row.client_type || '—'}</td>
                       <td className="px-4 py-3 text-white">{row.case_number || '—'}</td>
-                      <td className="px-4 py-3 font-serif text-[#f5f0e7]">{row.case_title || '—'}</td>
+                      <td className="px-4 py-3 font-serif text-[#F6F4EF]">{row.case_title || '—'}</td>
                       <td className="px-4 py-3">{row.priority || '—'}</td>
-                      <td className="px-4 py-3 text-[#f5f0e7]">
+                      <td className="px-4 py-3 text-[#F6F4EF]">
                         {row.budget ? `₹ ${Number(row.budget).toLocaleString('en-IN')}` : '—'}
                       </td>
                     </tr>
@@ -826,14 +826,14 @@ export default function Reports() {
 
       {/* TAB 6: HIGH-VALUE MATTERS SUBQUERY */}
       {activeTab === 'q6' && (
-        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#141416] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Subquery Logic</div>
-              <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
+              <h2 className="text-xl font-serif font-semibold text-[#F6F4EF] mt-0.5">
                 High-Value Client Matters Subquery
               </h2>
-              <p className="text-xs text-[#f5f0e7]/70 font-mono mt-1">
+              <p className="text-xs text-[#F6F4EF]/70 font-mono mt-1">
                 SELECT * FROM CLIENT WHERE client_id IN (SELECT client_id FROM CASES WHERE budget &gt;= {q6Threshold})
               </p>
             </div>
@@ -841,7 +841,7 @@ export default function Reports() {
               <select
                 value={q6Threshold}
                 onChange={(e) => setQ6Threshold(parseFloat(e.target.value) || 0)}
-                className="px-3 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs font-mono text-[#f5f0e7]"
+                className="px-3 py-2 bg-[#141416] border border-white/10 rounded-sm text-xs font-mono text-[#F6F4EF]"
               >
                 <option value={100000}>Budget &gt; ₹1,00,000</option>
                 <option value={200000}>Budget &gt; ₹2,00,000</option>
@@ -852,7 +852,7 @@ export default function Reports() {
               <button
                 onClick={runQuery6}
                 disabled={loading}
-                className="px-4 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                className="px-4 py-2 court-btn-brass hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#0A0A0B] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
               >
                 Run Subquery
               </button>
@@ -860,8 +860,8 @@ export default function Reports() {
           </div>
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
-            <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+            <table className="w-full text-left text-xs text-[#F6F4EF]/70">
+              <thead className="bg-[#141416] text-[#F6F4EF] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3">Client ID</th>
                   <th className="px-4 py-3">Client Entity</th>
@@ -873,7 +873,7 @@ export default function Reports() {
               <tbody className="divide-y divide-white/5 font-mono">
                 {q6Data.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="text-center py-10 text-[#f5f0e7]/70 font-serif">
+                    <td colSpan="5" className="text-center py-10 text-[#F6F4EF]/70 font-serif">
                       Click "Run Subquery" to filter clients holding matters above ₹ {Number(q6Threshold).toLocaleString('en-IN')}.
                     </td>
                   </tr>
@@ -881,7 +881,7 @@ export default function Reports() {
                   q6Data.map((c) => (
                     <tr key={c.client_id} className="hover:bg-white/[0.02]">
                       <td className="px-4 py-3 text-white">#{c.client_id}</td>
-                      <td className="px-4 py-3 font-serif font-semibold text-[#f5f0e7]">{c.name}</td>
+                      <td className="px-4 py-3 font-serif font-semibold text-[#F6F4EF]">{c.name}</td>
                       <td className="px-4 py-3">{c.client_type}</td>
                       <td className="px-4 py-3">{c.email}</td>
                       <td className="px-4 py-3">{c.address}</td>
@@ -896,14 +896,14 @@ export default function Reports() {
 
       {/* TAB 7: PRACTICE BENCHMARKS (CORRELATED SUBQUERY) */}
       {activeTab === 'q7' && (
-        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#141416] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Correlated Subquery</div>
-              <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
+              <h2 className="text-xl font-serif font-semibold text-[#F6F4EF] mt-0.5">
                 Cases Compared to Practice Group Average Budget
               </h2>
-              <p className="text-xs text-[#f5f0e7]/70 font-mono mt-1">
+              <p className="text-xs text-[#F6F4EF]/70 font-mono mt-1">
                 SELECT c.* FROM CASES c WHERE c.budget {q7Operator} (SELECT AVG(budget) FROM CASES WHERE case_type_id = c.case_type_id)
               </p>
             </div>
@@ -911,7 +911,7 @@ export default function Reports() {
             <select
               value={q7Operator}
               onChange={(e) => setQ7Operator(e.target.value)}
-              className="px-3 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs font-mono text-[#f5f0e7]"
+              className="px-3 py-2 bg-[#141416] border border-white/10 rounded-sm text-xs font-mono text-[#F6F4EF]"
             >
               <option value=">">Above group average (&gt;)</option>
               <option value=">=">At or above average (&gt;=)</option>
@@ -921,7 +921,7 @@ export default function Reports() {
             <button
               onClick={runQuery7}
               disabled={loading}
-              className="px-4 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+              className="px-4 py-2 court-btn-brass hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#0A0A0B] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
             >
               Analyze Benchmarks
             </button>
@@ -929,8 +929,8 @@ export default function Reports() {
           </div>
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
-            <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+            <table className="w-full text-left text-xs text-[#F6F4EF]/70">
+              <thead className="bg-[#141416] text-[#F6F4EF] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3">Case Number</th>
                   <th className="px-4 py-3">Matter Title</th>
@@ -943,7 +943,7 @@ export default function Reports() {
               <tbody className="divide-y divide-white/5 font-mono">
                 {q7Data.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="text-center py-10 text-[#f5f0e7]/70 font-serif">
+                    <td colSpan="6" className="text-center py-10 text-[#F6F4EF]/70 font-serif">
                       Click "Analyze Benchmarks" to execute correlated category comparison.
                     </td>
                   </tr>
@@ -951,7 +951,7 @@ export default function Reports() {
                   q7Data.map((c) => (
                     <tr key={c.case_id} className="hover:bg-white/[0.02]">
                       <td className="px-4 py-3 text-white font-bold">{c.case_number}</td>
-                      <td className="px-4 py-3 font-serif font-semibold text-[#f5f0e7]">{c.title}</td>
+                      <td className="px-4 py-3 font-serif font-semibold text-[#F6F4EF]">{c.title}</td>
                       <td className="px-4 py-3">{c.type_name || `Type #${c.case_type_id}`}</td>
                       <td className="px-4 py-3 text-emerald-400 font-bold">
                         ₹ {Number(c.budget).toLocaleString('en-IN')}
@@ -959,7 +959,7 @@ export default function Reports() {
                       <td className="px-4 py-3 text-slate-400">
                         ₹ {Number(c.avg_type_budget || 0).toLocaleString('en-IN')}
                       </td>
-                      <td className="px-4 py-3 text-[#f5f0e7]">
+                      <td className="px-4 py-3 text-[#F6F4EF]">
                         +₹ {Number((c.budget || 0) - (c.avg_type_budget || 0)).toLocaleString('en-IN')}
                       </td>
                     </tr>
@@ -973,68 +973,68 @@ export default function Reports() {
 
       {/* TAB 8: BUDGET ADJUSTMENT & AUDIT MUTATION */}
       {activeTab === 'q8' && (
-        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#141416] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="pb-4 border-b border-white/5">
             <div className="text-[10px] font-mono text-white uppercase tracking-wider">Matter Modification</div>
-            <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
+            <h2 className="text-xl font-serif font-semibold text-[#F6F4EF] mt-0.5">
               Matter Budget Modification with Trigger Audit Verification
             </h2>
-            <p className="text-xs text-[#f5f0e7]/70 font-serif mt-1">
+            <p className="text-xs text-[#F6F4EF]/70 font-serif mt-1">
               Executes parameterized UPDATE on matter financials, firing validation triggers and recording JSON mutation diffs in the forensic audit trail.
             </p>
           </div>
 
           <form onSubmit={runQuery8} className="space-y-4 max-w-xl">
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70 mb-1">Target Matter ID *</label>
+              <label className="block text-xs font-mono uppercase tracking-wider text-[#F6F4EF]/70 mb-1">Target Matter ID *</label>
               <input
                 type="number"
                 min="1"
                 required
                 value={q8CaseId}
                 onChange={(e) => setQ8CaseId(parseInt(e.target.value, 10) || 1)}
-                className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="w-full px-3 py-2 bg-[#141416] border border-white/10 focus:border-white rounded-sm text-xs text-[#F6F4EF] font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70 mb-1">Adjusted Budget Allocation (₹) *</label>
+              <label className="block text-xs font-mono uppercase tracking-wider text-[#F6F4EF]/70 mb-1">Adjusted Budget Allocation (₹) *</label>
               <input
                 type="number"
                 min="0"
                 required
                 value={q8Budget}
                 onChange={(e) => setQ8Budget(parseFloat(e.target.value) || 0)}
-                className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="w-full px-3 py-2 bg-[#141416] border border-white/10 focus:border-white rounded-sm text-xs text-[#F6F4EF] font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/70 mb-1">Modification Remarks / Reason</label>
+              <label className="block text-xs font-mono uppercase tracking-wider text-[#F6F4EF]/70 mb-1">Modification Remarks / Reason</label>
               <input
                 type="text"
                 required
                 value={q8Notes}
                 onChange={(e) => setQ8Notes(e.target.value)}
-                className="w-full px-3 py-2 bg-[#4a3324] border border-white/10 focus:border-white rounded-sm text-xs text-[#f5f0e7] font-serif"
+                className="w-full px-3 py-2 bg-[#141416] border border-white/10 focus:border-white rounded-sm text-xs text-[#F6F4EF] font-serif"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+              className="px-5 py-2.5 court-btn-brass hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#0A0A0B] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
             >
               Execute Budget Adjustment
             </button>
           </form>
 
           {q8Result && (
-            <div className="p-4 bg-[#4a3324] border border-white/15 rounded-sm text-xs font-mono space-y-1 mt-4 text-[#f5f0e7]/70">
-              <div className="font-bold text-[#f5f0e7] uppercase tracking-wider">
+            <div className="p-4 bg-[#141416] border border-white/15 rounded-sm text-xs font-mono space-y-1 mt-4 text-[#F6F4EF]/70">
+              <div className="font-bold text-[#F6F4EF] uppercase tracking-wider">
                 Case Record Successfully Updated:
               </div>
-              <div>• Case Number: <span className="text-[#f5f0e7]">{q8Result.case_number}</span></div>
+              <div>• Case Number: <span className="text-[#F6F4EF]">{q8Result.case_number}</span></div>
               <div>• Title: {q8Result.title}</div>
               <div>• Updated Budget: ₹ {Number(q8Result.budget).toLocaleString('en-IN')}</div>
               <div>• Notes Log: {q8Result.notes}</div>
@@ -1045,14 +1045,14 @@ export default function Reports() {
 
       {/* TAB 9: CONSOLIDATED VIEWS */}
       {activeTab === 'views' && (
-        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#141416] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-white uppercase tracking-wider">Materialized Relations</div>
-              <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
+              <h2 className="text-xl font-serif font-semibold text-[#F6F4EF] mt-0.5">
                 Consolidated Practice Views & View-Level Trigger Propagation
               </h2>
-              <p className="text-xs text-[#f5f0e7]/70 font-mono mt-1">
+              <p className="text-xs text-[#F6F4EF]/70 font-mono mt-1">
                 Virtual tables abstracting multi-entity joins across Client, Matters, and Judicial Status.
               </p>
             </div>
@@ -1060,7 +1060,7 @@ export default function Reports() {
               <select
                 value={selectedView}
                 onChange={(e) => setSelectedView(e.target.value)}
-                className="px-3 py-2 bg-[#4a3324] border border-white/10 rounded-sm text-xs text-[#f5f0e7] font-mono"
+                className="px-3 py-2 bg-[#141416] border border-white/10 rounded-sm text-xs text-[#F6F4EF] font-mono"
               >
                 <option value="vw_client_cases">vw_client_cases (Client + Matters + Status)</option>
                 <option value="vw_surat_clients">vw_surat_clients (Jurisdictional Seat View)</option>
@@ -1068,7 +1068,7 @@ export default function Reports() {
               <button
                 onClick={runView}
                 disabled={loading}
-                className="px-4 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
+                className="px-4 py-2 court-btn-brass hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#0A0A0B] rounded-sm text-xs font-semibold uppercase tracking-wider shadow-lg font-mono transition-colors"
               >
                 Query View
               </button>
@@ -1076,8 +1076,8 @@ export default function Reports() {
           </div>
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
-            <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+            <table className="w-full text-left text-xs text-[#F6F4EF]/70">
+              <thead className="bg-[#141416] text-[#F6F4EF] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   {viewData.length > 0 &&
                     Object.keys(viewData[0]).map((key) => (
@@ -1090,7 +1090,7 @@ export default function Reports() {
               <tbody className="divide-y divide-white/5 font-mono">
                 {viewData.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="text-center py-10 text-[#f5f0e7]/70 font-serif">
+                    <td colSpan="6" className="text-center py-10 text-[#F6F4EF]/70 font-serif">
                       Click "Query View" to retrieve materialized records from the active database view.
                     </td>
                   </tr>
@@ -1113,20 +1113,20 @@ export default function Reports() {
 
       {/* TAB 10: INDEX OPTIMIZATION PROFILING */}
       {activeTab === 'indexes' && (
-        <div className="bg-[#553a28] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
+        <div className="bg-[#141416] border border-white/10 rounded-sm p-7 shadow-2xl space-y-5">
           <div className="pb-4 border-b border-white/5">
             <div className="text-[10px] font-mono text-white uppercase tracking-wider">Engine Performance</div>
-            <h2 className="text-xl font-serif font-semibold text-[#f5f0e7] mt-0.5">
+            <h2 className="text-xl font-serif font-semibold text-[#F6F4EF] mt-0.5">
               Query Optimization & B-Tree Index Profiling
             </h2>
-            <p className="text-xs text-[#f5f0e7]/70 font-serif mt-1">
+            <p className="text-xs text-[#F6F4EF]/70 font-serif mt-1">
               Empirical execution time measurements before and after B-Tree index creation on the active MySQL database engine.
             </p>
           </div>
 
           <div className="border border-white/10 rounded-sm overflow-x-auto">
-            <table className="w-full text-left text-xs text-[#f5f0e7]/70">
-              <thead className="bg-[#4a3324] text-[#f5f0e7] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
+            <table className="w-full text-left text-xs text-[#F6F4EF]/70">
+              <thead className="bg-[#141416] text-[#F6F4EF] font-mono uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
                   <th className="px-4 py-3.5">Query Operation</th>
                   <th className="px-4 py-3.5">Target B-Tree Index</th>
@@ -1138,7 +1138,7 @@ export default function Reports() {
               </thead>
               <tbody className="divide-y divide-white/5 font-mono text-xs">
                 <tr className="hover:bg-white/[0.02]">
-                  <td className="px-4 py-4 font-serif font-semibold text-[#f5f0e7] text-sm">
+                  <td className="px-4 py-4 font-serif font-semibold text-[#F6F4EF] text-sm">
                     Correlated Subquery Benchmarking
                   </td>
                   <td className="px-4 py-4 text-white">
@@ -1149,13 +1149,13 @@ export default function Reports() {
                   <td className="px-4 py-4 text-slate-300 font-sans text-xs">
                     Converts correlated subquery from full table scan (<code className="text-white font-mono">ALL</code>) to index-assisted range lookup (<code className="text-emerald-400 font-mono">ref</code>).
                   </td>
-                  <td className="px-4 py-4 text-[#f5f0e7] font-serif text-xs">
+                  <td className="px-4 py-4 text-[#F6F4EF] font-serif text-xs">
                     64% latency reduction. Avoids repeated sequential table scans for each outer case record.
                   </td>
                 </tr>
 
                 <tr className="hover:bg-white/[0.02]">
-                  <td className="px-4 py-4 font-serif font-semibold text-[#f5f0e7] text-sm">
+                  <td className="px-4 py-4 font-serif font-semibold text-[#F6F4EF] text-sm">
                     Dynamic Predicate Search
                   </td>
                   <td className="px-4 py-4 text-white">
@@ -1166,13 +1166,13 @@ export default function Reports() {
                   <td className="px-4 py-4 text-slate-300 font-sans text-xs">
                     Uses composite B-Tree index prefix seek on <code className="text-white font-mono">client_type</code>.
                   </td>
-                  <td className="px-4 py-4 text-[#f5f0e7] font-serif text-xs">
+                  <td className="px-4 py-4 text-[#F6F4EF] font-serif text-xs">
                     Direct index seek. Eliminates disk block reads of irrelevant client classification records.
                   </td>
                 </tr>
 
                 <tr className="hover:bg-white/[0.02]">
-                  <td className="px-4 py-4 font-serif font-semibold text-[#f5f0e7] text-sm">
+                  <td className="px-4 py-4 font-serif font-semibold text-[#F6F4EF] text-sm">
                     Multi-Table Equi-JOIN
                   </td>
                   <td className="px-4 py-4 text-white">
@@ -1183,7 +1183,7 @@ export default function Reports() {
                   <td className="px-4 py-4 text-slate-300 font-sans text-xs">
                     Equi-join on foreign key references covering composite index without temporary sorting buffers.
                   </td>
-                  <td className="px-4 py-4 text-[#f5f0e7] font-serif text-xs">
+                  <td className="px-4 py-4 text-[#F6F4EF] font-serif text-xs">
                     Optimizes join performance and supports status filtering in a single index scan pass.
                   </td>
                 </tr>

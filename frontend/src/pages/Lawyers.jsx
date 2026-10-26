@@ -142,7 +142,6 @@ export default function Lawyers() {
     }
   };
 
-  // Filtered lawyers
   const filteredLawyers = lawyers.filter(l => {
     const matchesSearch = searchTerm === '' ||
       l.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -157,328 +156,317 @@ export default function Lawyers() {
   });
 
   return (
-    <div className="space-y-4 pb-6">
+    <div className="space-y-6 pb-6 animate-fadeIn">
       {/* Editorial Header */}
-      <div className="relative overflow-hidden rounded-xl bg-[#664631] border border-white/10 p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
-
-        <div className="relative z-10 space-y-1 max-w-xl">
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider uppercase font-semibold bg-[#73513a] text-[#f5f0e7] border border-white/15">
-            <Scale className="w-3 h-3 text-white" />
-            <span>Advocates & Counsel</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#2B2D32]">
+        <div>
+          <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8975A] flex items-center gap-1.5">
+            <UserCheck className="w-3.5 h-3.5" />
+            <span>Advocates & Counsel Roster</span>
           </div>
-
-          <h1 className="text-xl sm:text-2xl font-serif text-[#f5f0e7] tracking-tight">
-            Counsel Directory & <span className="italic text-white font-medium">Practice Groups</span>
-          </h1>
-
-          <p className="text-xs text-white/60 font-sans leading-relaxed">
+          <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-tight mt-1 font-semibold">
+            Chambers Counsel Directory
+          </h2>
+          <p className="text-xs text-[#B4B7BC] font-sans mt-0.5">
             Verified Bar Council credentials, departmental practice groups, and counsel caseloads.
           </p>
         </div>
 
         <button
           onClick={openAdd}
-          className="self-start md:self-auto inline-flex items-center space-x-2 px-3.5 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow font-mono cursor-pointer"
+          className="court-btn-brass px-4 py-2 rounded-[3px] text-xs font-mono uppercase tracking-wider flex items-center gap-2 self-start sm:self-auto shadow-md"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span>Onboard Counsel</span>
+          <Plus className="w-4 h-4 text-[#0A0A0B]" />
+          <span>Admit New Counsel</span>
         </button>
       </div>
 
-      {/* Alert Banners */}
+      {/* Alerts */}
       {error && (
-        <div className="p-3 bg-red-950/60 border border-red-500/40 rounded-lg text-[#f5f0e7] flex items-start space-x-2.5">
-          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs">{error}</div>
+        <div className="p-3.5 bg-[#9B2C2C]/20 border border-[#9B2C2C]/60 rounded-[3px] text-[#E67272] text-xs flex items-start gap-2.5">
+          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="p-3 bg-emerald-950/60 border border-emerald-500/40 rounded-lg text-[#f5f0e7] flex items-start space-x-2.5">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs">{success}</div>
+        <div className="p-3.5 bg-[#3F7D5C]/20 border border-[#3F7D5C]/60 rounded-[3px] text-[#72C095] text-xs flex items-start gap-2.5">
+          <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span>{success}</span>
         </div>
       )}
 
-      {/* Filter and Search Bar */}
-      <div className="bg-[#664631] p-3 rounded-lg border border-white/10 shadow-sm flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between">
-        <div className="relative flex-1">
-          <Search className="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
+      {/* Search and Department Filter Toolbar */}
+      <div className="court-card p-3.5 flex flex-wrap items-center justify-between gap-3">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="w-3.5 h-3.5 text-[#6B6F76] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by advocate name, Bar registration, or specialization..."
-            className="w-full pl-9 pr-3 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] placeholder-white/40 focus:border-white/30 focus:outline-none"
+            placeholder="Search counsel by name, Bar Council registration, or specialty..."
+            className="w-full pl-9 pr-3 py-1.5 court-input text-xs text-white placeholder-[#6B6F76] font-sans"
           />
         </div>
 
-        <div className="flex items-center gap-2.5">
-          <div className="flex items-center gap-2">
-            <Filter className="w-3.5 h-3.5 text-white/50" />
-            <select
-              value={selectedDept}
-              onChange={(e) => setSelectedDept(e.target.value)}
-              className="px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] font-mono focus:border-white/30 focus:outline-none"
-            >
-              <option value="">All Groups</option>
-              {departments.map((d) => (
-                <option key={d.department_id} value={d.department_name}>{d.department_name}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="text-xs font-mono text-white/60 px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md">
-            {filteredLawyers.length} Advocates
-          </div>
+        <div className="flex items-center space-x-2">
+          <Filter className="w-3.5 h-3.5 text-[#6B6F76]" />
+          <select
+            value={selectedDept}
+            onChange={(e) => setSelectedDept(e.target.value)}
+            className="court-input px-3 py-1.5 text-xs text-white"
+          >
+            <option value="" className="bg-[#141416]">All Practice Groups</option>
+            {departments.map((d) => (
+              <option key={d.department_id} value={d.department_name} className="bg-[#141416]">
+                {d.department_name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
-      {/* Lawyers Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-        {loading ? (
-          <div className="col-span-3 text-center py-12 bg-[#664631] border border-white/10 rounded-xl text-white/50 font-serif">
-            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-            Querying chambers counsel records...
-          </div>
-        ) : filteredLawyers.length === 0 ? (
-          <div className="col-span-3 text-center py-12 bg-[#664631] border border-white/10 rounded-xl text-white/50 font-serif">
-            <UserCheck className="w-8 h-8 text-white/30 mx-auto mb-2" />
-            <p className="text-sm text-[#f5f0e7]">No advocates match current search criteria.</p>
-            <p className="text-xs text-white/40 mt-1">Adjust your filters or onboard a new counsel.</p>
-          </div>
-        ) : (
-          filteredLawyers.map((l) => (
-            <div
-              key={l.lawyer_id}
-              className="bg-[#664631] p-4 rounded-xl border border-white/10 shadow-md flex flex-col justify-between hover:border-white/25 transition-all group relative overflow-hidden"
-            >
-              <div>
-                <div className="flex items-start justify-between gap-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className="w-7 h-7 rounded-lg bg-[#73513a] border border-white/15 flex items-center justify-center text-white font-serif text-xs font-bold">
-                      {l.name.replace('Adv. ', '').charAt(0)}
-                    </span>
-                    <div>
-                      <h3 className="font-serif font-medium text-[#f5f0e7] text-sm group-hover:text-white transition-colors">
-                        {l.name}
-                      </h3>
-                      <div className="text-[10px] text-white/50 font-mono">
-                        Bar: {l.bar_registration_no}
-                      </div>
+      {/* Lawyers Table */}
+      <div className="court-card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="court-table">
+            <thead>
+              <tr>
+                <th>Counsel Name</th>
+                <th>Bar Registration</th>
+                <th>Practice Specialty</th>
+                <th>Department</th>
+                <th>Standing</th>
+                <th>Caseload</th>
+                <th>Status</th>
+                <th className="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan={8} className="text-center py-10 text-xs font-mono text-[#B4B7BC]">
+                    Accessing chambers counsel directory...
+                  </td>
+                </tr>
+              ) : filteredLawyers.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="text-center py-12 text-xs font-serif text-[#6B6F76]">
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <UserCheck className="w-8 h-8 text-[#B8975A]/40" />
+                      <p>No counsel records found matching the active criteria.</p>
                     </div>
-                  </div>
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-medium ${
-                    l.status === 'Active'
-                      ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30'
-                      : 'bg-stone-900 text-white/60 border border-white/10'
-                  }`}>
-                    {l.status}
-                  </span>
-                </div>
-
-                <div className="mt-3.5 space-y-1.5 text-xs text-white/70 pt-2.5 border-t border-white/5">
-                  <div className="flex items-center space-x-2 text-[#f5f0e7]">
-                    <Building className="w-3.5 h-3.5 text-white/50 flex-shrink-0" />
-                    <span className="font-medium truncate">{l.department_name || 'General Litigation'}</span>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Award className="w-3.5 h-3.5 text-white/40 flex-shrink-0" />
-                    <span className="truncate">
-                      Focus: <strong className="text-[#f5f0e7] font-medium">{l.specialization || 'General'}</strong>
-                    </span>
-                  </div>
-
-                  <div className="flex items-center space-x-2 text-[11px] font-mono text-white/60">
-                    <BadgeCheck className="w-3.5 h-3.5 text-white/40 flex-shrink-0" />
-                    <span>Exp: <strong className="text-white">{l.experience_years || 0} yrs</strong></span>
-                  </div>
-
-                  <div className="pt-2 border-t border-white/5 space-y-1 font-mono text-[10px]">
-                    {l.email && (
-                      <div className="flex items-center space-x-2 text-white/50 truncate">
-                        <Mail className="w-3 h-3 text-white/40" />
-                        <span className="truncate">{l.email}</span>
+                  </td>
+                </tr>
+              ) : (
+                filteredLawyers.map((l) => (
+                  <tr key={l.lawyer_id}>
+                    <td>
+                      <div>
+                        <div className="font-serif font-medium text-white text-xs">{l.name}</div>
+                        <div className="font-mono text-[10px] text-[#6B6F76] flex items-center gap-1.5 mt-0.5">
+                          <span>{l.email || '—'}</span>
+                          {l.phone && <span>• {l.phone}</span>}
+                        </div>
                       </div>
-                    )}
-                    {l.phone && (
-                      <div className="flex items-center space-x-2 text-white/50">
-                        <Phone className="w-3 h-3 text-white/40" />
-                        <span>{l.phone}</span>
+                    </td>
+                    <td className="font-mono text-xs text-[#D4B97E] font-semibold">
+                      {l.bar_registration_no}
+                    </td>
+                    <td className="text-xs text-[#F6F4EF] font-sans">
+                      {l.specialization || 'General Practice'}
+                    </td>
+                    <td className="text-xs text-[#B4B7BC] font-sans">
+                      {l.department_name || 'General Litigation'}
+                    </td>
+                    <td className="font-mono text-xs text-[#D4B97E]">
+                      {l.experience_years} yrs
+                    </td>
+                    <td className="font-mono text-xs text-white">
+                      {l.assigned_cases_count || 0} Matters
+                    </td>
+                    <td>
+                      <span className={`px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase ${
+                        l.status === 'Active' ? 'badge-success' : 'badge-danger'
+                      }`}>
+                        {l.status}
+                      </span>
+                    </td>
+                    <td className="text-right">
+                      <div className="flex items-center justify-end space-x-1.5">
+                        <button
+                          onClick={() => openEdit(l)}
+                          className="p-1.5 rounded-[3px] text-[#B4B7BC] hover:text-white hover:bg-[#1E1F23] transition-colors cursor-pointer"
+                          title="Edit Counsel"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(l.lawyer_id, l.name)}
+                          className="p-1.5 rounded-[3px] text-[#6B6F76] hover:text-[#E67272] hover:bg-[#9B2C2C]/10 transition-colors cursor-pointer"
+                          title="Revoke Credentials"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
                       </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-3.5 pt-2.5 border-t border-white/10 flex items-center justify-between">
-                <span className="text-[10px] font-mono text-white/40">
-                  #{l.lawyer_id}
-                </span>
-
-                <div className="flex items-center space-x-1">
-                  <button
-                    onClick={() => openEdit(l)}
-                    className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer"
-                    title="Edit Credentials"
-                  >
-                    <Edit2 className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(l.lawyer_id, l.name)}
-                    className="p-1.5 text-white/60 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors cursor-pointer"
-                    title="Remove Counsel"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* Onboard / Edit Modal */}
+      {/* Add / Edit Counsel Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#664631] rounded-xl shadow-2xl border border-white/15 max-w-md w-full overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#5e412d]">
-              <div className="flex items-center gap-2">
-                <Scale className="w-4 h-4 text-[#f5f0e7]" />
-                <h3 className="font-serif font-semibold text-[#f5f0e7] text-sm">
-                  {isEditing ? 'Update Counsel Credentials' : 'Onboard Practice Counsel'}
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="court-card-elevated max-w-lg w-full">
+            <div className="px-5 py-3.5 border-b border-[#2B2D32] flex items-center justify-between bg-[#141416]">
+              <div className="flex items-center space-x-2">
+                <UserCheck className="w-4 h-4 text-[#B8975A]" />
+                <h3 className="font-serif font-semibold text-white text-sm">
+                  {isEditing ? `Edit Credentials: ${formData.name}` : 'Admit Counsel to Chambers'}
                 </h3>
               </div>
               <button
                 onClick={() => setModalOpen(false)}
-                className="text-white/60 hover:text-white cursor-pointer"
+                className="text-[#6B6F76] hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-5 space-y-3 max-h-[80vh] overflow-y-auto">
+            <form onSubmit={handleSubmit} className="p-5 space-y-4">
               <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                  Advocate Name *
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Counsel Full Name *
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Adv. Vikramaditya Desai"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
+                  placeholder="e.g. Adv. Vikram Singh"
+                  className="w-full px-3 py-1.5 court-input text-xs text-white"
                 />
               </div>
 
-              <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                  Bar Council Reg. No. *
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. G/1245/2012"
-                  value={formData.bar_registration_no}
-                  onChange={(e) => setFormData({ ...formData, bar_registration_no: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                    Group *
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Bar Council Registration # *
                   </label>
-                  <select
-                    value={formData.department_id}
-                    onChange={(e) => setFormData({ ...formData, department_id: parseInt(e.target.value, 10) })}
-                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
-                  >
-                    {departments.map((d) => (
-                      <option key={d.department_id} value={d.department_id}>{d.department_name}</option>
-                    ))}
-                  </select>
+                  <input
+                    type="text"
+                    required
+                    value={formData.bar_registration_no}
+                    onChange={(e) => setFormData({ ...formData, bar_registration_no: e.target.value })}
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
+                  />
                 </div>
+
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                    Exp (Years)
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Years of Standing / Experience
                   </label>
                   <input
                     type="number"
-                    min="0"
+                    min={0}
                     value={formData.experience_years}
-                    onChange={(e) => setFormData({ ...formData, experience_years: parseInt(e.target.value, 10) || 0 })}
-                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
+                    onChange={(e) => setFormData({ ...formData, experience_years: parseInt(e.target.value) || 0 })}
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                  Specialization Focus
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. White Collar Defense"
-                  value={formData.specialization}
-                  onChange={(e) => setFormData({ ...formData, specialization: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Email</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Official Email *
+                  </label>
                   <input
                     type="email"
-                    placeholder="counsel@briefcase.in"
+                    required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Phone</label>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Direct Phone *
+                  </label>
                   <input
-                    type="text"
-                    placeholder="+91 98250 12345"
+                    type="tel"
+                    required
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   />
                 </div>
               </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Practice Specialty
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.specialization}
+                    onChange={(e) => setFormData({ ...formData, specialization: e.target.value })}
+                    placeholder="e.g. Constitutional Law"
+                    className="w-full px-3 py-1.5 court-input text-xs text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Department Practice Group
+                  </label>
+                  <select
+                    value={formData.department_id}
+                    onChange={(e) => setFormData({ ...formData, department_id: Number(e.target.value) })}
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
+                  >
+                    {departments.map((d) => (
+                      <option key={d.department_id} value={d.department_id} className="bg-[#141416]">
+                        {d.department_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
               <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">Status</label>
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Chambers Standing Status
+                </label>
                 <select
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
+                  className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                 >
-                  <option value="Active">Active</option>
-                  <option value="On Leave">On Leave</option>
-                  <option value="Inactive">Inactive</option>
+                  <option value="Active" className="bg-[#141416]">Active / Admitted</option>
+                  <option value="Inactive" className="bg-[#141416]">Inactive / Suspended</option>
                 </select>
               </div>
 
-              <div className="pt-3 flex justify-end space-x-2.5 border-t border-white/10">
+              <div className="pt-3 flex justify-end space-x-2.5 border-t border-[#2B2D32]">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-3.5 py-1.5 border border-white/15 text-white/70 hover:text-white rounded-md text-xs font-mono uppercase tracking-wider hover:bg-white/5 transition-colors cursor-pointer"
+                  className="court-btn-outline px-4 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-md text-xs font-semibold uppercase tracking-wider shadow font-mono transition-colors cursor-pointer"
+                  className="court-btn-brass px-5 py-1.5 rounded-[3px] text-xs font-mono font-semibold uppercase tracking-wider shadow"
                 >
-                  {isEditing ? 'Save' : 'Confirm'}
+                  {isEditing ? 'Save Credentials' : 'Admit Counsel'}
                 </button>
               </div>
             </form>

@@ -15,6 +15,7 @@ import Finances from './pages/Finances';
 import Reports from './pages/Reports';
 import AuditLogs from './pages/AuditLogs';
 import DatabaseUsers from './pages/DatabaseUsers';
+import PlsqlLab from './pages/PlsqlLab';
 import Loader from './components/Loader';
 
 export default function App() {
@@ -58,6 +59,7 @@ export default function App() {
           <Route path="tasks" element={<Tasks />} />
           <Route path="finances" element={<Finances />} />
           <Route path="reports" element={<Reports />} />
+          <Route path="plsql" element={<PlsqlLab />} />
           <Route path="audit" element={<AuditLogs />} />
           <Route path="db-users" element={<DatabaseUsers />} />
         </Route>

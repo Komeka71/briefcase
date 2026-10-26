@@ -5,15 +5,14 @@ import {
   Plus,
   Trash2,
   Clock,
-  AlertTriangle,
   CheckCircle2,
   AlertCircle,
   X,
   Search,
   Filter,
   Calendar,
-  User,
-  Briefcase
+  Briefcase,
+  Scale
 } from 'lucide-react';
 
 export default function Tasks() {
@@ -122,184 +121,166 @@ export default function Tasks() {
   });
 
   return (
-    <div className="space-y-4 pb-6">
+    <div className="space-y-6 pb-6 animate-fadeIn">
       {/* Editorial Header */}
-      <div className="relative overflow-hidden rounded-xl bg-[#664631] border border-white/10 p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
-
-        <div className="relative z-10 space-y-1 max-w-xl">
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider uppercase font-semibold bg-[#73513a] text-[#f5f0e7] border border-white/15">
-            <CheckSquare className="w-3 h-3 text-white" />
-            <span>Workflow & Deadlines</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#2B2D32]">
+        <div>
+          <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8975A] flex items-center gap-1.5">
+            <CheckSquare className="w-3.5 h-3.5" />
+            <span>Trial Preparation & Deadlines</span>
           </div>
-
-          <h1 className="text-xl sm:text-2xl font-serif text-[#f5f0e7] tracking-tight">
-            Action Items & <span className="italic text-white font-medium">Filing Deadlines</span>
-          </h1>
-
-          <p className="text-xs text-white/60 font-sans leading-relaxed">
-            Trial preparation, evidence collation, cross-examination briefs, and statutory limitation dates.
+          <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-tight mt-1 font-semibold">
+            Action Items & Filing Deadlines
+          </h2>
+          <p className="text-xs text-[#B4B7BC] font-sans mt-0.5">
+            Chambers trial prep, evidence deposition deadlines, vakalatnama execution, and legal filings.
           </p>
         </div>
 
         <button
           onClick={() => setModalOpen(true)}
-          className="self-start md:self-auto inline-flex items-center space-x-2 px-3.5 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow font-mono cursor-pointer"
+          className="court-btn-brass px-4 py-2 rounded-[3px] text-xs font-mono uppercase tracking-wider flex items-center gap-2 self-start sm:self-auto shadow-md"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span>New Task</span>
+          <Plus className="w-4 h-4 text-[#0A0A0B]" />
+          <span>Create Action Item</span>
         </button>
       </div>
 
-      {/* Alert Banners */}
+      {/* Alerts */}
       {error && (
-        <div className="p-3 bg-red-950/60 border border-red-500/40 rounded-lg text-[#f5f0e7] flex items-start space-x-2.5">
-          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs">{error}</div>
+        <div className="p-3.5 bg-[#9B2C2C]/20 border border-[#9B2C2C]/60 rounded-[3px] text-[#E67272] text-xs flex items-start gap-2.5">
+          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="p-3 bg-emerald-950/60 border border-emerald-500/40 rounded-lg text-[#f5f0e7] flex items-start space-x-2.5">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs">{success}</div>
+        <div className="p-3.5 bg-[#3F7D5C]/20 border border-[#3F7D5C]/60 rounded-[3px] text-[#72C095] text-xs flex items-start gap-2.5">
+          <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span>{success}</span>
         </div>
       )}
 
-      {/* Filters and Controls */}
-      <div className="bg-[#664631] p-3 rounded-lg border border-white/10 shadow-sm flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between">
-        <div className="relative flex-1">
-          <Search className="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
+      {/* Filter Toolbar */}
+      <div className="court-card p-3.5 flex flex-wrap items-center justify-between gap-3">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="w-3.5 h-3.5 text-[#6B6F76] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search tasks or case #..."
-            className="w-full pl-9 pr-3 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] placeholder-white/40 focus:border-white/30 focus:outline-none"
+            placeholder="Search action items by title, docket #, or matter..."
+            className="w-full pl-9 pr-3 py-1.5 court-input text-xs text-white placeholder-[#6B6F76] font-sans"
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-1.5">
-            <Filter className="w-3.5 h-3.5 text-white/50" />
-            <select
-              value={selectedPriority}
-              onChange={(e) => setSelectedPriority(e.target.value)}
-              className="px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] font-mono focus:border-white/30 focus:outline-none"
-            >
-              <option value="">All Priorities</option>
-              <option value="High">High Priority</option>
-              <option value="Medium">Medium Priority</option>
-              <option value="Low">Low Priority</option>
-            </select>
-          </div>
+        <div className="flex items-center space-x-2">
+          <Filter className="w-3.5 h-3.5 text-[#6B6F76]" />
+          <select
+            value={selectedPriority}
+            onChange={(e) => setSelectedPriority(e.target.value)}
+            className="court-input px-3 py-1.5 text-xs text-white"
+          >
+            <option value="" className="bg-[#141416]">All Priorities</option>
+            <option value="High" className="bg-[#141416]">High Priority</option>
+            <option value="Medium" className="bg-[#141416]">Medium Priority</option>
+            <option value="Low" className="bg-[#141416]">Low Priority</option>
+          </select>
 
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] font-mono focus:border-white/30 focus:outline-none"
+            className="court-input px-3 py-1.5 text-xs text-white"
           >
-            <option value="">All Statuses</option>
-            <option value="Pending">Pending</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
+            <option value="" className="bg-[#141416]">All Workflow Statuses</option>
+            <option value="Pending" className="bg-[#141416]">Pending</option>
+            <option value="In Progress" className="bg-[#141416]">In Progress</option>
+            <option value="Completed" className="bg-[#141416]">Completed</option>
           </select>
-
-          <div className="text-xs font-mono text-white/60 px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md">
-            {filteredTasks.length} Tasks
-          </div>
         </div>
       </div>
 
       {/* Tasks Table */}
-      <div className="bg-[#664631] rounded-xl border border-white/10 shadow-lg overflow-hidden">
+      <div className="court-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-white/80">
-            <thead className="bg-[#5e412d] text-white/50 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
+          <table className="court-table">
+            <thead>
               <tr>
-                <th className="px-4 py-3 font-semibold">Priority</th>
-                <th className="px-4 py-3 font-semibold">Action Item</th>
-                <th className="px-4 py-3 font-semibold">Matter Docket</th>
-                <th className="px-4 py-3 font-semibold">Due Date</th>
-                <th className="px-4 py-3 font-semibold">Status</th>
-                <th className="px-4 py-3 font-semibold text-right">Actions</th>
+                <th>Action Item</th>
+                <th>Case Docket</th>
+                <th>Priority</th>
+                <th>Due Date</th>
+                <th>Workflow Status</th>
+                <th className="text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="text-center py-10 text-white/50 font-serif">
-                    Querying chambers task roster...
+                  <td colSpan={6} className="text-center py-10 text-xs font-mono text-[#B4B7BC]">
+                    Accessing trial preparation tasks...
                   </td>
                 </tr>
               ) : filteredTasks.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="text-center py-10 text-white/50 font-serif">
-                    <CheckSquare className="w-8 h-8 text-white/30 mx-auto mb-2" />
-                    <p className="text-sm text-[#f5f0e7]">No action items match current filters.</p>
+                  <td colSpan={6} className="text-center py-12 text-xs font-serif text-[#6B6F76]">
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <CheckSquare className="w-8 h-8 text-[#B8975A]/40" />
+                      <p>All scheduled action items are currently resolved.</p>
+                    </div>
                   </td>
                 </tr>
               ) : (
-                filteredTasks.map((task) => (
-                  <tr key={task.task_id} className="hover:bg-white/[0.03] transition-colors group">
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-medium ${
-                        task.priority === 'High' ? 'bg-red-950/60 text-red-300 border border-red-500/30' :
-                        task.priority === 'Medium' ? 'bg-blue-950/60 text-blue-300 border border-blue-500/30' :
-                        'bg-stone-800 text-white/60 border border-white/10'
+                filteredTasks.map((t) => (
+                  <tr key={t.task_id}>
+                    <td>
+                      <div>
+                        <div className="font-serif font-medium text-white text-xs">{t.title}</div>
+                        <div className="text-[10px] text-[#6B6F76] font-sans truncate max-w-xs mt-0.5">
+                          {t.description || 'Trial deadline requirement'}
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="font-mono text-xs text-[#D4B97E]">{t.case_number}</div>
+                      <div className="font-serif text-[11px] text-[#B4B7BC] truncate max-w-xs">
+                        {t.case_title}
+                      </div>
+                    </td>
+                    <td>
+                      <span className={`px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase ${
+                        t.priority === 'High' ? 'badge-danger' :
+                        t.priority === 'Medium' ? 'badge-warning' : 'badge-info'
                       }`}>
-                        {task.priority}
+                        {t.priority}
                       </span>
                     </td>
-
-                    <td className="px-4 py-3">
-                      <div className="font-serif font-medium text-[#f5f0e7] text-xs group-hover:text-white transition-colors">
-                        {task.title}
-                      </div>
-                      {task.description && (
-                        <p className="text-white/50 text-[11px] line-clamp-1 mt-0.5">
-                          {task.description}
-                        </p>
-                      )}
-                    </td>
-
-                    <td className="px-4 py-3">
-                      <div className="text-[#f5f0e7] text-xs truncate max-w-xs font-serif">
-                        {task.case_title}
-                      </div>
-                      <div className="text-[10px] text-white/50 font-mono mt-0.5">
-                        {task.case_number}
+                    <td>
+                      <div className="font-mono text-xs text-[#F6F4EF] flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-[#B8975A]" />
+                        <span>{t.due_date ? String(t.due_date).slice(0, 10) : '—'}</span>
                       </div>
                     </td>
-
-                    <td className="px-4 py-3 font-mono text-xs whitespace-nowrap">
-                      <div className="flex items-center gap-1.5 text-white/80">
-                        <Calendar className="w-3.5 h-3.5 text-white/40" />
-                        <span>{task.due_date ? String(task.due_date).slice(0, 10) : '—'}</span>
-                      </div>
-                    </td>
-
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td>
                       <select
-                        value={task.status}
-                        onChange={(e) => handleStatusChange(task.task_id, e.target.value)}
-                        className={`px-2 py-0.5 rounded text-xs font-mono border focus:outline-none ${
-                          task.status === 'Completed' ? 'bg-emerald-950/60 text-emerald-300 border-emerald-500/30' :
-                          task.status === 'In Progress' ? 'bg-blue-950/60 text-blue-200 border-blue-500/30' :
-                          'bg-[#5e412d] text-white/70 border-white/10'
+                        value={t.status}
+                        onChange={(e) => handleStatusChange(t.task_id, e.target.value)}
+                        className={`text-xs font-mono px-2 py-1 rounded-[2px] border cursor-pointer ${
+                          t.status === 'Completed' ? 'bg-[#3F7D5C]/20 border-[#3F7D5C]/60 text-[#72C095]' :
+                          t.status === 'In Progress' ? 'bg-[#4A6A8A]/20 border-[#4A6A8A]/60 text-[#8EB7DF]' :
+                          'bg-[#C08A2E]/20 border-[#C08A2E]/60 text-[#E2B056]'
                         }`}
                       >
-                        <option value="Pending">Pending</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Completed">Completed</option>
+                        <option value="Pending" className="bg-[#141416] text-[#E2B056]">Pending</option>
+                        <option value="In Progress" className="bg-[#141416] text-[#8EB7DF]">In Progress</option>
+                        <option value="Completed" className="bg-[#141416] text-[#72C095]">Completed</option>
                       </select>
                     </td>
-
-                    <td className="px-4 py-3 text-right space-x-1 whitespace-nowrap">
+                    <td className="text-right">
                       <button
-                        onClick={() => handleDelete(task.task_id)}
-                        className="p-1.5 text-white/60 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors cursor-pointer"
-                        title="Remove Task"
+                        onClick={() => handleDelete(t.task_id)}
+                        className="p-1.5 rounded-[3px] text-[#6B6F76] hover:text-[#E67272] hover:bg-[#9B2C2C]/10 transition-colors cursor-pointer"
+                        title="Delete Action Item"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -314,35 +295,35 @@ export default function Tasks() {
 
       {/* Create Task Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#664631] rounded-xl shadow-2xl border border-white/15 max-w-md w-full overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#5e412d]">
-              <div className="flex items-center gap-2">
-                <CheckSquare className="w-4 h-4 text-[#f5f0e7]" />
-                <h3 className="font-serif font-semibold text-[#f5f0e7] text-sm">
-                  Assign Action Item
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="court-card-elevated max-w-lg w-full">
+            <div className="px-5 py-3.5 border-b border-[#2B2D32] flex items-center justify-between bg-[#141416]">
+              <div className="flex items-center space-x-2">
+                <CheckSquare className="w-4 h-4 text-[#B8975A]" />
+                <h3 className="font-serif font-semibold text-white text-sm">
+                  Schedule Action Item & Deadline
                 </h3>
               </div>
               <button
                 onClick={() => setModalOpen(false)}
-                className="text-white/60 hover:text-white cursor-pointer"
+                className="text-[#6B6F76] hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-5 space-y-3">
+            <form onSubmit={handleSubmit} className="p-5 space-y-4">
               <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                  Legal Matter *
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Associate Legal Matter *
                 </label>
                 <select
                   value={formData.case_id}
-                  onChange={(e) => setFormData({ ...formData, case_id: parseInt(e.target.value, 10) })}
-                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
+                  onChange={(e) => setFormData({ ...formData, case_id: Number(e.target.value) })}
+                  className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                 >
                   {cases.map((c) => (
-                    <option key={c.case_id} value={c.case_id}>
+                    <option key={c.case_id} value={c.case_id} className="bg-[#141416]">
                       {c.case_number} — {c.title}
                     </option>
                   ))}
@@ -350,75 +331,75 @@ export default function Tasks() {
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
                   Task Title *
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Draft interrogatories for cross-examination"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
+                  placeholder="e.g. Draft Written Statement & Serve Counter-Affidavit"
+                  className="w-full px-3 py-1.5 court-input text-xs text-white"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                    Due Date *
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Priority Urgency
+                  </label>
+                  <select
+                    value={formData.priority}
+                    onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
+                  >
+                    <option value="High" className="bg-[#141416]">High Priority</option>
+                    <option value="Medium" className="bg-[#141416]">Medium Priority</option>
+                    <option value="Low" className="bg-[#141416]">Low Priority</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Filing Deadline Due Date *
                   </label>
                   <input
                     type="date"
                     required
                     value={formData.due_date}
                     onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
-                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                    Priority
-                  </label>
-                  <select
-                    value={formData.priority}
-                    onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
-                  >
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                  </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                  Briefing Notes
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Instructions & Procedural Scope
                 </label>
                 <textarea
-                  rows="2"
-                  placeholder="e.g. Consult senior counsel before submission."
+                  rows={3}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
+                  placeholder="Specific instructions, evidence annexures, and filing requirements..."
+                  className="w-full px-3 py-1.5 court-input text-xs text-white"
                 />
               </div>
 
-              <div className="pt-3 flex justify-end space-x-2.5 border-t border-white/10">
+              <div className="pt-3 flex justify-end space-x-2.5 border-t border-[#2B2D32]">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-3.5 py-1.5 border border-white/15 text-white/70 hover:text-white rounded-md text-xs font-mono uppercase tracking-wider hover:bg-white/5 transition-colors cursor-pointer"
+                  className="court-btn-outline px-4 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-md text-xs font-semibold uppercase tracking-wider shadow font-mono transition-colors cursor-pointer"
+                  className="court-btn-brass px-5 py-1.5 rounded-[3px] text-xs font-mono font-semibold uppercase tracking-wider shadow"
                 >
-                  Schedule Task
+                  Schedule Deadline
                 </button>
               </div>
             </form>

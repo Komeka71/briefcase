@@ -4,20 +4,15 @@ import {
   ShieldCheck,
   Key,
   Users,
-  Lock,
   UserPlus,
-  LogIn,
   CheckCircle2,
   AlertCircle,
   X,
   Database,
   Terminal,
   Shield,
-  Layers,
-  KeyRound,
   Trash2,
-  Eye,
-  BadgeCheck
+  Scale
 } from 'lucide-react';
 
 export default function DatabaseUsers() {
@@ -42,7 +37,6 @@ export default function DatabaseUsers() {
       const res = await authService.getAllUsers();
       setUsers(res.data.data || []);
     } catch (err) {
-      // In case unauthenticated
       console.warn('Could not load users list:', err.message);
     } finally {
       setLoading(false);
@@ -105,130 +99,133 @@ export default function DatabaseUsers() {
     }
   ];
 
+  const getRoleBadgeClass = (role = '') => {
+    if (role === 'Admin') return 'badge-danger';
+    if (role === 'Lawyer') return 'badge-warning';
+    if (role === 'Assistant') return 'badge-info';
+    return 'badge-success';
+  };
+
   return (
-    <div className="space-y-7 pb-12">
+    <div className="space-y-6 pb-12 animate-fadeIn">
       {/* Editorial Header */}
-      <div className="relative overflow-hidden rounded-sm bg-gradient-to-r from-[#553a28] via-[#664631] to-[#73513a] border border-white/10 p-6 md:p-8 shadow-xl">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono tracking-widest uppercase font-semibold bg-[#4a3324] text-[#f5f0e7] border border-white/15">
-              <Shield className="w-3.5 h-3.5 text-white" />
-              <span>Chambers Identity & RBAC Matrix</span>
-            </div>
-
-            <h1 className="text-2xl md:text-3xl font-serif font-normal text-white tracking-tight">
-              User Directory, Roles & <span className="italic text-[#f5f0e7]">Access Control</span>
-            </h1>
-
-            <p className="text-xs md:text-sm text-[#f5f0e7]/75 font-serif leading-relaxed">
-              Maintains authenticated legal staff profiles, Bar Council authorized roles (Admin, Lawyer, Assistant, Staff), and database-level security accounts.
-            </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#2B2D32]">
+        <div>
+          <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8975A] flex items-center gap-1.5">
+            <Shield className="w-3.5 h-3.5" />
+            <span>Chambers Identity & RBAC Matrix</span>
           </div>
-
-          <button
-            onClick={() => setRegisterOpen(true)}
-            className="self-start md:self-auto inline-flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow-xl shadow-black/40 font-mono hover:scale-[1.02] cursor-pointer"
-          >
-            <UserPlus className="w-4 h-4 stroke-[2.5]" />
-            <span>Create User Account</span>
-          </button>
+          <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-tight mt-1 font-semibold">
+            Security, Roles & Access Control
+          </h2>
+          <p className="text-xs text-[#B4B7BC] font-sans mt-0.5">
+            Maintains authenticated legal staff profiles, Bar Council authorized roles (Admin, Lawyer, Assistant, Staff), and database-level security accounts.
+          </p>
         </div>
+
+        <button
+          onClick={() => setRegisterOpen(true)}
+          className="court-btn-brass px-4 py-2 rounded-[3px] text-xs font-mono uppercase tracking-wider flex items-center gap-2 self-start sm:self-auto shadow-md"
+        >
+          <UserPlus className="w-4 h-4 text-[#0A0A0B]" />
+          <span>Create User Account</span>
+        </button>
       </div>
 
       {/* Alert Banners */}
       {error && (
-        <div className="p-4 bg-red-950/40 border-l-4 border-red-500 rounded-sm text-[#f5f0e7] flex items-start space-x-3 shadow-lg border border-red-500/20">
-          <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs font-serif leading-relaxed">{error}</div>
+        <div className="p-3.5 bg-[#9B2C2C]/20 border border-[#9B2C2C]/60 rounded-[3px] text-[#E67272] text-xs flex items-start gap-2.5">
+          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="p-4 bg-emerald-950/40 border-l-4 border-emerald-500 rounded-sm text-[#f5f0e7] flex items-start space-x-3 shadow-lg border border-emerald-500/20">
-          <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs font-serif leading-relaxed">{success}</div>
+        <div className="p-3.5 bg-[#3F7D5C]/20 border border-[#3F7D5C]/60 rounded-[3px] text-[#72C095] text-xs flex items-start gap-2.5">
+          <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span>{success}</span>
         </div>
       )}
 
-      {/* System Users Table */}
+      {/* Authorized Practice Accounts Table */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Users className="w-4 h-4 text-white" />
-            <h2 className="text-lg font-serif font-semibold text-white">
+            <Users className="w-4 h-4 text-[#B8975A]" />
+            <h3 className="text-sm font-serif font-semibold text-white">
               Authorized Practice Accounts (USERS Table)
-            </h2>
+            </h3>
           </div>
-          <span className="text-xs font-mono text-[#f5f0e7]/60">
-            {users.length} Active System Users
+          <span className="text-[10px] font-mono text-[#6B6F76]">
+            {users.length} Registered Accounts
           </span>
         </div>
 
-        <div className="bg-[#553a28] rounded-sm border border-white/10 shadow-xl overflow-hidden">
+        <div className="court-card overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-[#f5f0e7]/75">
-              <thead className="bg-[#4a3324] text-white/70 text-[11px] uppercase tracking-wider font-mono border-b border-white/10">
+            <table className="court-table">
+              <thead>
                 <tr>
-                  <th className="px-5 py-3.5 font-semibold">User ID</th>
-                  <th className="px-5 py-3.5 font-semibold">Legal Name</th>
-                  <th className="px-5 py-3.5 font-semibold">Email Identifier</th>
-                  <th className="px-5 py-3.5 font-semibold">Chambers Role</th>
-                  <th className="px-5 py-3.5 font-semibold">Status</th>
-                  <th className="px-5 py-3.5 font-semibold">Admitted On</th>
-                  <th className="px-5 py-3.5 font-semibold text-right">Actions</th>
+                  <th>User ID</th>
+                  <th>Full Name</th>
+                  <th>Chambers Email</th>
+                  <th>Assigned Role</th>
+                  <th>Status</th>
+                  <th>Enrolled Timestamp</th>
+                  <th className="text-right">Revoke Access</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 font-mono">
+              <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="7" className="text-center py-12 text-[#f5f0e7]/60 font-serif">
-                      <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-                      Querying authorized user directory...
+                    <td colSpan={7} className="text-center py-10 text-xs font-mono text-[#B4B7BC]">
+                      Querying authorized users from database...
                     </td>
                   </tr>
                 ) : users.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="text-center py-12 text-[#f5f0e7]/60 font-serif">
-                      No user accounts found. Click "Create User Account" to add practice members.
+                    <td colSpan={7} className="text-center py-10 text-xs font-serif text-[#6B6F76]">
+                      <div className="flex flex-col items-center justify-center space-y-2">
+                        <Users className="w-8 h-8 text-[#B8975A]/40" />
+                        <p>No user accounts returned from directory query.</p>
+                      </div>
                     </td>
                   </tr>
                 ) : (
                   users.map((u) => (
-                    <tr key={u.user_id} className="hover:bg-white/5 transition-colors">
-                      <td className="px-5 py-3.5 text-white font-bold font-mono">#{u.user_id}</td>
-                      <td className="px-5 py-3.5 font-serif font-semibold text-white text-sm">
+                    <tr key={u.user_id}>
+                      <td className="font-mono text-xs font-bold text-[#D4B97E]">
+                        #{u.user_id}
+                      </td>
+                      <td className="font-serif font-medium text-white text-xs">
                         {u.name}
                       </td>
-                      <td className="px-5 py-3.5 text-white/80">{u.email}</td>
-                      <td className="px-5 py-3.5">
-                        <span className={`px-2 py-0.5 rounded-sm text-[10px] font-semibold ${
-                          u.role === 'Admin' ? 'bg-[#73513a] text-white border border-white/20' :
-                          u.role === 'Lawyer' ? 'bg-[#664631] text-[#f5f0e7] border border-white/15' :
-                          'bg-white/5 text-[#f5f0e7]/70'
-                        }`}>
+                      <td className="font-mono text-xs text-[#F6F4EF]">
+                        {u.email}
+                      </td>
+                      <td>
+                        <span className={`px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase ${getRoleBadgeClass(u.role)}`}>
                           {u.role}
                         </span>
                       </td>
-                      <td className="px-5 py-3.5">
-                        <span className={`px-2 py-0.5 rounded-sm text-[10px] ${
-                          u.status === 'Active' ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30' : 'bg-white/5 text-slate-400'
+                      <td>
+                        <span className={`px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase ${
+                          u.status === 'Active' ? 'badge-success' : 'badge-danger'
                         }`}>
-                          {u.status}
+                          {u.status || 'Active'}
                         </span>
                       </td>
-                      <td className="px-5 py-3.5 text-white/60">
-                        {u.created_at ? String(u.created_at).slice(0, 10) : '—'}
+                      <td className="font-mono text-xs text-[#6B6F76]">
+                        {u.created_at ? String(u.created_at).slice(0, 19).replace('T', ' ') : '—'}
                       </td>
-                      <td className="px-5 py-3.5 text-right">
-                        {u.role !== 'Admin' && (
-                          <button
-                            onClick={() => handleDeleteUser(u.user_id, u.name)}
-                            className="p-1.5 text-white/60 hover:text-red-400 hover:bg-red-950/40 rounded-sm border border-transparent hover:border-red-500/30 transition-all cursor-pointer"
-                            title="Revoke Account"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        )}
+                      <td className="text-right">
+                        <button
+                          onClick={() => handleDeleteUser(u.user_id, u.name)}
+                          className="p-1.5 rounded-[3px] text-[#6B6F76] hover:text-[#E67272] hover:bg-[#9B2C2C]/10 transition-colors cursor-pointer"
+                          title="Revoke User Access"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
                       </td>
                     </tr>
                   ))
@@ -239,156 +236,162 @@ export default function DatabaseUsers() {
         </div>
       </div>
 
-      {/* Database Security & Least Privilege Matrix */}
+      {/* Database-Level Security Accounts & SQL Grants Matrix */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <KeyRound className="w-4 h-4 text-white" />
-          <h2 className="text-lg font-serif font-semibold text-white">
-            Database Accounts & Least-Privilege Architecture
-          </h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Terminal className="w-4 h-4 text-[#B8975A]" />
+            <h3 className="text-sm font-serif font-semibold text-white">
+              MySQL Database Accounts & Privileges (Lab 10.2 GRANT Specifications)
+            </h3>
+          </div>
+          <span className="text-[10px] font-mono text-[#6B6F76]">
+            3 Configured DB Roles
+          </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {dbAccounts.map((acc, idx) => (
-            <div
-              key={idx}
-              className="bg-[#553a28] p-5 rounded-sm border border-white/10 shadow-xl space-y-3 relative overflow-hidden"
-            >
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="font-serif font-semibold text-white text-base">{acc.role}</h3>
-                  <div className="text-[11px] font-mono text-[#f5f0e7]/70 mt-0.5">{acc.account}</div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+          {dbAccounts.map((acc) => (
+            <div key={acc.account} className="court-card p-4 space-y-3 flex flex-col justify-between">
+              <div className="space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="font-mono text-xs font-bold text-[#D4B97E] truncate">
+                    {acc.account}
+                  </div>
+                  <span className="px-2 py-0.5 rounded-[2px] text-[8.5px] font-mono uppercase badge-info shrink-0">
+                    {acc.badge}
+                  </span>
                 </div>
-                <span className="px-2 py-0.5 rounded-sm text-[10px] font-mono bg-[#73513a] text-white border border-white/20">
-                  {acc.badge}
-                </span>
+
+                <div className="font-serif font-medium text-white text-xs">
+                  {acc.role}
+                </div>
+
+                <div className="p-2.5 bg-[#0A0A0B] border border-[#2B2D32] rounded-[3px] font-mono text-[10.5px] text-[#72C095] leading-relaxed">
+                  {acc.privileges}
+                </div>
+
+                <p className="text-xs text-[#B4B7BC] font-sans leading-relaxed">
+                  {acc.rationale}
+                </p>
               </div>
 
-              <div className="pt-2 border-t border-white/10 space-y-2 text-xs">
-                <div>
-                  <div className="text-[10px] font-mono uppercase text-[#f5f0e7]/60">Grant Privileges:</div>
-                  <code className="text-xs font-mono text-emerald-400 block mt-0.5 bg-[#4a3324] p-2 rounded-sm border border-white/10">
-                    {acc.privileges}
-                  </code>
-                </div>
-
-                <div>
-                  <div className="text-[10px] font-mono uppercase text-[#f5f0e7]/60">Security Rationale:</div>
-                  <p className="font-serif text-[#f5f0e7]/75 text-xs leading-relaxed mt-0.5">
-                    {acc.rationale}
-                  </p>
-                </div>
+              <div className="pt-2 border-t border-[#2B2D32] flex items-center justify-between text-[10px] font-mono text-[#6B6F76]">
+                <span>Host: localhost</span>
+                <span className="text-[#3F7D5C] flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#3F7D5C]" /> Enforced
+                </span>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Registration Modal */}
+      {/* Create User Modal */}
       {registerOpen && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#553a28] rounded-sm shadow-2xl border border-white/20 max-w-md w-full overflow-hidden max-h-[90vh] flex flex-col">
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#4a3324]">
-              <div className="flex items-center gap-2.5">
-                <UserPlus className="w-4 h-4 text-white" />
-                <h3 className="font-serif font-semibold text-white text-base">
-                  Register System User Account
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="court-card-elevated max-w-lg w-full">
+            <div className="px-5 py-3.5 border-b border-[#2B2D32] flex items-center justify-between bg-[#141416]">
+              <div className="flex items-center space-x-2">
+                <UserPlus className="w-4 h-4 text-[#B8975A]" />
+                <h3 className="font-serif font-semibold text-white text-sm">
+                  Register Authorized Personnel Account
                 </h3>
               </div>
               <button
                 onClick={() => setRegisterOpen(false)}
-                className="text-white/60 hover:text-white p-1 cursor-pointer"
+                className="text-[#6B6F76] hover:text-white cursor-pointer"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleRegister} className="p-6 space-y-4 overflow-y-auto">
+            <form onSubmit={handleRegister} className="p-5 space-y-4">
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1.5">
-                  Full Name *
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Full Name & Salutation *
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Adv. Priya Patel"
                   value={regForm.name}
                   onChange={(e) => setRegForm({ ...regForm, name: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-[#4a3324] border border-white/15 focus:border-white rounded-sm text-xs text-white focus:outline-none"
+                  placeholder="e.g. Adv. Meera Joshi"
+                  className="w-full px-3 py-1.5 court-input text-xs text-white"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1.5">
-                  Official Email Address *
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Chambers Email Address *
                 </label>
                 <input
                   type="email"
                   required
-                  placeholder="name@briefcase.law"
                   value={regForm.email}
                   onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-[#4a3324] border border-white/15 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
+                  placeholder="m.joshi@briefcase.in"
+                  className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1.5">
-                  Password (Bcrypt Hashed) *
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Initial Temporary Password *
                 </label>
                 <input
                   type="password"
                   required
-                  placeholder="••••••••••••"
                   value={regForm.password}
                   onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-[#4a3324] border border-white/15 focus:border-white rounded-sm text-xs font-mono text-white focus:outline-none"
+                  placeholder="Minimum 6 characters"
+                  className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1.5">
-                    Chambers Role *
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Authorization Role
                   </label>
                   <select
                     value={regForm.role}
                     onChange={(e) => setRegForm({ ...regForm, role: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#4a3324] border border-white/15 focus:border-white rounded-sm text-xs text-white font-mono focus:outline-none"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   >
-                    <option value="Lawyer">Lawyer</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Assistant">Assistant</option>
-                    <option value="Staff">Staff</option>
+                    <option value="Lawyer" className="bg-[#141416]">Lawyer / Advocate</option>
+                    <option value="Admin" className="bg-[#141416]">Admin / Chambers Partner</option>
+                    <option value="Assistant" className="bg-[#141416]">Legal Assistant / Paralegal</option>
+                    <option value="Staff" className="bg-[#141416]">Clerical Staff / Clerk</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-[#f5f0e7]/75 mb-1.5">
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
                     Account Status
                   </label>
                   <select
                     value={regForm.status}
                     onChange={(e) => setRegForm({ ...regForm, status: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#4a3324] border border-white/15 focus:border-white rounded-sm text-xs text-white font-mono focus:outline-none"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   >
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
+                    <option value="Active" className="bg-[#141416]">Active / Verified</option>
+                    <option value="Inactive" className="bg-[#141416]">Suspended / Inactive</option>
                   </select>
                 </div>
               </div>
 
-              <div className="pt-4 flex justify-end space-x-3 border-t border-white/10">
+              <div className="pt-3 flex justify-end space-x-2.5 border-t border-[#2B2D32]">
                 <button
                   type="button"
                   onClick={() => setRegisterOpen(false)}
-                  className="px-4 py-2 border border-white/15 text-white/70 hover:text-white rounded-sm text-xs font-mono uppercase tracking-wider hover:bg-white/5 transition-colors cursor-pointer"
+                  className="court-btn-outline px-4 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-sm text-xs font-semibold uppercase tracking-wider shadow font-mono transition-colors cursor-pointer"
+                  className="court-btn-brass px-5 py-1.5 rounded-[3px] text-xs font-mono font-semibold uppercase tracking-wider shadow"
                 >
                   Register Account
                 </button>

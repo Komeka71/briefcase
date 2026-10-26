@@ -11,11 +11,9 @@ import {
   CheckCircle2,
   X,
   Gavel,
-  Landmark,
   Scale,
   Search,
-  Filter,
-  FileText
+  Filter
 } from 'lucide-react';
 
 export default function Hearings() {
@@ -143,7 +141,6 @@ export default function Hearings() {
     }
   };
 
-  // Filtered hearings
   const filteredHearings = hearings.filter(h => {
     const matchesSearch = searchTerm === '' ||
       h.case_title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -159,231 +156,212 @@ export default function Hearings() {
   });
 
   return (
-    <div className="space-y-4 pb-6">
+    <div className="space-y-6 pb-6 animate-fadeIn">
       {/* Editorial Header */}
-      <div className="relative overflow-hidden rounded-xl bg-[#664631] border border-white/10 p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
-
-        <div className="relative z-10 space-y-1 max-w-xl">
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider uppercase font-semibold bg-[#73513a] text-[#f5f0e7] border border-white/15">
-            <Gavel className="w-3 h-3 text-white" />
-            <span>Judicial Bench Cause List</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#2B2D32]">
+        <div>
+          <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8975A] flex items-center gap-1.5">
+            <Gavel className="w-3.5 h-3.5" />
+            <span>Judicial Cause Lists & Benches</span>
           </div>
-
-          <h1 className="text-xl sm:text-2xl font-serif text-[#f5f0e7] tracking-tight">
-            Hearings & <span className="italic text-white font-medium">Court Dates</span>
-          </h1>
-
-          <p className="text-xs text-white/60 font-sans leading-relaxed">
-            Monitor courtroom dockets, bench schedules, witness examination, and interim orders.
+          <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-tight mt-1 font-semibold">
+            Court Hearings Cause List
+          </h2>
+          <p className="text-xs text-[#B4B7BC] font-sans mt-0.5">
+            Oral arguments schedule, court bench dockets, judicial orders, and adjourned proceedings.
           </p>
         </div>
 
         <button
           onClick={openAdd}
-          className="self-start md:self-auto inline-flex items-center space-x-2 px-3.5 py-2 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow font-mono cursor-pointer"
+          className="court-btn-brass px-4 py-2 rounded-[3px] text-xs font-mono uppercase tracking-wider flex items-center gap-2 self-start sm:self-auto shadow-md"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span>Schedule Hearing</span>
+          <Plus className="w-4 h-4 text-[#0A0A0B]" />
+          <span>Schedule Bench Hearing</span>
         </button>
       </div>
 
-      {/* Alert Banners */}
+      {/* Alerts */}
       {error && (
-        <div className="p-3 bg-red-950/60 border border-red-500/40 rounded-lg text-[#f5f0e7] flex items-start space-x-2.5">
-          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs">{error}</div>
+        <div className="p-3.5 bg-[#9B2C2C]/20 border border-[#9B2C2C]/60 rounded-[3px] text-[#E67272] text-xs flex items-start gap-2.5">
+          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="p-3 bg-emerald-950/60 border border-emerald-500/40 rounded-lg text-[#f5f0e7] flex items-start space-x-2.5">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs">{success}</div>
+        <div className="p-3.5 bg-[#3F7D5C]/20 border border-[#3F7D5C]/60 rounded-[3px] text-[#72C095] text-xs flex items-start gap-2.5">
+          <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span>{success}</span>
         </div>
       )}
 
       {/* Filter and Search Bar */}
-      <div className="bg-[#664631] p-3 rounded-lg border border-white/10 shadow-sm flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between">
-        <div className="relative flex-1">
-          <Search className="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
+      <div className="court-card p-3.5 flex flex-wrap items-center justify-between gap-3">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="w-3.5 h-3.5 text-[#6B6F76] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by case title, case number, court, or legal purpose..."
-            className="w-full pl-9 pr-3 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] placeholder-white/40 focus:border-white/30 focus:outline-none"
+            placeholder="Search cause list by case #, title, purpose, or court..."
+            className="w-full pl-9 pr-3 py-1.5 court-input text-xs text-white placeholder-[#6B6F76] font-sans"
           />
         </div>
 
-        <div className="flex items-center gap-2.5">
-          <div className="flex items-center gap-2">
-            <Filter className="w-3.5 h-3.5 text-white/50" />
-            <select
-              value={selectedCourt}
-              onChange={(e) => setSelectedCourt(e.target.value)}
-              className="px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md text-xs text-[#f5f0e7] font-mono focus:border-white/30 focus:outline-none"
-            >
-              <option value="">All Courts</option>
-              {refData.courts.map((c) => (
-                <option key={c.court_id} value={c.court_name}>{c.court_name}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="text-xs font-mono text-white/60 px-2.5 py-1.5 bg-[#5e412d] border border-white/10 rounded-md">
-            {filteredHearings.length} Hearings
-          </div>
+        <div className="flex items-center space-x-2">
+          <Filter className="w-3.5 h-3.5 text-[#6B6F76]" />
+          <select
+            value={selectedCourt}
+            onChange={(e) => setSelectedCourt(e.target.value)}
+            className="court-input px-3 py-1.5 text-xs text-white"
+          >
+            <option value="" className="bg-[#141416]">All Court Benches</option>
+            {refData.courts.map((c) => (
+              <option key={c.court_id} value={c.court_name} className="bg-[#141416]">
+                {c.court_name} ({c.city})
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
-      {/* Cause List Table */}
-      <div className="bg-[#664631] rounded-xl border border-white/10 shadow-lg overflow-hidden">
+      {/* Hearings Table */}
+      <div className="court-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-white/80">
-            <thead className="bg-[#5e412d] text-white/50 text-[10px] uppercase tracking-wider font-mono border-b border-white/10">
+          <table className="court-table">
+            <thead>
               <tr>
-                <th className="px-4 py-3 font-semibold">Date & Time</th>
-                <th className="px-4 py-3 font-semibold">Matter & Docket #</th>
-                <th className="px-4 py-3 font-semibold">Court & Bench</th>
-                <th className="px-4 py-3 font-semibold">Purpose</th>
-                <th className="px-4 py-3 font-semibold">Outcome</th>
-                <th className="px-4 py-3 font-semibold text-right">Actions</th>
+                <th>Cause List Date</th>
+                <th>Time & Bench</th>
+                <th>Case Docket</th>
+                <th>Courtroom Jurisdiction</th>
+                <th>Hearing Purpose</th>
+                <th>Bench Order / Outcome</th>
+                <th>Adjourned Next Date</th>
+                <th className="text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="text-center py-10 text-white/50 font-serif">
-                    Querying judicial cause list from database...
+                  <td colSpan={8} className="text-center py-10 text-xs font-mono text-[#B4B7BC]">
+                    Accessing judicial cause list dockets...
                   </td>
                 </tr>
               ) : filteredHearings.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="text-center py-10 text-white/50 font-serif">
-                    <Calendar className="w-8 h-8 text-white/30 mx-auto mb-2" />
-                    <p className="text-sm text-[#f5f0e7]">No scheduled hearings match current filters.</p>
+                  <td colSpan={8} className="text-center py-12 text-xs font-serif text-[#6B6F76]">
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <Gavel className="w-8 h-8 text-[#B8975A]/40" />
+                      <p>No hearing dates listed on the active cause list.</p>
+                    </div>
                   </td>
                 </tr>
               ) : (
-                filteredHearings.map((h) => {
-                  const isFuture = new Date(h.hearing_date) >= new Date(new Date().setHours(0,0,0,0));
-                  return (
-                    <tr key={h.hearing_id} className="hover:bg-white/[0.03] transition-colors group">
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="flex items-center gap-1.5">
-                          <span className={`w-2 h-2 rounded-full ${isFuture ? 'bg-blue-400' : 'bg-emerald-400'}`} />
-                          <span className="font-mono text-xs font-semibold text-[#f5f0e7]">
-                            {h.hearing_date}
-                          </span>
+                filteredHearings.map((h) => (
+                  <tr key={h.hearing_id}>
+                    <td className="font-mono text-xs font-semibold text-[#D4B97E]">
+                      {h.hearing_date}
+                    </td>
+                    <td>
+                      <div className="font-mono text-xs text-white flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-[#B8975A]" />
+                        <span>{h.start_time || '10:30 AM'}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div>
+                        <div className="font-serif font-medium text-white text-xs max-w-xs truncate">
+                          {h.case_title || 'Legal Matter'}
                         </div>
-                        <div className="text-[10px] font-mono text-white/50 mt-0.5 flex items-center gap-1 pl-3.5">
-                          <Clock className="w-3 h-3 text-white/40" />
-                          <span>{h.start_time?.slice(0,5) || '10:30'} — {h.end_time?.slice(0,5) || '12:00'}</span>
-                        </div>
-                      </td>
-
-                      <td className="px-4 py-3">
-                        <div className="font-serif font-medium text-[#f5f0e7] text-xs group-hover:text-white transition-colors">
-                          {h.case_title}
-                        </div>
-                        <div className="text-[10px] text-white/50 font-mono mt-0.5">
+                        <div className="font-mono text-[10px] text-[#B8975A] mt-0.5">
                           {h.case_number}
                         </div>
-                      </td>
-
-                      <td className="px-4 py-3">
-                        <div className="font-medium text-[#f5f0e7] flex items-center gap-1 text-xs">
-                          <Landmark className="w-3.5 h-3.5 text-white/40 flex-shrink-0" />
-                          <span>{h.court_name}</span>
-                        </div>
-                        <div className="text-[10px] text-white/50 font-mono pl-4.5">
-                          {h.court_city || 'Judicial Seat'}
-                        </div>
-                      </td>
-
-                      <td className="px-4 py-3 max-w-xs">
-                        <div className="text-xs text-white/80 line-clamp-2">
-                          {h.purpose}
-                        </div>
-                        {h.notes && (
-                          <div className="text-[10px] font-mono text-white/40 mt-0.5 truncate">
-                            Note: {h.notes}
-                          </div>
-                        )}
-                      </td>
-
-                      <td className="px-4 py-3">
-                        <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-mono ${
-                          h.outcome && h.outcome !== 'Pending Hearing'
-                            ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30'
-                            : 'bg-blue-950/40 text-blue-300 border border-blue-500/30'
-                        }`}>
-                          {h.outcome || 'Pending'}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="text-xs text-[#F6F4EF] font-sans">
+                        {h.court_name}
+                      </div>
+                      <div className="text-[10px] text-[#6B6F76] font-mono">
+                        {h.court_type || 'Civil Bench'} • {h.city || 'Chambers'}
+                      </div>
+                    </td>
+                    <td className="text-xs text-[#B4B7BC] max-w-xs truncate font-sans">
+                      {h.purpose || 'Arguments'}
+                    </td>
+                    <td>
+                      {h.outcome ? (
+                        <span className="px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase badge-info">
+                          {h.outcome}
                         </span>
-                        {h.next_hearing_date && (
-                          <div className="text-[10px] font-mono text-white/60 mt-0.5">
-                            Next: {h.next_hearing_date}
-                          </div>
-                        )}
-                      </td>
-
-                      <td className="px-4 py-3 text-right space-x-1 whitespace-nowrap">
+                      ) : (
+                        <span className="px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase badge-warning">
+                          Pending Order
+                        </span>
+                      )}
+                    </td>
+                    <td className="font-mono text-xs text-[#6B6F76]">
+                      {h.next_hearing_date ? String(h.next_hearing_date).slice(0, 10) : '—'}
+                    </td>
+                    <td className="text-right">
+                      <div className="flex items-center justify-end space-x-1.5">
                         <button
                           onClick={() => openEdit(h)}
-                          className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer"
+                          className="p-1.5 rounded-[3px] text-[#B4B7BC] hover:text-white hover:bg-[#1E1F23] transition-colors cursor-pointer"
                           title="Edit Hearing"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDelete(h.hearing_id)}
-                          className="p-1.5 text-white/60 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors cursor-pointer"
-                          title="Delete Hearing"
+                          className="p-1.5 rounded-[3px] text-[#6B6F76] hover:text-[#E67272] hover:bg-[#9B2C2C]/10 transition-colors cursor-pointer"
+                          title="Delete Docket"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
-                      </td>
-                    </tr>
-                  );
-                })
+                      </div>
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Schedule / Edit Modal */}
+      {/* Schedule / Edit Hearing Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#664631] rounded-xl shadow-2xl border border-white/15 max-w-md w-full overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#5e412d]">
-              <div className="flex items-center gap-2">
-                <Gavel className="w-4 h-4 text-[#f5f0e7]" />
-                <h3 className="font-serif font-semibold text-[#f5f0e7] text-sm">
-                  {isEditing ? 'Update Hearing Docket' : 'Schedule Court Hearing'}
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="court-card-elevated max-w-lg w-full">
+            <div className="px-5 py-3.5 border-b border-[#2B2D32] flex items-center justify-between bg-[#141416]">
+              <div className="flex items-center space-x-2">
+                <Gavel className="w-4 h-4 text-[#B8975A]" />
+                <h3 className="font-serif font-semibold text-white text-sm">
+                  {isEditing ? 'Update Judicial Cause List Docket' : 'Schedule Bench Hearing'}
                 </h3>
               </div>
               <button
                 onClick={() => setModalOpen(false)}
-                className="text-white/60 hover:text-white cursor-pointer"
+                className="text-[#6B6F76] hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-5 space-y-3 max-h-[80vh] overflow-y-auto">
+            <form onSubmit={handleSubmit} className="p-5 space-y-4">
               <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                  Matter / Case *
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Legal Matter Docket *
                 </label>
                 <select
                   value={formData.case_id}
-                  onChange={(e) => setFormData({ ...formData, case_id: parseInt(e.target.value, 10) })}
-                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
+                  onChange={(e) => setFormData({ ...formData, case_id: Number(e.target.value) })}
+                  className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                 >
                   {refData.cases.map((c) => (
-                    <option key={c.case_id} value={c.case_id}>
+                    <option key={c.case_id} value={c.case_id} className="bg-[#141416]">
                       {c.case_number} — {c.title}
                     </option>
                   ))}
@@ -391,125 +369,115 @@ export default function Hearings() {
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                  Court Bench *
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Court Jurisdiction & Bench *
                 </label>
                 <select
                   value={formData.court_id}
-                  onChange={(e) => setFormData({ ...formData, court_id: parseInt(e.target.value, 10) })}
-                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] font-mono focus:outline-none"
+                  onChange={(e) => setFormData({ ...formData, court_id: Number(e.target.value) })}
+                  className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                 >
-                  {refData.courts.map((court) => (
-                    <option key={court.court_id} value={court.court_id}>
-                      {court.court_name} ({court.court_type} - {court.city})
+                  {refData.courts.map((ct) => (
+                    <option key={ct.court_id} value={ct.court_id} className="bg-[#141416]">
+                      {ct.court_name} ({ct.city} - {ct.court_type})
                     </option>
                   ))}
                 </select>
               </div>
 
-              <div className="grid grid-cols-3 gap-2.5">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                    Date *
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Hearing Date *
                   </label>
                   <input
                     type="date"
                     required
                     value={formData.hearing_date}
                     onChange={(e) => setFormData({ ...formData, hearing_date: e.target.value })}
-                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                    Start
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Start Time
                   </label>
                   <input
                     type="time"
                     value={formData.start_time}
                     onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
-                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                    End
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    End Time
                   </label>
                   <input
                     type="time"
                     value={formData.end_time}
                     onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
-                    className="w-full px-2 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                  Purpose / Stage *
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                  Bench Purpose / Stage of Suit *
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Cross-examination / Framing issues"
                   value={formData.purpose}
                   onChange={(e) => setFormData({ ...formData, purpose: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
+                  placeholder="e.g. Final Arguments / Framing of Issues"
+                  className="w-full px-3 py-1.5 court-input text-xs text-white"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                    Outcome / Order
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Bench Order / Interim Outcome
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Interim stay granted"
                     value={formData.outcome}
                     onChange={(e) => setFormData({ ...formData, outcome: e.target.value })}
-                    className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
+                    placeholder="e.g. Adjourned / Interim Stay Granted"
+                    className="w-full px-3 py-1.5 court-input text-xs text-white"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                    Adjourned Date
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
+                    Adjourned Next Hearing Date
                   </label>
                   <input
                     type="date"
                     value={formData.next_hearing_date}
                     onChange={(e) => setFormData({ ...formData, next_hearing_date: e.target.value })}
-                    className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs font-mono text-[#f5f0e7] focus:outline-none"
+                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1">
-                  Chamber Notes
-                </label>
-                <textarea
-                  rows="2"
-                  placeholder="e.g. Certified copy of plaint required."
-                  value={formData.notes}
-                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-[#5e412d] border border-white/10 focus:border-white/30 rounded-md text-xs text-[#f5f0e7] focus:outline-none"
-                />
-              </div>
-
-              <div className="pt-3 flex justify-end space-x-2.5 border-t border-white/10">
+              <div className="pt-3 flex justify-end space-x-2.5 border-t border-[#2B2D32]">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-3.5 py-1.5 border border-white/15 text-white/70 hover:text-white rounded-md text-xs font-mono uppercase tracking-wider hover:bg-white/5 transition-colors cursor-pointer"
+                  className="court-btn-outline px-4 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-gradient-to-b from-[#fbf5ec] to-[#e9d6b8] hover:from-[#ffffff] hover:to-[#f0e2c9] shadow-[0_8px_22px_-8px_rgba(20,12,6,0.6)] text-[#3b2a1f] rounded-md text-xs font-semibold uppercase tracking-wider shadow font-mono transition-colors cursor-pointer"
+                  className="court-btn-brass px-5 py-1.5 rounded-[3px] text-xs font-mono font-semibold uppercase tracking-wider shadow"
                 >
-                  {isEditing ? 'Save' : 'Confirm'}
+                  {isEditing ? 'Update Docket' : 'Confirm Schedule'}
                 </button>
               </div>
             </form>
