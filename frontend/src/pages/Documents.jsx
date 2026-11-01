@@ -1,7 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { practiceService, caseService } from '../services/api';
 import {
-  FileText,
+  PageHeader,
+  MagneticButton,
+  StatusPill,
+  EmptyState,
+  Skeleton
+} from '../components/ui';
+import { EASE_EXPO } from '../lib/motion';
+import {
   Plus,
   Trash2,
   Lock,
@@ -12,9 +20,7 @@ import {
   CheckCircle2,
   AlertCircle,
   X,
-  FolderOpen,
-  FileCheck2,
-  Scale
+  FolderOpen
 } from 'lucide-react';
 
 export default function Documents() {
@@ -38,7 +44,7 @@ export default function Documents() {
     is_confidential: false
   });
 
-  const fetchDocs = async () => {
+  const fetchDocs = useCallback(async () => {
     setLoading(true);
     try {
       const res = await practiceService.getDocuments();
@@ -48,7 +54,7 @@ export default function Documents() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const fetchCases = async () => {
     try {
@@ -62,7 +68,7 @@ export default function Documents() {
   useEffect(() => {
     fetchDocs();
     fetchCases();
-  }, []);
+  }, [fetchDocs]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -119,300 +125,304 @@ export default function Documents() {
   });
 
   return (
-    <div className="space-y-6 pb-6 animate-fadeIn">
-      {/* Editorial Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#2B2D32]">
-        <div>
-          <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8975A] flex items-center gap-1.5">
-            <FolderOpen className="w-3.5 h-3.5" />
-            <span>Chambers Repository & Exhibits</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-tight mt-1 font-semibold">
-            Document Vault & Trial Exhibits
-          </h2>
-          <p className="text-xs text-[#B4B7BC] font-sans mt-0.5">
-            Pleadings, affidavits, evidence exhibits, court bench orders, and privileged work product.
-          </p>
-        </div>
-
-        <button
-          onClick={() => setModalOpen(true)}
-          className="court-btn-brass px-4 py-2 rounded-[3px] text-xs font-mono uppercase tracking-wider flex items-center gap-2 self-start sm:self-auto shadow-md"
-        >
-          <Plus className="w-4 h-4 text-[#0A0A0B]" />
-          <span>File Exhibit Document</span>
-        </button>
-      </div>
+    <div className="space-y-6 pb-8">
+      {/* Page Header */}
+      <PageHeader
+        title="Document Vault & Trial Exhibits"
+        subtitle="Cryptographically sealed legal pleadings, affidavits, evidence exhibits, court bench orders, and privileged work product."
+        category="Evidence Vault"
+        badge="Encrypted Store"
+        actions={
+          <MagneticButton
+            variant="brass"
+            size="md"
+            onClick={() => setModalOpen(true)}
+            icon={Plus}
+            iconPosition="left"
+            className="text-xs font-mono uppercase tracking-wider"
+          >
+            File Exhibit Document
+          </MagneticButton>
+        }
+      />
 
       {/* Alerts */}
       {error && (
-        <div className="p-3.5 bg-[#9B2C2C]/20 border border-[#9B2C2C]/60 rounded-[3px] text-[#E67272] text-xs flex items-start gap-2.5">
-          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+        <div className="p-3.5 bg-court-danger/20 border border-court-danger/50 rounded-xs text-red-300 text-xs flex items-start gap-2.5">
+          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="p-3.5 bg-[#3F7D5C]/20 border border-[#3F7D5C]/60 rounded-[3px] text-[#72C095] text-xs flex items-start gap-2.5">
-          <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
+        <div className="p-3.5 bg-court-success/20 border border-court-success/50 rounded-xs text-emerald-300 text-xs flex items-start gap-2.5">
+          <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{success}</span>
         </div>
       )}
 
-      {/* Filter Toolbar */}
-      <div className="court-card p-3.5 flex flex-wrap items-center justify-between gap-3">
-        <div className="relative flex-1 min-w-[200px]">
-          <Search className="w-3.5 h-3.5 text-[#6B6F76] absolute left-3 top-1/2 -translate-y-1/2" />
+      {/* Filter and Search Bar */}
+      <div className="court-card p-4 flex flex-wrap items-center justify-between gap-4">
+        <div className="relative flex-1 min-w-[240px]">
+          <Search className="w-4 h-4 text-steel absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search vault by title, docket #, matter, or classification..."
-            className="w-full pl-9 pr-3 py-1.5 court-input text-xs text-white placeholder-[#6B6F76] font-sans"
+            className="court-input w-full pl-10 pr-4 py-2 text-xs"
           />
         </div>
 
         <div className="flex items-center space-x-2">
-          <Filter className="w-3.5 h-3.5 text-[#6B6F76]" />
+          <Filter className="w-4 h-4 text-steel" />
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="court-input px-3 py-1.5 text-xs text-white"
+            className="court-input px-3 py-2 text-xs font-mono bg-charcoal cursor-pointer"
           >
-            <option value="" className="bg-[#141416]">All Document Types</option>
-            <option value="Pleading" className="bg-[#141416]">Pleadings</option>
-            <option value="Affidavit" className="bg-[#141416]">Affidavits</option>
-            <option value="Evidence" className="bg-[#141416]">Evidence Exhibits</option>
-            <option value="Order" className="bg-[#141416]">Court Orders</option>
-            <option value="Notice" className="bg-[#141416]">Legal Notices</option>
+            <option value="">All Document Types</option>
+            <option value="Pleading">Pleadings</option>
+            <option value="Affidavit">Affidavits</option>
+            <option value="Evidence">Evidence Exhibits</option>
+            <option value="Order">Court Orders</option>
+            <option value="Notice">Legal Notices</option>
           </select>
         </div>
       </div>
 
       {/* Documents Table */}
-      <div className="court-card overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="court-table">
-            <thead>
+      <div className="court-table-container">
+        <table className="court-table">
+          <thead>
+            <tr>
+              <th>Exhibit Title</th>
+              <th>Case Docket</th>
+              <th>Classification</th>
+              <th>File Size</th>
+              <th>Privilege Status</th>
+              <th>Filing Date</th>
+              <th className="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
               <tr>
-                <th>Exhibit Title</th>
-                <th>Case Docket</th>
-                <th>Document Classification</th>
-                <th>File Size</th>
-                <th>Confidentiality</th>
-                <th>Filing Date</th>
-                <th className="text-right">Actions</th>
+                <td colSpan={7} className="py-8">
+                  <Skeleton rows={4} height="h-6" />
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={7} className="text-center py-10 text-xs font-mono text-[#B4B7BC]">
-                    Accessing encrypted document repository...
+            ) : filteredDocs.length === 0 ? (
+              <tr>
+                <td colSpan={7}>
+                  <EmptyState
+                    icon={FolderOpen}
+                    title="No documents found"
+                    description="No document exhibits matched the active search parameters."
+                    actionLabel="File Exhibit Document"
+                    onAction={() => setModalOpen(true)}
+                  />
+                </td>
+              </tr>
+            ) : (
+              filteredDocs.map((doc) => (
+                <tr key={doc.document_id}>
+                  <td>
+                    <div>
+                      <div className="font-serif font-medium text-ivory text-sm">{doc.title}</div>
+                      <div className="text-[11px] text-silver/60 font-sans truncate max-w-xs mt-0.5">
+                        {doc.description || 'Pleading exhibit brief'}
+                      </div>
+                    </div>
                   </td>
-                </tr>
-              ) : filteredDocs.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="text-center py-12 text-xs font-serif text-[#6B6F76]">
-                    <div className="flex flex-col items-center justify-center space-y-2">
-                      <FolderOpen className="w-8 h-8 text-[#B8975A]/40" />
-                      <p>No documents found matching the filter criteria.</p>
+                  <td>
+                    <div className="font-mono text-xs text-brass font-medium">{doc.case_number}</div>
+                    <div className="font-serif text-[11px] text-silver/80 truncate max-w-xs">
+                      {doc.case_title}
+                    </div>
+                  </td>
+                  <td>
+                    <StatusPill status={doc.document_type || 'General Brief'} />
+                  </td>
+                  <td className="font-mono text-xs text-silver/80">
+                    {formatFileSize(doc.file_size)}
+                  </td>
+                  <td>
+                    {doc.is_confidential ? (
+                      <span className="px-2.5 py-0.5 rounded-full font-mono text-[10px] uppercase badge-danger inline-flex items-center gap-1">
+                        <Lock className="w-3 h-3" />
+                        <span>Privileged</span>
+                      </span>
+                    ) : (
+                      <span className="px-2.5 py-0.5 rounded-full font-mono text-[10px] uppercase badge-success inline-flex items-center gap-1">
+                        <Unlock className="w-3 h-3" />
+                        <span>Standard</span>
+                      </span>
+                    )}
+                  </td>
+                  <td className="font-mono text-xs text-silver/60">
+                    {doc.uploaded_at ? String(doc.uploaded_at).slice(0, 10) : '—'}
+                  </td>
+                  <td className="text-right">
+                    <div className="flex items-center justify-end space-x-1.5">
+                      <button
+                        onClick={() => alert(`Downloading verified exhibit: ${doc.title}`)}
+                        className="p-1.5 rounded-xs text-silver hover:text-brass hover:bg-graphite transition-colors cursor-pointer"
+                        title="Download Exhibit"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(doc.document_id, doc.title)}
+                        className="p-1.5 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
+                        title="Expunge Record"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </td>
                 </tr>
-              ) : (
-                filteredDocs.map((doc) => (
-                  <tr key={doc.document_id}>
-                    <td>
-                      <div>
-                        <div className="font-serif font-medium text-white text-xs">{doc.title}</div>
-                        <div className="text-[10px] text-[#6B6F76] font-sans truncate max-w-xs mt-0.5">
-                          {doc.description || 'Pleading exhibit brief'}
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="font-mono text-xs text-[#D4B97E]">{doc.case_number}</div>
-                      <div className="font-serif text-[11px] text-[#B4B7BC] truncate max-w-xs">
-                        {doc.case_title}
-                      </div>
-                    </td>
-                    <td>
-                      <span className="px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase badge-info">
-                        {doc.document_type || 'General Brief'}
-                      </span>
-                    </td>
-                    <td className="font-mono text-xs text-[#B4B7BC]">
-                      {formatFileSize(doc.file_size)}
-                    </td>
-                    <td>
-                      {doc.is_confidential ? (
-                        <span className="px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase badge-danger inline-flex items-center gap-1">
-                          <Lock className="w-2.5 h-2.5" />
-                          <span>Privileged</span>
-                        </span>
-                      ) : (
-                        <span className="px-2 py-0.5 rounded-[2px] font-mono text-[9px] uppercase badge-success inline-flex items-center gap-1">
-                          <Unlock className="w-2.5 h-2.5" />
-                          <span>Standard</span>
-                        </span>
-                      )}
-                    </td>
-                    <td className="font-mono text-xs text-[#6B6F76]">
-                      {doc.uploaded_at ? String(doc.uploaded_at).slice(0, 10) : '—'}
-                    </td>
-                    <td className="text-right">
-                      <div className="flex items-center justify-end space-x-1.5">
-                        <button
-                          onClick={() => alert(`Downloading verified exhibit: ${doc.title}`)}
-                          className="p-1.5 rounded-[3px] text-[#B4B7BC] hover:text-[#D4B97E] hover:bg-[#1E1F23] transition-colors cursor-pointer"
-                          title="Download Exhibit"
-                        >
-                          <Download className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(doc.document_id, doc.title)}
-                          className="p-1.5 rounded-[3px] text-[#6B6F76] hover:text-[#E67272] hover:bg-[#9B2C2C]/10 transition-colors cursor-pointer"
-                          title="Expunge Record"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
 
       {/* File Document Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="court-card-elevated max-w-lg w-full">
-            <div className="px-5 py-3.5 border-b border-[#2B2D32] flex items-center justify-between bg-[#141416]">
-              <div className="flex items-center space-x-2">
-                <FolderOpen className="w-4 h-4 text-[#B8975A]" />
-                <h3 className="font-serif font-semibold text-white text-sm">
-                  File Exhibit Document into Vault
-                </h3>
-              </div>
-              <button
-                onClick={() => setModalOpen(false)}
-                className="text-[#6B6F76] hover:text-white cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="p-5 space-y-4">
-              <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
-                  Associate Legal Matter *
-                </label>
-                <select
-                  value={formData.case_id}
-                  onChange={(e) => setFormData({ ...formData, case_id: Number(e.target.value) })}
-                  className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
+      <AnimatePresence>
+        {modalOpen && (
+          <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 16 }}
+              transition={{ duration: 0.3, ease: EASE_EXPO }}
+              className="court-card-elevated max-w-lg w-full overflow-hidden shadow-2xl"
+            >
+              <div className="px-6 py-4 border-b border-brass/20 flex items-center justify-between bg-charcoal">
+                <div className="flex items-center space-x-2.5">
+                  <FolderOpen className="w-4 h-4 text-brass" />
+                  <h3 className="font-serif font-medium text-ivory text-base">
+                    File Exhibit Document into Vault
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setModalOpen(false)}
+                  className="text-silver/60 hover:text-ivory p-1 cursor-pointer"
                 >
-                  {cases.map((c) => (
-                    <option key={c.case_id} value={c.case_id} className="bg-[#141416]">
-                      {c.case_number} — {c.title}
-                    </option>
-                  ))}
-                </select>
+                  <X className="w-4 h-4" />
+                </button>
               </div>
 
-              <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
-                  Exhibit Title *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="e.g. Affidavit of Service / Plaint Exhibit A"
-                  className="w-full px-3 py-1.5 court-input text-xs text-white"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <form onSubmit={handleSubmit} className="p-6 space-y-4">
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
-                    Document Classification
+                  <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                    Associate Legal Matter *
                   </label>
                   <select
-                    value={formData.document_type_id}
-                    onChange={(e) => setFormData({ ...formData, document_type_id: Number(e.target.value) })}
-                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
+                    value={formData.case_id}
+                    onChange={(e) => setFormData({ ...formData, case_id: Number(e.target.value) })}
+                    className="court-input w-full px-3.5 py-2 text-xs font-mono bg-charcoal cursor-pointer"
                   >
-                    <option value={1} className="bg-[#141416]">Pleading</option>
-                    <option value={2} className="bg-[#141416]">Affidavit</option>
-                    <option value={3} className="bg-[#141416]">Evidence</option>
-                    <option value={4} className="bg-[#141416]">Court Order</option>
-                    <option value={5} className="bg-[#141416]">Notice</option>
+                    {cases.map((c) => (
+                      <option key={c.case_id} value={c.case_id}>
+                        {c.case_number} — {c.title}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
-                    File Size (Bytes)
+                  <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                    Exhibit Title *
                   </label>
                   <input
-                    type="number"
-                    value={formData.file_size}
-                    onChange={(e) => setFormData({ ...formData, file_size: parseInt(e.target.value) || 0 })}
-                    className="w-full px-3 py-1.5 court-input text-xs font-mono text-white"
+                    type="text"
+                    required
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    placeholder="e.g. Affidavit of Service / Plaint Exhibit A"
+                    className="court-input w-full px-3.5 py-2 text-xs"
                   />
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B4B7BC] mb-1">
-                  Description & Context
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Bench context, exhibit index, and filing remarks..."
-                  className="w-full px-3 py-1.5 court-input text-xs text-white"
-                />
-              </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                      Document Classification
+                    </label>
+                    <select
+                      value={formData.document_type_id}
+                      onChange={(e) => setFormData({ ...formData, document_type_id: Number(e.target.value) })}
+                      className="court-input w-full px-3.5 py-2 text-xs font-mono bg-charcoal cursor-pointer"
+                    >
+                      <option value={1}>Pleading</option>
+                      <option value={2}>Affidavit</option>
+                      <option value={3}>Evidence</option>
+                      <option value={4}>Court Order</option>
+                      <option value={5}>Notice</option>
+                    </select>
+                  </div>
 
-              <div className="pt-1">
-                <label className="flex items-center space-x-2 text-xs text-[#B4B7BC] cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.is_confidential}
-                    onChange={(e) => setFormData({ ...formData, is_confidential: e.target.checked })}
-                    className="rounded-[2px] bg-[#141416] border-[#2B2D32] text-[#B8975A] focus:ring-[#B8975A]"
+                  <div>
+                    <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                      File Size (Bytes)
+                    </label>
+                    <input
+                      type="number"
+                      value={formData.file_size}
+                      onChange={(e) => setFormData({ ...formData, file_size: parseInt(e.target.value) || 0 })}
+                      className="court-input w-full px-3.5 py-2 text-xs font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                    Description & Context
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    placeholder="Bench context, exhibit index, and filing remarks..."
+                    className="court-input w-full px-3.5 py-2 text-xs"
                   />
-                  <span>Privileged work product / Confidential sealing</span>
-                </label>
-              </div>
+                </div>
 
-              <div className="pt-3 flex justify-end space-x-2.5 border-t border-[#2B2D32]">
-                <button
-                  type="button"
-                  onClick={() => setModalOpen(false)}
-                  className="court-btn-outline px-4 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="court-btn-brass px-5 py-1.5 rounded-[3px] text-xs font-mono font-semibold uppercase tracking-wider shadow"
-                >
-                  Commit Document
-                </button>
-              </div>
-            </form>
+                <div className="pt-1">
+                  <label className="flex items-center space-x-2 text-xs text-silver/80 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.is_confidential}
+                      onChange={(e) => setFormData({ ...formData, is_confidential: e.target.checked })}
+                      className="rounded-xs bg-charcoal border-slate text-brass focus:ring-brass"
+                    />
+                    <span>Privileged work product / Confidential sealing</span>
+                  </label>
+                </div>
+
+                <div className="pt-4 flex justify-end space-x-3 border-t border-brass/15">
+                  <MagneticButton
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setModalOpen(false)}
+                  >
+                    Cancel
+                  </MagneticButton>
+                  <MagneticButton
+                    type="submit"
+                    variant="brass"
+                    size="sm"
+                  >
+                    Commit Document
+                  </MagneticButton>
+                </div>
+              </form>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 }

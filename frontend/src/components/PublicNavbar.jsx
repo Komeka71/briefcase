@@ -1,25 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import Logo from './Logo';
-import { Menu, X, ArrowRight, ChevronRight, Scale } from 'lucide-react';
+import { Menu, X, ArrowRight, ChevronRight } from 'lucide-react';
+import { EASE_EXPO } from '../lib/motion';
 
 export default function PublicNavbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 25);
+      const currentScrollY = window.scrollY;
+
+      // Transparent vs blurred glass threshold
+      setScrolled(currentScrollY > 30);
+
+      // Hide on scroll down, show on scroll up
+      if (currentScrollY > 120) {
+        if (currentScrollY > lastScrollY && !mobileMenuOpen) {
+          setVisible(false);
+        } else {
+          setVisible(true);
+        }
+      } else {
+        setVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
     };
-    window.addEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [lastScrollY, mobileMenuOpen]);
 
   const navLinks = [
     { name: 'Our Firm', href: '#firm' },
     { name: 'Practice Areas', href: '#practice-areas' },
     { name: 'Chambers Resume', href: '#resume' },
+    { name: 'Strategic Workflow', href: '#approach' },
     { name: 'Our Counsel', href: '#lawyers' },
     { name: 'Practice Suite', href: '#why-briefcase' },
     { name: 'Contact', href: '#contact' },
@@ -35,98 +56,113 @@ export default function PublicNavbar() {
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled
-          ? 'bg-[#0A0A0B]/95 backdrop-blur-md border-b border-[#2B2D32] py-3 shadow-xl shadow-black/60'
-          : 'bg-gradient-to-b from-[#0A0A0B]/90 via-[#0A0A0B]/40 to-transparent py-4 border-b border-transparent'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between">
-        {/* Brand Wordmark */}
-        <Link to="/" className="outline-none">
-          <Logo size="md" />
-        </Link>
-
-        {/* Desktop Public Navigation */}
-        <nav className="hidden lg:flex items-center space-x-7">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={(e) => scrollToSection(e, link.href)}
-              className="text-xs font-mono uppercase tracking-[0.16em] text-[#B4B7BC] hover:text-[#D4B97E] transition-colors relative py-1 group"
-            >
-              {link.name}
-              <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#B8975A] transition-all duration-200 group-hover:w-full" />
-            </a>
-          ))}
-        </nav>
-
-        {/* Right CTA Actions */}
-        <div className="hidden sm:flex items-center space-x-3">
-          <a
-            href="#contact"
-            onClick={(e) => scrollToSection(e, '#contact')}
-            className="text-xs font-mono uppercase tracking-wider text-[#B4B7BC] hover:text-white px-3 py-2 transition-colors"
-          >
-            Get in Touch
-          </a>
-
-          <Link
-            to="/login"
-            className="inline-flex items-center space-x-2 px-3.5 py-2 court-btn-brass rounded-[3px] text-xs font-mono uppercase tracking-wider transition-all duration-200 shadow-md group hover:scale-[1.02]"
-          >
-            <span>Chambers Portal</span>
-            <ArrowRight className="w-3.5 h-3.5 text-[#0A0A0B] transition-transform duration-200 group-hover:translate-x-0.5" />
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 transform ${
+          visible ? 'translate-y-0' : '-translate-y-full'
+        } ${
+          scrolled
+            ? 'bg-charcoal/85 backdrop-blur-xl border-b border-brass/20 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.7)]'
+            : 'bg-gradient-to-b from-ink/90 via-ink/40 to-transparent py-5 border-b border-transparent'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between">
+          {/* Brand Wordmark */}
+          <Link to="/" className="outline-none focus-visible:ring-2 focus-visible:ring-brass rounded-sm">
+            <Logo size="md" />
           </Link>
-        </div>
 
-        {/* Mobile Hamburger Toggle */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="lg:hidden p-2 rounded text-[#F6F4EF] border border-[#2B2D32] hover:border-[#B8975A]/50 bg-[#141416] transition-colors cursor-pointer"
-          aria-label="Toggle Navigation Menu"
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5" />}
-        </button>
-      </div>
-
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#141416] border-b border-[#2B2D32] px-5 py-5 shadow-2xl transition-all animate-fadeIn">
-          <div className="flex flex-col space-y-3">
+          {/* Desktop Public Navigation */}
+          <nav className="hidden lg:flex items-center space-x-7">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={(e) => scrollToSection(e, link.href)}
-                className="text-sm font-serif text-[#F6F4EF] hover:text-[#D4B97E] py-1.5 border-b border-[#2B2D32]/60 flex items-center justify-between"
+                className="text-xs font-mono uppercase tracking-[0.18em] text-silver/80 hover:text-ivory transition-colors relative py-1 group"
               >
-                <span>{link.name}</span>
-                <ChevronRight className="w-4 h-4 text-[#6B6F76]" />
+                {link.name}
+                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-gradient-to-r from-brass to-brass-light transition-all duration-250 ease-out group-hover:w-full" />
               </a>
             ))}
+          </nav>
 
-            <div className="pt-3 flex flex-col space-y-2">
+          {/* Right CTA Actions */}
+          <div className="hidden sm:flex items-center space-x-3.5">
+            <a
+              href="#contact"
+              onClick={(e) => scrollToSection(e, '#contact')}
+              className="text-xs font-mono uppercase tracking-wider text-silver hover:text-ivory px-3.5 py-2 transition-colors"
+            >
+              Consultation
+            </a>
+
+            <Link
+              to="/login"
+              className="court-btn-brass inline-flex items-center space-x-2 px-4 py-2 rounded-xs text-xs font-mono uppercase tracking-wider shadow-md group"
+            >
+              <span>Chambers Portal</span>
+              <ArrowRight className="w-3.5 h-3.5 text-ink transition-transform duration-200 group-hover:translate-x-1" />
+            </Link>
+          </div>
+
+          {/* Mobile Hamburger Toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-xs text-ivory border border-brass/25 hover:border-brass/60 bg-charcoal/90 transition-colors cursor-pointer"
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </header>
+
+      {/* Elegant Mobile Menu Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: EASE_EXPO }}
+            className="fixed inset-0 top-[60px] z-30 lg:hidden bg-ink/95 backdrop-blur-2xl border-t border-brass/20 flex flex-col justify-between p-6 overflow-y-auto"
+          >
+            <div className="flex flex-col space-y-1 mt-4">
+              {navLinks.map((link, idx) => (
+                <motion.a
+                  key={link.name}
+                  href={link.href}
+                  onClick={(e) => scrollToSection(e, link.href)}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.05, duration: 0.3 }}
+                  className="text-lg font-serif text-ivory hover:text-brass py-3 border-b border-slate/30 flex items-center justify-between"
+                >
+                  <span>{link.name}</span>
+                  <ChevronRight className="w-4 h-4 text-brass/60" />
+                </motion.a>
+              ))}
+            </div>
+
+            <div className="pt-6 pb-8 flex flex-col space-y-3">
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-2.5 court-btn-brass font-medium text-xs font-mono uppercase tracking-wider rounded-[3px] shadow-md"
+                className="w-full text-center py-3 court-btn-brass font-medium text-xs font-mono uppercase tracking-wider rounded-xs shadow-lg"
               >
-                Chambers Portal Login
+                Enter Chambers Portal
               </Link>
               <a
                 href="#contact"
                 onClick={(e) => scrollToSection(e, '#contact')}
-                className="w-full text-center py-2 court-btn-outline text-xs font-mono uppercase tracking-wider rounded-[3px]"
+                className="w-full text-center py-3 court-btn-outline text-xs font-mono uppercase tracking-wider rounded-xs"
               >
-                Request Consultation
+                Schedule Private Consultation
               </a>
             </div>
-          </div>
-        </div>
-      )}
-    </header>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
