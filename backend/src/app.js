@@ -1,6 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+
+const { verifyToken } = require('./middleware/auth');
+const { attachDb } = require('./middleware/dbContext');
+const errorHandler = require('./middleware/errorHandler');
 
 const clientRoutes = require('./routes/clientRoutes');
 const caseRoutes = require('./routes/caseRoutes');
@@ -11,7 +16,6 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const auditRoutes = require('./routes/auditRoutes');
 const authRoutes = require('./routes/authRoutes');
 const practiceRoutes = require('./routes/practiceRoutes');
-const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
@@ -20,7 +24,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Health Check
+// Health Check (public endpoint)
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'online',
@@ -29,16 +33,18 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Mount Resource Routes
-app.use('/api/clients', clientRoutes);
-app.use('/api/cases', caseRoutes);
-app.use('/api/lawyers', lawyerRoutes);
-app.use('/api/hearings', hearingRoutes);
-app.use('/api/reports', reportRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/audit', auditRoutes);
+// Authentication Routes (public login/register; protected /me, /users)
 app.use('/api/auth', authRoutes);
-app.use('/api/practice', practiceRoutes);
+
+// Protected Resource Routes (database-enforced role context applied to all requests)
+app.use('/api/clients', verifyToken, attachDb, clientRoutes);
+app.use('/api/cases', verifyToken, attachDb, caseRoutes);
+app.use('/api/lawyers', verifyToken, attachDb, lawyerRoutes);
+app.use('/api/hearings', verifyToken, attachDb, hearingRoutes);
+app.use('/api/reports', verifyToken, attachDb, reportRoutes);
+app.use('/api/dashboard', verifyToken, attachDb, dashboardRoutes);
+app.use('/api/audit', verifyToken, attachDb, auditRoutes);
+app.use('/api/practice', verifyToken, attachDb, practiceRoutes);
 
 // 404 Handler for undefined routes
 app.use((req, res, next) => {

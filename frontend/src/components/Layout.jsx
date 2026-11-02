@@ -42,9 +42,9 @@ export default function Layout() {
   const [user] = useState(() => {
     try {
       const saved = localStorage.getItem('briefcase_user');
-      return saved ? JSON.parse(saved) : { name: 'Senior Partner', role: 'Admin', email: 'admin@briefcase.in' };
+      return saved ? JSON.parse(saved) : null;
     } catch {
-      return { name: 'Senior Partner', role: 'Admin', email: 'admin@briefcase.in' };
+      return null;
     }
   });
 
@@ -74,7 +74,7 @@ export default function Layout() {
     navigate('/login');
   };
 
-  const navigation = [
+  const allNavigation = [
     { name: 'Dashboard', href: '/app', icon: LayoutDashboard, subtitle: 'Practice Metrics & Dockets' },
     { name: 'Clients Registry', href: '/app/clients', icon: Users, subtitle: 'Client Directory & Records' },
     { name: 'Legal Cases', href: '/app/cases', icon: BriefcaseIcon, subtitle: 'Matter Dockets & Budgets' },
@@ -82,12 +82,15 @@ export default function Layout() {
     { name: 'Court Hearings', href: '/app/hearings', icon: Calendar, subtitle: 'Cause Lists & Bench Orders' },
     { name: 'Document Vault', href: '/app/documents', icon: FolderOpen, subtitle: 'Exhibits & Pleading Briefs' },
     { name: 'Action Items', href: '/app/tasks', icon: CheckSquare, subtitle: 'Deadlines & Trial Prep' },
-    { name: 'Billing & Ledgers', href: '/app/finances', icon: Receipt, subtitle: 'Retainers & Fee Receipts' },
-    { name: 'Reports', href: '/app/reports', icon: FileCode2, subtitle: 'Cross-Entity Reports & Views' },
-    { name: 'System Operations', href: '/app/plsql', icon: Database, subtitle: 'Automated Procedures & Routines' },
-    { name: 'Activity History', href: '/app/audit', icon: History, subtitle: 'Audit Logs & System Activity' },
-    { name: 'Security & Access', href: '/app/db-users', icon: ShieldCheck, subtitle: 'User Accounts & Privileges' },
+    { name: 'Billing & Ledgers', href: '/app/finances', icon: Receipt, subtitle: 'Retainers & Fee Receipts', roles: ['Admin'] },
+    { name: 'Reports', href: '/app/reports', icon: FileCode2, subtitle: 'Cross-Entity Reports & Views', roles: ['Admin'] },
+    { name: 'System Operations', href: '/app/plsql', icon: Database, subtitle: 'Automated Procedures & Routines', roles: ['Admin'] },
+    { name: 'Activity History', href: '/app/audit', icon: History, subtitle: 'Audit Logs & System Activity', roles: ['Admin'] },
+    { name: 'Security & Access', href: '/app/db-users', icon: ShieldCheck, subtitle: 'User Accounts & Privileges', roles: ['Admin'] },
   ];
+
+  const role = user?.role;
+  const navigation = allNavigation.filter(item => !item.roles || item.roles.includes(role));
 
   const currentNav = navigation.find(n => n.href === location.pathname) || {
     name: 'Practice Management',

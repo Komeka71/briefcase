@@ -1,9 +1,8 @@
-const { pool } = require('../config/db');
-
 const auditController = {
   // Requirement 10.9 & Assignment 11: Get Audit Logs with pagination and filters
   getAuditLogs: async (req, res, next) => {
     try {
+      const db = req.db;
       const page = parseInt(req.query.page || '1', 10);
       const pageSize = parseInt(req.query.pageSize || '15', 10);
       const { table, operation } = req.query;
@@ -23,7 +22,7 @@ const auditController = {
       }
 
       // Count query
-      const [countResult] = await pool.query(
+      const [countResult] = await db.query(
         `SELECT COUNT(*) AS total FROM application_audit_log ${whereClause}`,
         params
       );
@@ -31,14 +30,12 @@ const auditController = {
       const totalPages = Math.ceil(totalRecords / pageSize) || 1;
 
       // Data query
-      const [rows] = await pool.query(
+      const [rows] = await db.query(
         `SELECT 
           audit_id,
           table_name,
           operation_type,
           record_id,
-          old_values,
-          new_values,
           changed_at,
           changed_by
         FROM application_audit_log 
@@ -66,13 +63,14 @@ const auditController = {
   // Audit Statistics
   getAuditStats: async (req, res, next) => {
     try {
-      const [byOperation] = await pool.query(`
+      const db = req.db;
+      const [byOperation] = await db.query(`
         SELECT operation_type, COUNT(*) AS count
         FROM application_audit_log
         GROUP BY operation_type
       `);
 
-      const [byTable] = await pool.query(`
+      const [byTable] = await db.query(`
         SELECT table_name, COUNT(*) AS count
         FROM application_audit_log
         GROUP BY table_name

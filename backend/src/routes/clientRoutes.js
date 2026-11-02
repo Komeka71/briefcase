@@ -1,26 +1,27 @@
 const express = require('express');
 const router = express.Router();
 const clientController = require('../controllers/clientController');
+const { requireRole } = require('../middleware/auth');
 
-// Query 1: Get all clients (supports JSON and ?format=xml)
-router.get('/', clientController.getAllClients);
+// Get all clients (Admin: all; Lawyer: own case clients; Assistant: all)
+router.get('/', requireRole('Admin', 'Lawyer', 'Assistant', 'Staff'), clientController.getAllClients);
 
-// Requirement 10.5: Paginated client search via Stored Procedure
-router.get('/paginated', clientController.getPaginatedClients);
+// Paginated client search via Stored Procedure or View
+router.get('/paginated', requireRole('Admin', 'Lawyer', 'Assistant', 'Staff'), clientController.getPaginatedClients);
 
-// Requirement 10.4: Cursors demo (bounded and unbounded)
-router.get('/cursor', clientController.getClientsCursor);
+// Cursors demo
+router.get('/cursor', requireRole('Admin', 'Lawyer', 'Assistant', 'Staff'), clientController.getClientsCursor);
 
-// Requirement 10.1: Get single client by ID via Stored Procedure
-router.get('/:id', clientController.getClientById);
+// Get single client by ID
+router.get('/:id', requireRole('Admin', 'Lawyer', 'Assistant', 'Staff'), clientController.getClientById);
 
-// Requirement 10.1: Create client via Stored Procedure InsertClient
-router.post('/', clientController.createClient);
+// Create client (Admin only)
+router.post('/', requireRole('Admin'), clientController.createClient);
 
-// Requirement 10.1: Update client via Stored Procedure UpdateClient
-router.put('/:id', clientController.updateClient);
+// Update client (Admin only)
+router.put('/:id', requireRole('Admin'), clientController.updateClient);
 
-// Requirement 10.1: Delete client via Stored Procedure DeleteClient
-router.delete('/:id', clientController.deleteClient);
+// Delete client (Admin only)
+router.delete('/:id', requireRole('Admin'), clientController.deleteClient);
 
 module.exports = router;

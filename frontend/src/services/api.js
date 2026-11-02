@@ -17,6 +17,21 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Response interceptor: 401 clears auth and redirects to /login, 403 rejects
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('briefcase_token');
+      localStorage.removeItem('briefcase_user');
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const dashboardService = {
   getSummary: () => api.get('/dashboard')
 };

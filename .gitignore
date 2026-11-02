@@ -8,6 +8,7 @@ backend/.env.*
 # Dependencies
 node_modules/
 backend/node_modules/
+frontend/node_modules/
 
 # Logs
 *.log
@@ -18,21 +19,6 @@ npm-debug.log*
 Thumbs.db
 .vscode/
 
-# Environment variables and secrets
-.env
-.env.*
-!.env.example
-backend/.env
-backend/.env.*
-
-# Dependencies
-node_modules/
-backend/node_modules/
-
-# Logs
-*.log
-npm-debug.log*
-
-# OS files
-.DS_Store
-Thumbs.db
+# Database backups and uploads
+backup_*.sql
+backend/storage/

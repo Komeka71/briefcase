@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
+import RequireAuth from './components/RequireAuth';
 import PublicHome from './pages/PublicHome';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -49,7 +50,14 @@ export default function App() {
         <Route path="/register" element={<Register />} />
 
         {/* Private Law Practice Management Platform */}
-        <Route path="/app" element={<Layout />}>
+        <Route
+          path="/app"
+          element={
+            <RequireAuth>
+              <Layout />
+            </RequireAuth>
+          }
+        >
           <Route index element={<Dashboard />} />
           <Route path="clients" element={<Clients />} />
           <Route path="cases" element={<Cases />} />
@@ -57,11 +65,46 @@ export default function App() {
           <Route path="hearings" element={<Hearings />} />
           <Route path="documents" element={<Documents />} />
           <Route path="tasks" element={<Tasks />} />
-          <Route path="finances" element={<Finances />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="plsql" element={<PlsqlLab />} />
-          <Route path="audit" element={<AuditLogs />} />
-          <Route path="db-users" element={<DatabaseUsers />} />
+          <Route
+            path="finances"
+            element={
+              <RequireAuth roles={['Admin']}>
+                <Finances />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="reports"
+            element={
+              <RequireAuth roles={['Admin']}>
+                <Reports />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="plsql"
+            element={
+              <RequireAuth roles={['Admin']}>
+                <PlsqlLab />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="audit"
+            element={
+              <RequireAuth roles={['Admin']}>
+                <AuditLogs />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="db-users"
+            element={
+              <RequireAuth roles={['Admin']}>
+                <DatabaseUsers />
+              </RequireAuth>
+            }
+          />
         </Route>
 
         {/* Legacy & Direct Route Redirects */}

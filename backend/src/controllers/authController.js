@@ -1,10 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { pool } = require('../config/db');
+const { authPool, adminPool } = require('../config/db');
 const { JWT_SECRET } = require('../middleware/auth');
 
 const authController = {
-  // Requirement 10.3: Register Application User
+  // Public & Admin Registration
   register: async (req, res, next) => {
     try {
       const { name, email, password, role, status } = req.body;
@@ -23,11 +23,39 @@ const authController = {
         });
       }
 
+      // Admin account restriction: Creating Admin requires valid Admin JWT
+      if (role === 'Admin') {
+        let isAdmin = false;
+        const authHeader = req.headers.authorization;
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+          try {
+            const decoded = jwt.verify(authHeader.split(' ')[1], JWT_SECRET);
+            if (decoded.role === 'Admin') {
+              isAdmin = true;
+            }
+          } catch (e) {
+            // invalid token
+          }
+        }
+        if (!isAdmin) {
+          return res.status(403).json({
+            success: false,
+            message: 'Admin accounts can only be created by an existing administrator.'
+          });
+        }
+      } else if (!['Lawyer', 'Assistant', 'Staff'].includes(role)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Role must be Lawyer, Assistant, or Staff.'
+        });
+      }
+
       // Hash password with bcrypt salt rounds = 10
       const salt = await bcrypt.genSalt(10);
       const passwordHash = await bcrypt.hash(password, salt);
 
-      const connection = await pool.getConnection();
+      // Registration executes RegisterUser procedure using authPool
+      const connection = await authPool.getConnection();
       try {
         await connection.query('SET @new_user_id = 0');
         const [results] = await connection.query(
@@ -59,7 +87,7 @@ const authController = {
     }
   },
 
-  // Requirement 10.3: Login Application User
+  // Login Application User via authPool
   login: async (req, res, next) => {
     try {
       const { email, password } = req.body;
@@ -71,8 +99,8 @@ const authController = {
         });
       }
 
-      // Retrieve user hash via stored procedure GetUserByEmail
-      const [results] = await pool.query('CALL GetUserByEmail(?)', [email]);
+      // Retrieve user credentials via stored procedure GetUserByEmail on authPool
+      const [results] = await authPool.query('CALL GetUserByEmail(?)', [email]);
       const user = results[0]?.[0];
 
       if (!user) {
@@ -126,9 +154,11 @@ const authController = {
   // Get Current Authenticated User Profile
   getMe: async (req, res, next) => {
     try {
-      const [results] = await pool.query(
+      const userId = req.user.userId || req.user.user_id;
+      const db = req.db || adminPool;
+      const [results] = await db.query(
         'SELECT user_id, name, email, role, status, created_at FROM USERS WHERE user_id = ?',
-        [req.user.userId]
+        [userId]
       );
       const user = results[0];
       if (!user) {
@@ -140,10 +170,10 @@ const authController = {
     }
   },
 
-  // List all users via stored procedure GetAllUsers (Admin view)
+  // List all users via stored procedure GetAllUsers (Admin pool)
   getAllUsers: async (req, res, next) => {
     try {
-      const [results] = await pool.query('CALL GetAllUsers()');
+      const [results] = await adminPool.query('CALL GetAllUsers()');
       const users = results[0] || [];
       return res.json({ success: true, count: users.length, data: users });
     } catch (error) {
@@ -151,11 +181,11 @@ const authController = {
     }
   },
 
-  // Delete user via stored procedure DeleteUser
+  // Delete user via stored procedure DeleteUser (Admin pool)
   deleteUser: async (req, res, next) => {
     try {
       const userId = parseInt(req.params.id, 10);
-      const [results] = await pool.query('CALL DeleteUser(?)', [userId]);
+      const [results] = await adminPool.query('CALL DeleteUser(?)', [userId]);
       const message = results[0]?.[0]?.message || 'User deleted.';
       return res.json({ success: true, message });
     } catch (error) {

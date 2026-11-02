@@ -45,5 +45,8 @@ SOURCE 12_views.sql;
 -- Step 13: Create Indexes and Performance Analyzers
 SOURCE 13_indexes.sql;
 
+-- Step 14: Create Role-Based Access Views, Functions, Procedures and Accounts
+SOURCE 16_role_security.sql;
+
 -- Final Verification Check
 SELECT 'BriefCase Database initialization finished successfully!' AS status;

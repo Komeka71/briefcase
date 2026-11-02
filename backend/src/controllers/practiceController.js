@@ -1,29 +1,71 @@
-const { pool } = require('../config/db');
-
 const practiceController = {
   // Documents Management
   getDocuments: async (req, res, next) => {
     try {
-      const [rows] = await pool.query(`
-        SELECT 
-          d.document_id,
-          d.title,
-          d.description,
-          d.file_path,
-          d.file_size,
-          d.upload_date,
-          d.is_confidential,
-          c.case_id,
-          c.case_number,
-          c.title AS case_title,
-          dt.type_name AS document_type,
-          u.name AS uploaded_by_name
-        FROM DOCUMENT d
-        LEFT JOIN CASES c ON d.case_id = c.case_id
-        LEFT JOIN DOCUMENT_TYPE dt ON d.document_type_id = dt.document_type_id
-        LEFT JOIN USERS u ON d.uploaded_by = u.user_id
-        ORDER BY d.upload_date DESC
-      `);
+      const db = req.db;
+      const role = req.user?.role || 'Admin';
+
+      let sql;
+      if (role === 'Lawyer') {
+        sql = `
+          SELECT 
+            document_id,
+            title,
+            description,
+            file_path,
+            file_size,
+            upload_date,
+            is_confidential,
+            case_id,
+            case_number,
+            case_title,
+            document_type,
+            uploaded_by_name
+          FROM vw_lawyer_documents
+          ORDER BY upload_date DESC
+        `;
+      } else if (role === 'Assistant' || role === 'Staff') {
+        sql = `
+          SELECT 
+            document_id,
+            title,
+            description,
+            file_path,
+            file_size,
+            upload_date,
+            is_confidential,
+            case_id,
+            case_number,
+            case_title,
+            document_type,
+            uploaded_by_name
+          FROM vw_staff_documents
+          ORDER BY upload_date DESC
+        `;
+      } else {
+        sql = `
+          SELECT 
+            d.document_id,
+            d.title,
+            d.description,
+            d.file_path,
+            d.file_size,
+            d.upload_date,
+            d.is_confidential,
+            c.case_id,
+            c.case_number,
+            c.title AS case_title,
+            dt.type_name AS document_type,
+            u.name AS uploaded_by_name
+          FROM DOCUMENT d
+          LEFT JOIN CASES c ON d.case_id = c.case_id
+          LEFT JOIN DOCUMENT_TYPE dt ON d.document_type_id = dt.document_type_id
+          LEFT JOIN USERS u ON d.uploaded_by = u.user_id
+          ORDER BY d.upload_date DESC
+        `;
+      }
+
+      const [rows] = await db.query(sql);
       res.json({ success: true, data: rows });
     } catch (err) {
       next(err);
@@ -32,13 +74,30 @@ const practiceController = {
 
   createDocument: async (req, res, next) => {
     try {
+      const db = req.db;
       const { case_id, document_type_id, title, description, file_path, file_size, is_confidential } = req.body;
-      const [result] = await pool.query(
-        `INSERT INTO DOCUMENT (case_id, document_type_id, title, description, file_path, file_size, upload_date, uploaded_by, is_confidential)
-         VALUES (?, ?, ?, ?, ?, ?, NOW(), 1, ?)`,
-        [case_id || 1, document_type_id || 1, title, description || '', file_path || '/uploads/doc.pdf', file_size || 1024000, is_confidential ? 1 : 0]
-      );
-      res.status(201).json({ success: true, message: 'Document registered successfully', id: result.insertId });
+
+      // Use stored procedure sp_role_add_document for role enforcement
+      const conn = await db.getConnection();
+      try {
+        await conn.query('SET @new_doc_id = 0');
+        await conn.query(
+          'CALL sp_role_add_document(?, ?, ?, ?, ?, ?, ?, @new_doc_id)',
+          [
+            case_id || null,
+            document_type_id || 1,
+            title || 'Untitled Document',
+            description || '',
+            file_path || '/uploads/doc.pdf',
+            file_size || 1024000,
+            is_confidential ? 1 : 0
+          ]
+        );
+        const [out] = await conn.query('SELECT @new_doc_id AS id');
+        res.status(201).json({ success: true, message: 'Document registered successfully', id: out[0]?.id });
+      } finally {
+        conn.release();
+      }
     } catch (err) {
       next(err);
     }
@@ -46,8 +105,9 @@ const practiceController = {
 
   deleteDocument: async (req, res, next) => {
     try {
+      const db = req.db;
       const { id } = req.params;
-      await pool.query('DELETE FROM DOCUMENT WHERE document_id = ?', [id]);
+      await db.query('DELETE FROM DOCUMENT WHERE document_id = ?', [id]);
       res.json({ success: true, message: 'Document deleted successfully' });
     } catch (err) {
       next(err);
@@ -57,23 +117,63 @@ const practiceController = {
   // Tasks Management
   getTasks: async (req, res, next) => {
     try {
-      const [rows] = await pool.query(`
-        SELECT 
-          t.task_id,
-          t.title,
-          t.description,
-          t.due_date,
-          t.priority,
-          t.status,
-          c.case_id,
-          c.case_number,
-          c.title AS case_title,
-          u.name AS assigned_to_name
-        FROM TASK t
-        LEFT JOIN CASES c ON t.case_id = c.case_id
-        LEFT JOIN USERS u ON t.assigned_to = u.user_id
-        ORDER BY t.due_date ASC
-      `);
+      const db = req.db;
+      const role = req.user?.role || 'Admin';
+
+      let sql;
+      if (role === 'Lawyer') {
+        sql = `
+          SELECT 
+            task_id,
+            title,
+            description,
+            due_date,
+            priority,
+            status,
+            case_id,
+            case_number,
+            case_title,
+            assigned_to_name
+          FROM vw_lawyer_tasks
+          ORDER BY due_date ASC
+        `;
+      } else if (role === 'Assistant' || role === 'Staff') {
+        sql = `
+          SELECT 
+            task_id,
+            title,
+            description,
+            due_date,
+            priority,
+            status,
+            case_id,
+            case_number,
+            case_title,
+            assigned_to_name
+          FROM vw_staff_tasks
+          ORDER BY due_date ASC
+        `;
+      } else {
+        sql = `
+          SELECT 
+            t.task_id,
+            t.title,
+            t.description,
+            t.due_date,
+            t.priority,
+            t.status,
+            c.case_id,
+            c.case_number,
+            c.title AS case_title,
+            u.name AS assigned_to_name
+          FROM TASK t
+          LEFT JOIN CASES c ON t.case_id = c.case_id
+          LEFT JOIN USERS u ON t.assigned_to = u.user_id
+          ORDER BY t.due_date ASC
+        `;
+      }
+
+      const [rows] = await db.query(sql);
       res.json({ success: true, data: rows });
     } catch (err) {
       next(err);
@@ -82,13 +182,29 @@ const practiceController = {
 
   createTask: async (req, res, next) => {
     try {
+      const db = req.db;
       const { case_id, assigned_to, title, description, due_date, priority, status } = req.body;
-      const [result] = await pool.query(
-        `INSERT INTO TASK (case_id, assigned_to, created_by, title, description, due_date, priority, status)
-         VALUES (?, ?, 1, ?, ?, ?, ?, ?)`,
-        [case_id || 1, assigned_to || 1, title, description || '', due_date, priority || 'Medium', status || 'Pending']
-      );
-      res.status(201).json({ success: true, message: 'Task created successfully', id: result.insertId });
+
+      const conn = await db.getConnection();
+      try {
+        await conn.query('SET @new_task_id = 0');
+        await conn.query(
+          'CALL sp_role_add_task(?, ?, ?, ?, ?, ?, ?, @new_task_id)',
+          [
+            case_id,
+            assigned_to || null,
+            title,
+            description || '',
+            due_date || null,
+            priority || 'Medium',
+            status || 'Pending'
+          ]
+        );
+        const [out] = await conn.query('SELECT @new_task_id AS id');
+        res.status(201).json({ success: true, message: 'Task created successfully', id: out[0]?.id });
+      } finally {
+        conn.release();
+      }
     } catch (err) {
       next(err);
     }
@@ -96,9 +212,11 @@ const practiceController = {
 
   updateTaskStatus: async (req, res, next) => {
     try {
+      const db = req.db;
       const { id } = req.params;
       const { status } = req.body;
-      await pool.query('UPDATE TASK SET status = ? WHERE task_id = ?', [status, id]);
+
+      await db.query('CALL sp_role_update_task_status(?, ?)', [id, status]);
       res.json({ success: true, message: 'Task status updated' });
     } catch (err) {
       next(err);
@@ -107,18 +225,20 @@ const practiceController = {
 
   deleteTask: async (req, res, next) => {
     try {
+      const db = req.db;
       const { id } = req.params;
-      await pool.query('DELETE FROM TASK WHERE task_id = ?', [id]);
+      await db.query('DELETE FROM TASK WHERE task_id = ?', [id]);
       res.json({ success: true, message: 'Task removed successfully' });
     } catch (err) {
       next(err);
     }
   },
 
-  // Invoices & Payments Management
+  // Invoices & Payments Management (Admin only)
   getInvoices: async (req, res, next) => {
     try {
-      const [rows] = await pool.query(`
+      const db = req.db;
+      const [rows] = await db.query(`
         SELECT 
           i.invoice_id,
           i.invoice_number,
@@ -143,7 +263,8 @@ const practiceController = {
 
   getPayments: async (req, res, next) => {
     try {
-      const [rows] = await pool.query(`
+      const db = req.db;
+      const [rows] = await db.query(`
         SELECT 
           p.payment_id,
           p.payment_date,
@@ -168,10 +289,11 @@ const practiceController = {
     }
   },
 
-  // Appointments Management
+  // Appointments Management (Admin only)
   getAppointments: async (req, res, next) => {
     try {
-      const [rows] = await pool.query(`
+      const db = req.db;
+      const [rows] = await db.query(`
         SELECT 
           a.appointment_id,
           a.appointment_date,

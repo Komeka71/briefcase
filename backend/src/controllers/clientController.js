@@ -1,4 +1,3 @@
-const { pool } = require('../config/db');
 const { clientsToXml } = require('../utils/xml');
 
 /**
@@ -8,7 +7,19 @@ const clientController = {
   // Query 1 & Requirement 11.1: Display all clients (supports JSON and XML)
   getAllClients: async (req, res, next) => {
     try {
-      const [rows] = await pool.query('SELECT * FROM CLIENT ORDER BY client_id ASC');
+      const db = req.db;
+      const role = req.user?.role || 'Admin';
+
+      let sql;
+      if (role === 'Lawyer') {
+        sql = 'SELECT * FROM vw_lawyer_clients ORDER BY client_id ASC';
+      } else if (role === 'Assistant' || role === 'Staff') {
+        sql = 'SELECT * FROM vw_staff_clients ORDER BY client_id ASC';
+      } else {
+        sql = 'SELECT * FROM CLIENT ORDER BY client_id ASC';
+      }
+
+      const [rows] = await db.query(sql);
 
       const format = (req.query.format || '').toLowerCase();
       if (format === 'xml' || req.headers.accept?.includes('application/xml')) {
@@ -27,12 +38,24 @@ const clientController = {
     }
   },
 
-  // Requirement 10.1: Get Client By ID via Stored Procedure
+  // Requirement 10.1: Get Client By ID
   getClientById: async (req, res, next) => {
     try {
+      const db = req.db;
+      const role = req.user?.role || 'Admin';
       const clientId = parseInt(req.params.id, 10);
-      const [results] = await pool.query('CALL GetClientById(?)', [clientId]);
-      const client = results[0] && results[0][0];
+
+      let client;
+      if (role === 'Lawyer') {
+        const [rows] = await db.query('SELECT * FROM vw_lawyer_clients WHERE client_id = ?', [clientId]);
+        client = rows[0];
+      } else if (role === 'Assistant' || role === 'Staff') {
+        const [rows] = await db.query('SELECT * FROM vw_staff_clients WHERE client_id = ?', [clientId]);
+        client = rows[0];
+      } else {
+        const [results] = await db.query('CALL GetClientById(?)', [clientId]);
+        client = results[0] && results[0][0];
+      }
 
       if (!client) {
         return res.status(404).json({ success: false, message: 'Client not found.' });
@@ -44,18 +67,25 @@ const clientController = {
     }
   },
 
-  // Requirement 10.1 & 11.2: Insert Client via Stored Procedure InsertClient
+  // Requirement 10.1 & 11.2: Insert Client via Stored Procedure InsertClient (Admin only)
   createClient: async (req, res, next) => {
     try {
+      const db = req.db;
       const { name, client_type, phone, email, address } = req.body;
 
-      // Execute stored procedure with OUT parameter
-      const connection = await pool.getConnection();
+      if (!name || !name.trim()) {
+        return res.status(400).json({
+          success: false,
+          message: 'Client name is required.'
+        });
+      }
+
+      const connection = await db.getConnection();
       try {
         await connection.query('SET @new_id = 0');
         const [results] = await connection.query(
           'CALL InsertClient(?, ?, ?, ?, ?, @new_id)',
-          [name || '', client_type || 'Individual', phone || null, email || null, address || null]
+          [name.trim(), client_type || 'Individual', phone || null, email || null, address || null]
         );
         const [outResult] = await connection.query('SELECT @new_id AS new_client_id');
         const newClientId = outResult[0]?.new_client_id;
@@ -75,13 +105,14 @@ const clientController = {
     }
   },
 
-  // Requirement 10.1 & 11.8: Update Client via Stored Procedure UpdateClient
+  // Requirement 10.1 & 11.8: Update Client via Stored Procedure UpdateClient (Admin only)
   updateClient: async (req, res, next) => {
     try {
+      const db = req.db;
       const clientId = parseInt(req.params.id, 10);
       const { name, client_type, phone, email, address } = req.body;
 
-      const [results] = await pool.query(
+      const [results] = await db.query(
         'CALL UpdateClient(?, ?, ?, ?, ?, ?)',
         [clientId, name, client_type, phone || null, email || null, address || null]
       );
@@ -97,12 +128,13 @@ const clientController = {
     }
   },
 
-  // Requirement 10.1: Delete Client via Stored Procedure DeleteClient
+  // Requirement 10.1: Delete Client via Stored Procedure DeleteClient (Admin only)
   deleteClient: async (req, res, next) => {
     try {
+      const db = req.db;
       const clientId = parseInt(req.params.id, 10);
 
-      const [results] = await pool.query('CALL DeleteClient(?)', [clientId]);
+      const [results] = await db.query('CALL DeleteClient(?)', [clientId]);
       const message = results[0]?.[0]?.message || 'Client deleted successfully.';
 
       return res.json({ success: true, message });
@@ -111,67 +143,86 @@ const clientController = {
     }
   },
 
-  // Requirement 10.5: Paginated Search via Stored Procedure PaginateClients
- // Requirement 10.5: Paginated Search via Stored Procedure PaginateClients
-getPaginatedClients: async (req, res, next) => {
-  try {
-    // Validate and normalize query parameters
-    const parsedPage = Number.parseInt(req.query.page, 10);
-    const parsedPageSize = Number.parseInt(req.query.pageSize, 10);
+  // Requirement 10.5: Paginated Search
+  getPaginatedClients: async (req, res, next) => {
+    try {
+      const db = req.db;
+      const role = req.user?.role || 'Admin';
 
-    const page =
-      Number.isInteger(parsedPage) && parsedPage > 0
-        ? parsedPage
-        : 1;
+      const parsedPage = Number.parseInt(req.query.page, 10);
+      const parsedPageSize = Number.parseInt(req.query.pageSize, 10);
 
-    const pageSize =
-      Number.isInteger(parsedPageSize) &&
-      parsedPageSize > 0 &&
-      parsedPageSize <= 100
-        ? parsedPageSize
-        : 10;
+      const page = Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+      const pageSize = Number.isInteger(parsedPageSize) && parsedPageSize > 0 && parsedPageSize <= 100 ? parsedPageSize : 10;
+      const search = typeof req.query.search === 'string' ? req.query.search.trim() : '';
 
-    const search =
-      typeof req.query.search === 'string'
-        ? req.query.search.trim()
-        : '';
+      let rows = [];
+      if (role === 'Admin') {
+        const [results] = await db.query(
+          'CALL PaginateClients(?, ?, ?)',
+          [search || null, page, pageSize]
+        );
+        rows = results[0] || [];
+      } else {
+        const clientView = role === 'Lawyer' ? 'vw_lawyer_clients' : 'vw_staff_clients';
+        const offset = (page - 1) * pageSize;
+        let query = `SELECT * FROM ${clientView}`;
+        const params = [];
+        if (search) {
+          query += ' WHERE name LIKE ? OR email LIKE ?';
+          const p = `%${search}%`;
+          params.push(p, p);
+        }
+        query += ' ORDER BY client_id ASC LIMIT ? OFFSET ?';
+        params.push(pageSize, offset);
 
-    // Parameter order must match the MySQL procedure:
-    // p_search, p_page, p_limit
-    const [results] = await pool.query(
-      'CALL PaginateClients(?, ?, ?)',
-      [search || null, page, pageSize]
-    );
-
-    const rows = results[0] || [];
-
-    return res.json({
-      success: true,
-      data: rows,
-      pagination: {
-        current_page: page,
-        page_size: pageSize,
-        total_records: null,
-        total_pages: null
+        const [results] = await db.query(query, params);
+        rows = results;
       }
-    });
-  } catch (error) {
-    next(error);
-  }
-},
+
+      return res.json({
+        success: true,
+        data: rows,
+        pagination: {
+          current_page: page,
+          page_size: pageSize,
+          total_records: null,
+          total_pages: null
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
   // Requirement 10.4: Cursor Processing Demonstration
   getClientsCursor: async (req, res, next) => {
     try {
+      const db = req.db;
+      const role = req.user?.role || 'Admin';
       const limit = req.query.limit ? parseInt(req.query.limit, 10) : null;
 
-      let results;
-      if (limit && limit > 0) {
-        [results] = await pool.query('CALL DisplayLimitedClients(?)', [limit]);
+      let rows = [];
+      if (role === 'Admin') {
+        let results;
+        if (limit && limit > 0) {
+          [results] = await db.query('CALL DisplayLimitedClients(?)', [limit]);
+        } else {
+          [results] = await db.query('CALL DisplayAllClients()');
+        }
+        rows = results[0] || [];
       } else {
-        [results] = await pool.query('CALL DisplayAllClients()');
+        const clientView = role === 'Lawyer' ? 'vw_lawyer_clients' : 'vw_staff_clients';
+        let query = `SELECT * FROM ${clientView} ORDER BY client_id ASC`;
+        const params = [];
+        if (limit && limit > 0) {
+          query += ' LIMIT ?';
+          params.push(limit);
+        }
+        const [results] = await db.query(query, params);
+        rows = results;
       }
 
-      const rows = results[0] || [];
       return res.json({
         success: true,
         cursorType: limit ? `Bounded Cursor (First ${limit} records)` : 'Unbounded Explicit Cursor (All records)',

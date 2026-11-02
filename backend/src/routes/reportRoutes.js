@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const reportController = require('../controllers/reportController');
+const { requireRole } = require('../middleware/auth');
+
+// All reports are strictly Admin-only per Access Matrix
+router.use(requireRole('Admin'));
 
 // Assignment 11 Section A Query 1: All records from CLIENT (+ XML)
 router.get('/query1-clients', reportController.getQuery1Clients);

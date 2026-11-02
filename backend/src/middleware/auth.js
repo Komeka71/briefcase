@@ -1,6 +1,13 @@
 const jwt = require('jsonwebtoken');
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
-const JWT_SECRET = process.env.JWT_SECRET || 'briefcase_svnit_secret_key_2026_dbms_project';
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET environment variable is missing.');
+  process.exit(1);
+}
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 /**
  * Middleware to verify JWT authentication token
