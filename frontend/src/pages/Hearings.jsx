@@ -8,6 +8,7 @@ import {
   EmptyState,
   Skeleton
 } from '../components/ui';
+import { getRole } from '../lib/auth';
 import { EASE_EXPO } from '../lib/motion';
 import {
   Plus,
@@ -23,6 +24,10 @@ import {
 } from 'lucide-react';
 
 export default function Hearings() {
+  const role = getRole();
+  const isAdmin = role === 'Admin';
+  const canSchedule = isAdmin || role === 'Lawyer';
+  const hasActions = role !== 'Assistant';
   const [hearings, setHearings] = useState([]);
   const [refData, setRefData] = useState({ courts: [], cases: [] });
   const [loading, setLoading] = useState(true);
@@ -170,16 +175,18 @@ export default function Hearings() {
         category="Bench Docket"
         badge="Daily Roster"
         actions={
-          <MagneticButton
-            variant="brass"
-            size="md"
-            onClick={openAdd}
-            icon={Plus}
-            iconPosition="left"
-            className="text-xs font-mono uppercase tracking-wider"
-          >
-            Schedule Bench Hearing
-          </MagneticButton>
+          canSchedule ? (
+            <MagneticButton
+              variant="brass"
+              size="md"
+              onClick={openAdd}
+              icon={Plus}
+              iconPosition="left"
+              className="text-xs font-mono uppercase tracking-wider"
+            >
+              Schedule Bench Hearing
+            </MagneticButton>
+          ) : undefined
         }
       />
 
@@ -240,25 +247,25 @@ export default function Hearings() {
               <th>Hearing Purpose</th>
               <th>Bench Order / Outcome</th>
               <th>Adjourned Next Date</th>
-              <th className="text-right">Actions</th>
+              {hasActions && <th className="text-right">Actions</th>}
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={8} className="py-8">
+                <td colSpan={hasActions ? 8 : 7} className="py-8">
                   <Skeleton rows={4} height="h-6" />
                 </td>
               </tr>
             ) : filteredHearings.length === 0 ? (
               <tr>
-                <td colSpan={8}>
+                <td colSpan={hasActions ? 8 : 7}>
                   <EmptyState
                     icon={Gavel}
                     title="No hearings found"
                     description="No hearing entries match the active filter criteria."
-                    actionLabel="Schedule Bench Hearing"
-                    onAction={openAdd}
+                    actionLabel={canSchedule ? "Schedule Bench Hearing" : undefined}
+                    onAction={canSchedule ? openAdd : undefined}
                   />
                 </td>
               </tr>
@@ -301,24 +308,28 @@ export default function Hearings() {
                   <td className="font-mono text-xs text-silver/60">
                     {h.next_hearing_date ? String(h.next_hearing_date).slice(0, 10) : '—'}
                   </td>
-                  <td className="text-right">
-                    <div className="flex items-center justify-end space-x-1.5">
-                      <button
-                        onClick={() => openEdit(h)}
-                        className="p-1.5 rounded-xs text-silver hover:text-ivory hover:bg-graphite transition-colors cursor-pointer"
-                        title="Edit Hearing"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(h.hearing_id)}
-                        className="p-1.5 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
-                        title="Delete Docket"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </td>
+                  {hasActions && (
+                    <td className="text-right">
+                      <div className="flex items-center justify-end space-x-1.5">
+                        <button
+                          onClick={() => openEdit(h)}
+                          className="p-1.5 rounded-xs text-silver hover:text-ivory hover:bg-graphite transition-colors cursor-pointer"
+                          title="Edit Hearing"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        {isAdmin && (
+                          <button
+                            onClick={() => handleDelete(h.hearing_id)}
+                            className="p-1.5 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
+                            title="Delete Docket"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))
             )}

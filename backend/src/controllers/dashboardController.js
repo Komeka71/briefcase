@@ -57,7 +57,7 @@ const dashboardController = {
           ORDER BY count DESC
         `);
 
-        // 5. Upcoming Hearings
+        // 5. Upcoming Hearings (unadjourned / pending outcome)
         const [upcomingHearings] = await db.query(`
           SELECT 
             h.hearing_id,
@@ -72,23 +72,25 @@ const dashboardController = {
           INNER JOIN CASES c ON h.case_id = c.case_id
           INNER JOIN COURT co ON h.court_id = co.court_id
           WHERE h.hearing_date >= CURRENT_DATE
+            AND (h.outcome IS NULL OR TRIM(h.outcome) = '')
           ORDER BY h.hearing_date ASC, h.start_time ASC
           LIMIT 5
         `);
 
-        // 6. Pending Tasks
+        // 6. Urgent Filing Deadlines (Pending or In Progress, overdue first)
         const [pendingTasks] = await db.query(`
           SELECT 
             t.task_id,
             t.title,
             t.priority,
+            t.status,
             t.due_date,
             c.case_number,
             u.name AS assigned_to_name
           FROM TASK t
           INNER JOIN CASES c ON t.case_id = c.case_id
           LEFT JOIN USERS u ON t.assigned_to = u.user_id
-          WHERE t.status = 'Pending'
+          WHERE t.status IN ('Pending', 'In Progress')
           ORDER BY t.due_date ASC
           LIMIT 5
         `);
@@ -187,7 +189,7 @@ const dashboardController = {
         ORDER BY count DESC
       `);
 
-      // Upcoming Hearings
+      // Upcoming Hearings (unadjourned / pending outcome)
       const [upcomingHearings] = await db.query(`
         SELECT 
           h.hearing_id,
@@ -200,21 +202,23 @@ const dashboardController = {
           h.court_city AS city
         FROM ${hearingView} h
         WHERE h.hearing_date >= CURRENT_DATE
+          AND (h.outcome IS NULL OR TRIM(h.outcome) = '')
         ORDER BY h.hearing_date ASC, h.start_time ASC
         LIMIT 5
       `);
 
-      // Pending Tasks
+      // Urgent Tasks (Pending or In Progress, overdue first)
       const [pendingTasks] = await db.query(`
         SELECT 
           t.task_id,
           t.title,
           t.priority,
+          t.status,
           t.due_date,
           t.case_number,
           t.assigned_to_name
         FROM ${taskView} t
-        WHERE t.status = 'Pending'
+        WHERE t.status IN ('Pending', 'In Progress')
         ORDER BY t.due_date ASC
         LIMIT 5
       `);

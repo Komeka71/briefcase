@@ -8,6 +8,7 @@ import {
   EmptyState,
   Skeleton
 } from '../components/ui';
+import { getRole } from '../lib/auth';
 import { EASE_EXPO } from '../lib/motion';
 import {
   CheckSquare,
@@ -22,6 +23,7 @@ import {
 } from 'lucide-react';
 
 export default function Tasks() {
+  const isAdmin = getRole() === 'Admin';
   const [tasks, setTasks] = useState([]);
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -213,19 +215,19 @@ export default function Tasks() {
               <th>Limitation Due Date</th>
               <th>Workflow Status</th>
               <th>Quick Status Update</th>
-              <th className="text-right">Actions</th>
+              {isAdmin && <th className="text-right">Actions</th>}
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={7} className="py-8">
+                <td colSpan={isAdmin ? 7 : 6} className="py-8">
                   <Skeleton rows={4} height="h-6" />
                 </td>
               </tr>
             ) : filteredTasks.length === 0 ? (
               <tr>
-                <td colSpan={7}>
+                <td colSpan={isAdmin ? 7 : 6}>
                   <EmptyState
                     icon={CheckSquare}
                     title="No action items found"
@@ -292,15 +294,17 @@ export default function Tasks() {
                       )}
                     </div>
                   </td>
-                  <td className="text-right">
-                    <button
-                      onClick={() => handleDelete(t.task_id)}
-                      className="p-1.5 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
-                      title="Delete Action Item"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </td>
+                  {isAdmin && (
+                    <td className="text-right">
+                      <button
+                        onClick={() => handleDelete(t.task_id)}
+                        className="p-1.5 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
+                        title="Delete Action Item"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             )}

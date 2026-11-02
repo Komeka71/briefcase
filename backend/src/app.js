@@ -16,6 +16,7 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const auditRoutes = require('./routes/auditRoutes');
 const authRoutes = require('./routes/authRoutes');
 const practiceRoutes = require('./routes/practiceRoutes');
+const plsqlRoutes = require('./routes/plsqlRoutes');
 
 const app = express();
 
@@ -45,6 +46,16 @@ app.use('/api/reports', verifyToken, attachDb, reportRoutes);
 app.use('/api/dashboard', verifyToken, attachDb, dashboardRoutes);
 app.use('/api/audit', verifyToken, attachDb, auditRoutes);
 app.use('/api/practice', verifyToken, attachDb, practiceRoutes);
+app.use('/api/plsql', verifyToken, attachDb, plsqlRoutes);
+
+// Direct /api/finances, /api/invoices, /api/payments aliases
+const practiceController = require('./controllers/practiceController');
+app.get('/api/finances/ledger/export', verifyToken, attachDb, practiceController.exportLedger);
+app.get('/api/invoices', verifyToken, attachDb, practiceController.getInvoices);
+app.post('/api/invoices', verifyToken, attachDb, practiceController.createInvoice);
+app.get('/api/payments', verifyToken, attachDb, practiceController.getPayments);
+app.post('/api/payments', verifyToken, attachDb, practiceController.createPayment);
+app.put('/api/payments/:id/status', verifyToken, attachDb, practiceController.updatePaymentStatus);
 
 // 404 Handler for undefined routes
 app.use((req, res, next) => {

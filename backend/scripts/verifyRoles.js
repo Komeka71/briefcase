@@ -160,7 +160,7 @@ async function verifyAllRoles() {
 
       // Hearings
       { method: 'GET', path: '/api/hearings', admin: 200, lawyer: 200, staff: 200, label: 'Hearings (Read)' },
-      { method: 'POST', path: '/api/hearings', admin: 400, lawyer: 403, staff: 403, label: 'Hearings (Create)', body: {} },
+      { method: 'POST', path: '/api/hearings', admin: 400, lawyer: 400, staff: 403, label: 'Hearings (Create)', body: {} },
       { method: 'PUT', path: '/api/hearings/1', admin: 200, lawyer: 200, staff: 403, label: 'Hearings (Update)', body: { outcome: 'Ongoing', notes: 'Hearing note' } },
 
       // Documents
@@ -169,14 +169,15 @@ async function verifyAllRoles() {
 
       // Tasks
       { method: 'GET', path: '/api/practice/tasks', admin: 200, lawyer: 200, staff: 200, label: 'Tasks (Read)' },
-      { method: 'DELETE', path: '/api/practice/tasks/999', admin: 200, lawyer: 403, staff: 403, label: 'Tasks (Delete)' },
+      { method: 'DELETE', path: '/api/practice/tasks/999', admin: 404, lawyer: 403, staff: 403, label: 'Tasks (Delete)' },
 
       // Finances (Invoices & Payments)
       { method: 'GET', path: '/api/practice/invoices', admin: 200, lawyer: 403, staff: 403, label: 'Finances (Invoices)' },
       { method: 'GET', path: '/api/practice/payments', admin: 200, lawyer: 403, staff: 403, label: 'Finances (Payments)' },
 
-      // Reports
-      { method: 'GET', path: '/api/reports/query1-clients', admin: 200, lawyer: 403, staff: 403, label: 'Reports' },
+      // Reports (Query 1 Scoped to all roles, Query 5 Admin-only)
+      { method: 'GET', path: '/api/reports/query1-clients', admin: 200, lawyer: 200, staff: 200, label: 'Reports (Query 1 Clients Scoped)' },
+      { method: 'GET', path: '/api/reports/query5-join', admin: 200, lawyer: 403, staff: 403, label: 'Reports (Query 5 Join Admin-only)' },
 
       // Audit Logs
       { method: 'GET', path: '/api/audit', admin: 200, lawyer: 403, staff: 403, label: 'Audit Logs' },

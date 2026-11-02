@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { practiceService, caseService } from '../services/api';
+import { getRole } from '../lib/auth';
 import {
   PageHeader,
   MagneticButton,
@@ -29,13 +30,15 @@ export default function Documents() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const isAdmin = getRole() === 'Admin';
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('');
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
-    case_id: 1,
+    case_id: 2,
     document_type_id: 1,
     title: '',
     description: '',
@@ -59,7 +62,11 @@ export default function Documents() {
   const fetchCases = async () => {
     try {
       const res = await caseService.getAll();
-      setCases(res.data.data || []);
+      const loadedCases = res.data.data || [];
+      setCases(loadedCases);
+      if (loadedCases.length > 0) {
+        setFormData((prev) => ({ ...prev, case_id: loadedCases[0].case_id || 2 }));
+      }
     } catch (err) {
       console.warn('Could not load cases:', err.message);
     }
@@ -75,11 +82,24 @@ export default function Documents() {
     setError(null);
     setSuccess(null);
     try {
-      await practiceService.createDocument(formData);
+      const payload = new FormData();
+      payload.append('case_id', formData.case_id);
+      payload.append('document_type_id', formData.document_type_id);
+      payload.append('title', formData.title);
+      payload.append('description', formData.description || '');
+      payload.append('is_confidential', formData.is_confidential ? 'true' : 'false');
+      if (file) {
+        payload.append('file', file);
+      } else {
+        payload.append('file_path', formData.file_path || '/uploads/cases/document.pdf');
+        payload.append('file_size', formData.file_size || 2450000);
+      }
+      await practiceService.createDocument(payload);
       setSuccess('Document successfully filed into matter repository.');
       setModalOpen(false);
+      setFile(null);
       setFormData({
-        case_id: cases[0]?.case_id || 1,
+        case_id: cases[0]?.case_id || 2,
         document_type_id: 1,
         title: '',
         description: '',
@@ -90,6 +110,24 @@ export default function Documents() {
       fetchDocs();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to file document.');
+    }
+  };
+
+  const handleDownload = async (doc) => {
+    try {
+      const res = await practiceService.downloadDocument(doc.document_id);
+      const blob = new Blob([res.data], { type: res.headers['content-type'] || 'application/octet-stream' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const filename = `${doc.title || 'document'}.pdf`;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Download failed.');
     }
   };
 
@@ -266,19 +304,21 @@ export default function Documents() {
                   <td className="text-right">
                     <div className="flex items-center justify-end space-x-1.5">
                       <button
-                        onClick={() => alert(`Downloading verified exhibit: ${doc.title}`)}
+                        onClick={() => handleDownload(doc)}
                         className="p-1.5 rounded-xs text-silver hover:text-brass hover:bg-graphite transition-colors cursor-pointer"
                         title="Download Exhibit"
                       >
                         <Download className="w-3.5 h-3.5" />
                       </button>
-                      <button
-                        onClick={() => handleDelete(doc.document_id, doc.title)}
-                        className="p-1.5 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
-                        title="Expunge Record"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      {isAdmin && (
+                        <button
+                          onClick={() => handleDelete(doc.document_id, doc.title)}
+                          className="p-1.5 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
+                          title="Expunge Record"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -330,6 +370,27 @@ export default function Documents() {
                       </option>
                     ))}
                   </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                    Exhibit File Document (PDF, DOCX, TXT, PNG, JPG)
+                  </label>
+                  <input
+                    type="file"
+                    onChange={(e) => {
+                      const f = e.target.files[0];
+                      setFile(f || null);
+                      if (f) {
+                        setFormData((prev) => ({
+                          ...prev,
+                          title: prev.title || f.name.replace(/\.[^/.]+$/, ''),
+                          file_size: f.size
+                        }));
+                      }
+                    }}
+                    className="court-input w-full px-3.5 py-2 text-xs font-mono"
+                  />
                 </div>
 
                 <div>

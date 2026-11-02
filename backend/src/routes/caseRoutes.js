@@ -21,4 +21,8 @@ router.put('/:id', requireRole('Admin', 'Lawyer'), caseController.updateCase);
 // Delete case (Admin only)
 router.delete('/:id', requireRole('Admin'), caseController.deleteCase);
 
+// Counsel allocation (Admin only per sp_case_assign_counsel and sp_case_remove_counsel)
+router.post('/:id/lawyers', requireRole('Admin'), caseController.assignCounsel);
+router.delete('/:id/lawyers/:lawyerId', requireRole('Admin'), caseController.removeCounsel);
+
 module.exports = router;

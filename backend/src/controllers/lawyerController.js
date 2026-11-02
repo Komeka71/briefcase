@@ -21,7 +21,8 @@ const lawyerController = {
             l.join_date,
             l.status,
             l.department_id,
-            d.department_name
+            d.department_name,
+            (SELECT COUNT(*) FROM CASE_LAWYER cl WHERE cl.lawyer_id = l.lawyer_id) AS assigned_cases_count
           FROM LAWYER l
           LEFT JOIN DEPARTMENT d ON l.department_id = d.department_id
           ORDER BY l.lawyer_id ASC

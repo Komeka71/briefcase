@@ -29,6 +29,28 @@ export default function Reports() {
   const [selectedView, setSelectedView] = useState('vw_client_cases');
   const [viewData, setViewData] = useState([]);
 
+  // Tab 3: Relational Insertion (Q2)
+  const [q2Form, setQ2Form] = useState({
+    client_name: '',
+    client_type: 'Individual',
+    client_phone: '',
+    client_email: '',
+    client_address: '',
+    case_title: '',
+    case_type_id: 1,
+    budget: 150000,
+    priority: 'Medium'
+  });
+  const [q2Result, setQ2Result] = useState(null);
+
+  // Tab 4: Relational Update (Q8)
+  const [q8Form, setQ8Form] = useState({
+    case_id: 2,
+    budget: 650000,
+    notes: 'Budget revised and approved per chambers conference.'
+  });
+  const [q8Result, setQ8Result] = useState(null);
+
   const TABLE2_OPTIONS = {
     CLIENT: ['CASES'],
     CASES: ['CASE_TYPE', 'CASE_STATUS'],
@@ -79,9 +101,45 @@ export default function Reports() {
     }
   };
 
+  const handleQ2Submit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    setQ2Result(null);
+    try {
+      const res = await reportService.postQuery2(q2Form);
+      setQ2Result(res.data.data);
+      setSuccess(res.data.message || 'Records successfully inserted maintaining integrity constraints.');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Relational insertion failed.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleQ8Submit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    setQ8Result(null);
+    try {
+      const res = await reportService.putQuery8(q8Form);
+      setQ8Result(res.data.data);
+      setSuccess(res.data.message || 'Case record successfully updated maintaining relational integrity.');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Relational update failed.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const tabs = [
     { id: 'joins', label: 'Cross-Entity Reports (Joins)' },
-    { id: 'views', label: 'Consolidated Practice Views' }
+    { id: 'views', label: 'Consolidated Practice Views' },
+    { id: 'q2', label: 'Relational Insertion (Q2)' },
+    { id: 'q8', label: 'Relational Update (Q8)' }
   ];
 
   return (
@@ -308,6 +366,281 @@ export default function Reports() {
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+
+      {/* TAB 3: RELATIONAL INSERTION (Q2) */}
+      {activeTab === 'q2' && (
+        <div className="court-card p-6 space-y-5">
+          <div className="pb-4 border-b border-brass/15">
+            <div className="text-[10px] font-mono text-brass uppercase tracking-wider">Assignment 11.2 & Query 2</div>
+            <h2 className="text-lg font-serif font-medium text-ivory mt-0.5">
+              Atomic Relational Insertion Maintaining Referential Integrity
+            </h2>
+            <p className="text-xs text-silver/60 font-sans mt-1">
+              Atomically creates a primary client record and links a dependent legal matter within a transaction boundary.
+            </p>
+          </div>
+
+          <form onSubmit={handleQ2Submit} className="space-y-4 max-w-2xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                  Client Full Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={q2Form.client_name}
+                  onChange={(e) => setQ2Form({ ...q2Form, client_name: e.target.value })}
+                  placeholder="e.g. Ramesh Patel"
+                  className="court-input w-full px-3.5 py-2 text-xs"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                  Client Classification
+                </label>
+                <select
+                  value={q2Form.client_type}
+                  onChange={(e) => setQ2Form({ ...q2Form, client_type: e.target.value })}
+                  className="court-input w-full px-3.5 py-2 text-xs font-mono bg-charcoal cursor-pointer"
+                >
+                  <option value="Individual">Individual</option>
+                  <option value="Corporate">Corporate Entity</option>
+                  <option value="Government">Government / Public Body</option>
+                  <option value="NGO">Non-Profit / Society</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                  Contact Phone
+                </label>
+                <input
+                  type="text"
+                  value={q2Form.client_phone}
+                  onChange={(e) => setQ2Form({ ...q2Form, client_phone: e.target.value })}
+                  placeholder="+91 98250 12345"
+                  className="court-input w-full px-3.5 py-2 text-xs font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={q2Form.client_email}
+                  onChange={(e) => setQ2Form({ ...q2Form, client_email: e.target.value })}
+                  placeholder="rpatel@example.com"
+                  className="court-input w-full px-3.5 py-2 text-xs font-mono"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                Client Chamber Address
+              </label>
+              <input
+                type="text"
+                value={q2Form.client_address}
+                onChange={(e) => setQ2Form({ ...q2Form, client_address: e.target.value })}
+                placeholder="402 Court Chambers, Nanpura, Surat"
+                className="court-input w-full px-3.5 py-2 text-xs"
+              />
+            </div>
+
+            <div className="pt-2 border-t border-brass/10">
+              <div className="text-[10px] font-mono text-brass uppercase tracking-wider mb-3">
+                Dependent Linked Matter Information (FK Integrity)
+              </div>
+              <div>
+                <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                  Matter Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={q2Form.case_title}
+                  onChange={(e) => setQ2Form({ ...q2Form, case_title: e.target.value })}
+                  placeholder="e.g. Special Civil Suit for Specific Performance"
+                  className="court-input w-full px-3.5 py-2 text-xs"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                  Practice Area
+                </label>
+                <select
+                  value={q2Form.case_type_id}
+                  onChange={(e) => setQ2Form({ ...q2Form, case_type_id: Number(e.target.value) })}
+                  className="court-input w-full px-3.5 py-2 text-xs font-mono bg-charcoal cursor-pointer"
+                >
+                  <option value={1}>Civil Litigation</option>
+                  <option value={2}>Criminal Defense</option>
+                  <option value={3}>Constitutional / Writ</option>
+                  <option value={4}>Corporate & Commercial</option>
+                  <option value={5}>Family & Succession</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                  Matter Budget (INR)
+                </label>
+                <input
+                  type="number"
+                  value={q2Form.budget}
+                  onChange={(e) => setQ2Form({ ...q2Form, budget: parseFloat(e.target.value) || 0 })}
+                  className="court-input w-full px-3.5 py-2 text-xs font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                  Docket Priority
+                </label>
+                <select
+                  value={q2Form.priority}
+                  onChange={(e) => setQ2Form({ ...q2Form, priority: e.target.value })}
+                  className="court-input w-full px-3.5 py-2 text-xs font-mono bg-charcoal cursor-pointer"
+                >
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                  <option value="Urgent">Urgent</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <MagneticButton
+                type="submit"
+                variant="brass"
+                size="md"
+                disabled={loading}
+                icon={Play}
+                iconPosition="left"
+                className="text-xs font-mono uppercase tracking-wider"
+              >
+                Execute Relational Insert (Q2)
+              </MagneticButton>
+            </div>
+          </form>
+
+          {q2Result && (
+            <div className="p-4 bg-charcoal border border-brass/30 rounded-xs space-y-2 mt-4 max-w-2xl">
+              <div className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider">
+                Transaction Committed Successfully
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-xs font-mono">
+                <div>
+                  <span className="text-silver/60">Client ID:</span> <span className="text-ivory font-bold">{q2Result.client_id}</span>
+                </div>
+                <div>
+                  <span className="text-silver/60">Case ID:</span> <span className="text-ivory font-bold">{q2Result.case_id}</span>
+                </div>
+                <div>
+                  <span className="text-silver/60">Docket:</span> <span className="text-brass font-bold">{q2Result.case_number}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* TAB 4: RELATIONAL UPDATE (Q8) */}
+      {activeTab === 'q8' && (
+        <div className="court-card p-6 space-y-5">
+          <div className="pb-4 border-b border-brass/15">
+            <div className="text-[10px] font-mono text-brass uppercase tracking-wider">Assignment 11.8 & Query 8</div>
+            <h2 className="text-lg font-serif font-medium text-ivory mt-0.5">
+              Relational Update Maintaining Domain & State Constraints
+            </h2>
+            <p className="text-xs text-silver/60 font-sans mt-1">
+              Executes a targeted UPDATE statement modifying financial estimates and appending audit notes.
+            </p>
+          </div>
+
+          <form onSubmit={handleQ8Submit} className="space-y-4 max-w-xl">
+            <div>
+              <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                Target Legal Matter ID *
+              </label>
+              <input
+                type="number"
+                required
+                value={q8Form.case_id}
+                onChange={(e) => setQ8Form({ ...q8Form, case_id: parseInt(e.target.value) || 2 })}
+                placeholder="2"
+                className="court-input w-full px-3.5 py-2 text-xs font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                Revised Budget Estimate (INR) *
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                required
+                value={q8Form.budget}
+                onChange={(e) => setQ8Form({ ...q8Form, budget: parseFloat(e.target.value) || 0 })}
+                placeholder="650000.00"
+                className="court-input w-full px-3.5 py-2 text-xs font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-mono uppercase tracking-wider text-silver/80 mb-1.5">
+                Audit Remarks & Reason for Revision
+              </label>
+              <textarea
+                rows={3}
+                value={q8Form.notes}
+                onChange={(e) => setQ8Form({ ...q8Form, notes: e.target.value })}
+                placeholder="Senior counsel fee adjustment agreed upon in Chambers conference..."
+                className="court-input w-full px-3.5 py-2 text-xs"
+              />
+            </div>
+
+            <div className="pt-2">
+              <MagneticButton
+                type="submit"
+                variant="brass"
+                size="md"
+                disabled={loading}
+                icon={Play}
+                iconPosition="left"
+                className="text-xs font-mono uppercase tracking-wider"
+              >
+                Execute Relational Update (Q8)
+              </MagneticButton>
+            </div>
+          </form>
+
+          {q8Result && (
+            <div className="p-4 bg-charcoal border border-brass/30 rounded-xs space-y-2 mt-4 max-w-xl">
+              <div className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider">
+                Case Record Updated
+              </div>
+              <div className="text-xs font-mono text-ivory">
+                <div><span className="text-silver/60">Matter:</span> {q8Result.case_number} — {q8Result.title}</div>
+                <div><span className="text-silver/60">New Budget:</span> ₹{Number(q8Result.budget).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
+                <div className="truncate"><span className="text-silver/60">Notes:</span> {q8Result.notes}</div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -6,8 +6,8 @@ const { requireRole } = require('../middleware/auth');
 // Get hearings (Admin: all, Lawyer: own, Assistant: all)
 router.get('/', requireRole('Admin', 'Lawyer', 'Assistant', 'Staff'), hearingController.getAllHearings);
 
-// Create hearing (Admin only)
-router.post('/', requireRole('Admin'), hearingController.createHearing);
+// Create hearing (Admin and Lawyer)
+router.post('/', requireRole('Admin', 'Lawyer'), hearingController.createHearing);
 
 // Update hearing (Admin: full, Lawyer: outcome and notes only)
 router.put('/:id', requireRole('Admin', 'Lawyer'), hearingController.updateHearing);

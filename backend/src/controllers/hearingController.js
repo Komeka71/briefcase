@@ -79,10 +79,32 @@ const hearingController = {
   createHearing: async (req, res, next) => {
     try {
       const db = req.db;
+      const role = req.user?.role || 'Admin';
       const { case_id, court_id, hearing_date, start_time, end_time, purpose, outcome, next_hearing_date, notes } = req.body;
 
       if (!case_id || !court_id || !hearing_date) {
         return res.status(400).json({ success: false, message: 'Case ID, Court ID, and Hearing Date are required.' });
+      }
+
+      if (role === 'Lawyer') {
+        const conn = await db.getConnection();
+        try {
+          await conn.query('SET @new_hearing_id = 0');
+          const [results] = await conn.query(
+            'CALL sp_lawyer_schedule_hearing(?, ?, ?, ?, @new_hearing_id)',
+            [case_id, court_id, hearing_date, notes || purpose || '']
+          );
+          const [outRes] = await conn.query('SELECT @new_hearing_id AS hearing_id');
+          const hearingId = outRes[0]?.hearing_id || (results[0] && results[0][0]?.hearing_id);
+          return res.status(201).json({
+            success: true,
+            message: 'Hearing scheduled successfully via stored procedure.',
+            hearing_id: hearingId,
+            data: results[0] ? results[0][0] : undefined
+          });
+        } finally {
+          conn.release();
+        }
       }
 
       const [result] = await db.query(`

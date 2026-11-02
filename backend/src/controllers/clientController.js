@@ -157,24 +157,39 @@ const clientController = {
       const search = typeof req.query.search === 'string' ? req.query.search.trim() : '';
 
       let rows = [];
+      let totalRecords = null;
+      let totalPages = null;
       if (role === 'Admin') {
         const [results] = await db.query(
           'CALL PaginateClients(?, ?, ?)',
-          [search || null, page, pageSize]
+          [page, pageSize, search || null]
         );
         rows = results[0] || [];
+        if (results[1] && results[1][0]) {
+          totalRecords = results[1][0].total_records;
+          totalPages = results[1][0].total_pages;
+        }
       } else {
         const clientView = role === 'Lawyer' ? 'vw_lawyer_clients' : 'vw_staff_clients';
         const offset = (page - 1) * pageSize;
+        let countQuery = `SELECT COUNT(*) AS total FROM ${clientView}`;
         let query = `SELECT * FROM ${clientView}`;
+        const countParams = [];
         const params = [];
         if (search) {
-          query += ' WHERE name LIKE ? OR email LIKE ?';
+          const whereClause = ' WHERE name LIKE ? OR email LIKE ?';
+          countQuery += whereClause;
+          query += whereClause;
           const p = `%${search}%`;
+          countParams.push(p, p);
           params.push(p, p);
         }
         query += ' ORDER BY client_id ASC LIMIT ? OFFSET ?';
         params.push(pageSize, offset);
+
+        const [countResult] = await db.query(countQuery, countParams);
+        totalRecords = countResult[0]?.total || 0;
+        totalPages = Math.ceil(totalRecords / pageSize) || 1;
 
         const [results] = await db.query(query, params);
         rows = results;
@@ -186,8 +201,8 @@ const clientController = {
         pagination: {
           current_page: page,
           page_size: pageSize,
-          total_records: null,
-          total_pages: null
+          total_records: totalRecords,
+          total_pages: totalPages
         }
       });
     } catch (error) {

@@ -7,6 +7,7 @@ import {
   EmptyState,
   Skeleton
 } from '../components/ui';
+import { getRole } from '../lib/auth';
 import { EASE_EXPO } from '../lib/motion';
 import {
   Users,
@@ -28,6 +29,7 @@ import {
 } from 'lucide-react';
 
 export default function Clients() {
+  const isAdmin = getRole() === 'Admin';
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -203,16 +205,18 @@ export default function Clients() {
             >
               Export XML
             </MagneticButton>
-            <MagneticButton
-              variant="brass"
-              size="md"
-              onClick={openAddModal}
-              icon={Plus}
-              iconPosition="left"
-              className="text-xs font-mono uppercase tracking-wider"
-            >
-              Enrol New Client
-            </MagneticButton>
+            {isAdmin && (
+              <MagneticButton
+                variant="brass"
+                size="md"
+                onClick={openAddModal}
+                icon={Plus}
+                iconPosition="left"
+                className="text-xs font-mono uppercase tracking-wider"
+              >
+                Enrol New Client
+              </MagneticButton>
+            )}
           </div>
         }
       />
@@ -321,25 +325,25 @@ export default function Clients() {
               <th>Official Email</th>
               <th>Chambers Address</th>
               <th>Enrolled Date</th>
-              <th className="text-right">Actions</th>
+              {isAdmin && <th className="text-right">Actions</th>}
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={8} className="py-8">
+                <td colSpan={isAdmin ? 8 : 7} className="py-8">
                   <Skeleton rows={4} height="h-6" />
                 </td>
               </tr>
             ) : clients.length === 0 ? (
               <tr>
-                <td colSpan={8}>
+                <td colSpan={isAdmin ? 8 : 7}>
                   <EmptyState
                     icon={Users}
                     title="No clients found"
                     description="No client records matched your search parameters. Use the button above to enrol new clients."
-                    actionLabel="Enrol New Client"
-                    onAction={openAddModal}
+                    actionLabel={isAdmin ? "Enrol New Client" : undefined}
+                    onAction={isAdmin ? openAddModal : undefined}
                   />
                 </td>
               </tr>
@@ -370,26 +374,28 @@ export default function Clients() {
                     {c.address || '—'}
                   </td>
                   <td className="font-mono text-xs text-silver/60">
-                    {c.created_at ? String(c.created_at).slice(0, 10) : '—'}
+                    {(c.date_of_registration || c.created_at) ? String(c.date_of_registration || c.created_at).slice(0, 10) : '—'}
                   </td>
-                  <td className="text-right">
-                    <div className="flex items-center justify-end space-x-1.5">
-                      <button
-                        onClick={() => openEditModal(c)}
-                        className="p-1.5 rounded-xs text-silver hover:text-brass hover:bg-graphite transition-colors cursor-pointer"
-                        title="Edit Client"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(c.client_id)}
-                        className="p-1.5 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
-                        title="Delete Client"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </td>
+                  {isAdmin && (
+                    <td className="text-right">
+                      <div className="flex items-center justify-end space-x-1.5">
+                        <button
+                          onClick={() => openEditModal(c)}
+                          className="p-1.5 rounded-xs text-silver hover:text-brass hover:bg-graphite transition-colors cursor-pointer"
+                          title="Edit Client"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(c.client_id)}
+                          className="p-1.5 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
+                          title="Delete Client"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))
             )}

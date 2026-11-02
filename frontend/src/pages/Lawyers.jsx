@@ -8,6 +8,7 @@ import {
   EmptyState,
   Skeleton
 } from '../components/ui';
+import { getRole } from '../lib/auth';
 import { EASE_EXPO } from '../lib/motion';
 import {
   UserCheck,
@@ -22,6 +23,7 @@ import {
 } from 'lucide-react';
 
 export default function Lawyers() {
+  const isAdmin = getRole() === 'Admin';
   const [lawyers, setLawyers] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -165,16 +167,18 @@ export default function Lawyers() {
         category="Counsel Directory"
         badge="Bar Enrolled"
         actions={
-          <MagneticButton
-            variant="brass"
-            size="md"
-            onClick={openAdd}
-            icon={Plus}
-            iconPosition="left"
-            className="text-xs font-mono uppercase tracking-wider"
-          >
-            Admit New Counsel
-          </MagneticButton>
+          isAdmin ? (
+            <MagneticButton
+              variant="brass"
+              size="md"
+              onClick={openAdd}
+              icon={Plus}
+              iconPosition="left"
+              className="text-xs font-mono uppercase tracking-wider"
+            >
+              Admit New Counsel
+            </MagneticButton>
+          ) : undefined
         }
       />
 
@@ -235,25 +239,25 @@ export default function Lawyers() {
               <th>Standing</th>
               <th>Caseload</th>
               <th>Status</th>
-              <th className="text-right">Actions</th>
+              {isAdmin && <th className="text-right">Actions</th>}
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={8} className="py-8">
+                <td colSpan={isAdmin ? 8 : 7} className="py-8">
                   <Skeleton rows={4} height="h-6" />
                 </td>
               </tr>
             ) : filteredLawyers.length === 0 ? (
               <tr>
-                <td colSpan={8}>
+                <td colSpan={isAdmin ? 8 : 7}>
                   <EmptyState
                     icon={UserCheck}
                     title="No counsel records found"
                     description="No advocate records matched the current filter criteria."
-                    actionLabel="Admit New Counsel"
-                    onAction={openAdd}
+                    actionLabel={isAdmin ? "Admit New Counsel" : undefined}
+                    onAction={isAdmin ? openAdd : undefined}
                   />
                 </td>
               </tr>
@@ -287,24 +291,26 @@ export default function Lawyers() {
                   <td>
                     <StatusPill status={l.status} />
                   </td>
-                  <td className="text-right">
-                    <div className="flex items-center justify-end space-x-1.5">
-                      <button
-                        onClick={() => openEdit(l)}
-                        className="p-1.5 rounded-xs text-silver hover:text-ivory hover:bg-graphite transition-colors cursor-pointer"
-                        title="Edit Counsel"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(l.lawyer_id, l.name)}
-                        className="p-1.5 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
-                        title="Revoke Credentials"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </td>
+                  {isAdmin && (
+                    <td className="text-right">
+                      <div className="flex items-center justify-end space-x-1.5">
+                        <button
+                          onClick={() => openEdit(l)}
+                          className="p-1.5 rounded-xs text-silver hover:text-ivory hover:bg-graphite transition-colors cursor-pointer"
+                          title="Edit Counsel"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(l.lawyer_id, l.name)}
+                          className="p-1.5 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
+                          title="Revoke Credentials"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))
             )}

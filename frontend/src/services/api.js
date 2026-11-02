@@ -54,7 +54,9 @@ export const caseService = {
   getById: (id) => api.get(`/cases/${id}`),
   create: (data) => api.post('/cases', data),
   update: (id, data) => api.put(`/cases/${id}`, data),
-  delete: (id) => api.delete(`/cases/${id}`)
+  delete: (id) => api.delete(`/cases/${id}`),
+  assignCounsel: (caseId, data) => api.post(`/cases/${caseId}/lawyers`, data),
+  removeCounsel: (caseId, lawyerId) => api.delete(`/cases/${caseId}/lawyers/${lawyerId}`)
 };
 
 export const lawyerService = {
@@ -81,8 +83,8 @@ export const reportService = {
     api.get(`/reports/query4-conditional?column=${column}&operator=${encodeURIComponent(operator)}&value=${encodeURIComponent(value)}${format ? `&format=${format}` : ''}`),
   getQuery5: (table1, table2, joinType) =>
     api.get(`/reports/query5-join?table1=${table1}&table2=${table2}&joinType=${joinType}`),
-  getQuery6: (minBudget = 300000) =>
-    api.get(`/reports/query6-subquery?minBudget=${minBudget}`),
+  getQuery6: (minBudget = 300000, shape = '') =>
+    api.get(`/reports/query6-subquery?minBudget=${minBudget}${shape ? `&shape=${shape}` : ''}`),
   getQuery7: () => api.get('/reports/query7-correlated'),
   putQuery8: (data) => api.put('/reports/query8-update-integrity', data),
   getViewData: (view = 'vw_client_cases') => api.get(`/reports/views?view=${view}`)
@@ -104,7 +106,15 @@ export const authService = {
 
 export const practiceService = {
   getDocuments: () => api.get('/practice/documents'),
-  createDocument: (data) => api.post('/practice/documents', data),
+  createDocument: (data) => {
+    if (data instanceof FormData) {
+      return api.post('/practice/documents', data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+    }
+    return api.post('/practice/documents', data);
+  },
+  downloadDocument: (id) => api.get(`/practice/documents/${id}/download`, { responseType: 'blob' }),
   deleteDocument: (id) => api.delete(`/practice/documents/${id}`),
 
   getTasks: () => api.get('/practice/tasks'),
@@ -113,7 +123,13 @@ export const practiceService = {
   deleteTask: (id) => api.delete(`/practice/tasks/${id}`),
 
   getInvoices: () => api.get('/practice/invoices'),
+  createInvoice: (data) => api.post('/practice/invoices', data),
+
   getPayments: () => api.get('/practice/payments'),
+  createPayment: (data) => api.post('/practice/payments', data),
+  updatePaymentStatus: (id, status) => api.put(`/practice/payments/${id}/status`, { status }),
+
+  exportLedger: () => api.get('/practice/ledger/export', { responseType: 'blob' }),
 
   getAppointments: () => api.get('/practice/appointments')
 };

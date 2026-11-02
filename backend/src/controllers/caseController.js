@@ -346,6 +346,51 @@ const caseController = {
     } catch (error) {
       next(error);
     }
+  },
+
+  assignCounsel: async (req, res, next) => {
+    try {
+      const db = req.db;
+      const caseId = parseInt(req.params.id, 10);
+      const { lawyer_id, role, is_primary } = req.body;
+
+      if (!lawyer_id) {
+        return res.status(400).json({ success: false, message: 'Advocate / Counsel (lawyer_id) is required.' });
+      }
+
+      const [results] = await db.query(
+        'CALL sp_case_assign_counsel(?, ?, ?, ?)',
+        [caseId, parseInt(lawyer_id, 10), role || 'Associate Counsel', Boolean(is_primary)]
+      );
+
+      return res.status(201).json({
+        success: true,
+        message: 'Counsel assigned to legal matter successfully.',
+        data: results[0]?.[0]
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  removeCounsel: async (req, res, next) => {
+    try {
+      const db = req.db;
+      const caseId = parseInt(req.params.id, 10);
+      const lawyerId = parseInt(req.params.lawyerId, 10);
+
+      await db.query(
+        'CALL sp_case_remove_counsel(?, ?)',
+        [caseId, lawyerId]
+      );
+
+      return res.json({
+        success: true,
+        message: 'Counsel representation revoked from matter.'
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 };
 

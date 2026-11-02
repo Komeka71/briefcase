@@ -130,11 +130,19 @@ SELECT
     l.email,
     l.phone,
     l.specialization,
-    l.experience_years,
+    (l.experience_years + COALESCE(TIMESTAMPDIFF(YEAR, l.join_date, CURRENT_DATE), 0)) AS experience_years,
     l.join_date,
     l.status,
     l.department_id,
-    d.department_name
+    d.department_name,
+    (
+        SELECT COUNT(*)
+        FROM CASE_LAWYER cl
+        INNER JOIN CASES c ON cl.case_id = c.case_id
+        INNER JOIN CASE_STATUS cs ON c.current_status_id = cs.status_id
+        WHERE cl.lawyer_id = l.lawyer_id
+          AND cs.status_name NOT IN ('Closed', 'Settled')
+    ) AS assigned_cases_count
 FROM LAWYER l
 LEFT JOIN DEPARTMENT d ON l.department_id = d.department_id;
 
@@ -402,6 +410,12 @@ DROP PROCEDURE IF EXISTS sp_role_update_task_status;
 DROP PROCEDURE IF EXISTS sp_role_add_document;
 DROP PROCEDURE IF EXISTS sp_lawyer_update_case_notes;
 DROP PROCEDURE IF EXISTS sp_lawyer_update_hearing_outcome;
+DROP PROCEDURE IF EXISTS sp_lawyer_schedule_hearing;
+DROP PROCEDURE IF EXISTS sp_recalculate_invoice_status;
+DROP PROCEDURE IF EXISTS sp_create_invoice;
+DROP PROCEDURE IF EXISTS sp_record_payment;
+DROP PROCEDURE IF EXISTS sp_case_assign_counsel;
+DROP PROCEDURE IF EXISTS sp_case_remove_counsel;
 
 DELIMITER //
 
@@ -648,6 +662,293 @@ BEGIN
     WHERE hearing_id = p_hearing_id;
 END //
 
+-- 6. sp_lawyer_schedule_hearing
+CREATE PROCEDURE sp_lawyer_schedule_hearing (
+    IN  p_case_id      INT,
+    IN  p_court_id     INT,
+    IN  p_hearing_date DATE,
+    IN  p_notes        TEXT,
+    OUT p_hearing_id   INT
+)
+SQL SECURITY DEFINER
+BEGIN
+    DECLARE v_role VARCHAR(30);
+    DECLARE v_user INT;
+    DECLARE v_is_own BOOLEAN DEFAULT FALSE;
+
+    SET v_role = fn_app_role();
+    SET v_user = fn_app_user();
+
+    IF NOT EXISTS (SELECT 1 FROM CASES WHERE case_id = p_case_id) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Error: Case record not found.';
+    END IF;
+
+    IF v_role = 'Lawyer' THEN
+        SELECT COUNT(*) > 0 INTO v_is_own
+        FROM CASE_LAWYER cl
+        JOIN LAWYER l ON cl.lawyer_id = l.lawyer_id
+        JOIN USERS u ON LOWER(TRIM(l.email)) = LOWER(TRIM(u.email))
+        WHERE cl.case_id = p_case_id AND u.user_id = v_user;
+
+        IF NOT v_is_own THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Forbidden: Lawyers can only schedule hearings for their own cases.';
+        END IF;
+    ELSEIF v_role != 'Admin' THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Forbidden: Only Lawyers and Admins can schedule hearings.';
+    END IF;
+
+    INSERT INTO HEARING (case_id, court_id, hearing_date, outcome, notes)
+    VALUES (p_case_id, p_court_id, p_hearing_date, NULL, p_notes);
+
+    SET p_hearing_id = LAST_INSERT_ID();
+
+    SELECT * FROM HEARING WHERE hearing_id = p_hearing_id;
+END //
+
+-- 7. sp_recalculate_invoice_status
+CREATE PROCEDURE sp_recalculate_invoice_status (
+    IN p_invoice_id INT
+)
+SQL SECURITY DEFINER
+BEGIN
+    DECLARE v_total_paid DECIMAL(12,2) DEFAULT 0.00;
+    DECLARE v_invoice_amount DECIMAL(12,2) DEFAULT 0.00;
+
+    IF p_invoice_id IS NOT NULL THEN
+        SELECT amount INTO v_invoice_amount FROM INVOICE WHERE invoice_id = p_invoice_id;
+        IF v_invoice_amount IS NOT NULL THEN
+            SELECT COALESCE(SUM(amount), 0.00) INTO v_total_paid
+            FROM PAYMENT
+            WHERE invoice_id = p_invoice_id AND payment_status = 'Completed';
+
+            IF v_total_paid >= v_invoice_amount AND v_invoice_amount > 0 THEN
+                UPDATE INVOICE SET status = 'Paid' WHERE invoice_id = p_invoice_id;
+            ELSEIF v_total_paid > 0 THEN
+                UPDATE INVOICE SET status = 'Partially Paid' WHERE invoice_id = p_invoice_id;
+            ELSE
+                UPDATE INVOICE SET status = 'Unpaid' WHERE invoice_id = p_invoice_id;
+            END IF;
+        END IF;
+    END IF;
+END //
+
+-- 8. sp_create_invoice
+CREATE PROCEDURE sp_create_invoice (
+    IN  p_case_id     INT,
+    IN  p_issue_date  DATE,
+    IN  p_due_date    DATE,
+    IN  p_amount      DECIMAL(12,2),
+    IN  p_description TEXT,
+    OUT p_invoice_id  INT
+)
+SQL SECURITY DEFINER
+BEGIN
+    DECLARE v_year INT;
+    DECLARE v_seq INT DEFAULT 1;
+    DECLARE v_inv_number VARCHAR(50);
+
+    IF fn_app_role() != 'Admin' THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Forbidden: Only administrators can create invoices.';
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM CASES WHERE case_id = p_case_id) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Validation Error: Specified case does not exist.';
+    END IF;
+
+    IF p_amount <= 0 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Validation Error: Invoice amount must be greater than zero.';
+    END IF;
+
+    IF p_due_date < p_issue_date THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Validation Error: Due date cannot be earlier than issue date.';
+    END IF;
+
+    SET v_year = YEAR(COALESCE(p_issue_date, CURRENT_DATE));
+
+    SELECT COALESCE(MAX(CAST(SUBSTRING_INDEX(invoice_number, '-', -1) AS UNSIGNED)), 0) + 1
+    INTO v_seq
+    FROM INVOICE
+    WHERE invoice_number LIKE CONCAT('INV-', v_year, '-%');
+
+    SET v_inv_number = CONCAT('INV-', v_year, '-', LPAD(v_seq, 3, '0'));
+
+    INSERT INTO INVOICE (case_id, invoice_number, invoice_date, due_date, amount, status, description)
+    VALUES (p_case_id, v_inv_number, COALESCE(p_issue_date, CURRENT_DATE), p_due_date, p_amount, 'Unpaid', p_description);
+
+    SET p_invoice_id = LAST_INSERT_ID();
+
+    SELECT * FROM INVOICE WHERE invoice_id = p_invoice_id;
+END //
+
+-- 9. sp_record_payment
+CREATE PROCEDURE sp_record_payment (
+    IN  p_case_id           INT,
+    IN  p_payment_method_id INT,
+    IN  p_invoice_id        INT,
+    IN  p_payment_date      DATE,
+    IN  p_amount            DECIMAL(12,2),
+    IN  p_payment_status    VARCHAR(20),
+    IN  p_description       TEXT,
+    OUT p_payment_id        INT
+)
+SQL SECURITY DEFINER
+BEGIN
+    DECLARE v_invoice_amount DECIMAL(12,2);
+    DECLARE v_already_paid DECIMAL(12,2) DEFAULT 0.00;
+    DECLARE v_outstanding DECIMAL(12,2);
+
+    IF fn_app_role() != 'Admin' THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Forbidden: Only administrators can record payments.';
+    END IF;
+
+    IF p_amount <= 0 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Validation Error: Payment amount must be greater than zero.';
+    END IF;
+
+    IF p_invoice_id IS NOT NULL THEN
+        SELECT amount INTO v_invoice_amount FROM INVOICE WHERE invoice_id = p_invoice_id;
+        IF v_invoice_amount IS NULL THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Validation Error: Linked invoice does not exist.';
+        END IF;
+
+        SELECT COALESCE(SUM(amount), 0.00) INTO v_already_paid
+        FROM PAYMENT
+        WHERE invoice_id = p_invoice_id AND payment_status = 'Completed';
+
+        SET v_outstanding = v_invoice_amount - v_already_paid;
+
+        IF p_amount > v_outstanding AND COALESCE(p_payment_status, 'Completed') = 'Completed' THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Validation Error: Payment amount exceeds the outstanding balance.';
+        END IF;
+    END IF;
+
+    INSERT INTO PAYMENT (case_id, payment_method_id, invoice_id, payment_date, amount, payment_status, description)
+    VALUES (
+        p_case_id,
+        p_payment_method_id,
+        p_invoice_id,
+        COALESCE(p_payment_date, CURRENT_DATE),
+        p_amount,
+        COALESCE(p_payment_status, 'Completed'),
+        p_description
+    );
+
+    SET p_payment_id = LAST_INSERT_ID();
+
+    IF p_invoice_id IS NOT NULL THEN
+        CALL sp_recalculate_invoice_status(p_invoice_id);
+    END IF;
+
+    SELECT p.*, pm.method_name AS payment_method, CONCAT('REC-', LPAD(p.payment_id, 4, '0')) AS payment_reference
+    FROM PAYMENT p
+    LEFT JOIN PAYMENT_METHOD pm ON p.payment_method_id = pm.method_id
+    WHERE p.payment_id = p_payment_id;
+END //
+
+-- 10. sp_case_assign_counsel
+CREATE PROCEDURE sp_case_assign_counsel (
+    IN p_case_id    INT,
+    IN p_lawyer_id  INT,
+    IN p_role       VARCHAR(50),
+    IN p_is_primary BOOLEAN
+)
+SQL SECURITY DEFINER
+BEGIN
+    IF fn_app_role() != 'Admin' THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Forbidden: Only administrators can assign counsel.';
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM CASES WHERE case_id = p_case_id) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Validation Error: Case does not exist.';
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM LAWYER WHERE lawyer_id = p_lawyer_id) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Validation Error: Lawyer does not exist.';
+    END IF;
+
+    IF p_is_primary THEN
+        UPDATE CASE_LAWYER SET is_primary = FALSE WHERE case_id = p_case_id;
+    END IF;
+
+    INSERT INTO CASE_LAWYER (case_id, lawyer_id, role, assigned_date, is_primary)
+    VALUES (p_case_id, p_lawyer_id, COALESCE(p_role, 'Associate Counsel'), CURRENT_DATE, COALESCE(p_is_primary, FALSE))
+    ON DUPLICATE KEY UPDATE
+        role = VALUES(role),
+        is_primary = VALUES(is_primary);
+
+    SELECT cl.*, l.name AS lawyer_name, l.email AS lawyer_email
+    FROM CASE_LAWYER cl
+    JOIN LAWYER l ON cl.lawyer_id = l.lawyer_id
+    WHERE cl.case_id = p_case_id AND cl.lawyer_id = p_lawyer_id;
+END //
+
+-- 11. sp_case_remove_counsel
+CREATE PROCEDURE sp_case_remove_counsel (
+    IN p_case_id   INT,
+    IN p_lawyer_id INT
+)
+SQL SECURITY DEFINER
+BEGIN
+    IF fn_app_role() != 'Admin' THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Forbidden: Only administrators can remove counsel.';
+    END IF;
+
+    DELETE FROM CASE_LAWYER
+    WHERE case_id = p_case_id AND lawyer_id = p_lawyer_id;
+END //
+
+DELIMITER //
+
+-- PAYMENT triggers for automatic status synchronization
+DROP TRIGGER IF EXISTS trg_payment_after_insert_status //
+DROP TRIGGER IF EXISTS trg_payment_after_update_status //
+DROP TRIGGER IF EXISTS trg_payment_after_delete_status //
+
+CREATE TRIGGER trg_payment_after_insert_status
+AFTER INSERT ON PAYMENT
+FOR EACH ROW
+BEGIN
+    IF NEW.invoice_id IS NOT NULL THEN
+        CALL sp_recalculate_invoice_status(NEW.invoice_id);
+    END IF;
+END //
+
+CREATE TRIGGER trg_payment_after_update_status
+AFTER UPDATE ON PAYMENT
+FOR EACH ROW
+BEGIN
+    IF NEW.invoice_id IS NOT NULL THEN
+        CALL sp_recalculate_invoice_status(NEW.invoice_id);
+    END IF;
+    IF OLD.invoice_id IS NOT NULL AND OLD.invoice_id != NEW.invoice_id THEN
+        CALL sp_recalculate_invoice_status(OLD.invoice_id);
+    END IF;
+END //
+
+CREATE TRIGGER trg_payment_after_delete_status
+AFTER DELETE ON PAYMENT
+FOR EACH ROW
+BEGIN
+    IF OLD.invoice_id IS NOT NULL THEN
+        CALL sp_recalculate_invoice_status(OLD.invoice_id);
+    END IF;
+END //
+
 DELIMITER ;
 
 -- =====================================================================
@@ -682,6 +983,7 @@ GRANT EXECUTE ON PROCEDURE briefcase.sp_role_update_task_status TO 'briefcase_la
 GRANT EXECUTE ON PROCEDURE briefcase.sp_role_add_document TO 'briefcase_lawyer'@'localhost';
 GRANT EXECUTE ON PROCEDURE briefcase.sp_lawyer_update_case_notes TO 'briefcase_lawyer'@'localhost';
 GRANT EXECUTE ON PROCEDURE briefcase.sp_lawyer_update_hearing_outcome TO 'briefcase_lawyer'@'localhost';
+GRANT EXECUTE ON PROCEDURE briefcase.sp_lawyer_schedule_hearing TO 'briefcase_lawyer'@'localhost';
 
 -- 3. Assistant / Staff Service Account (SELECT only on staff views and lookups; EXECUTE only on staff procedures)
 DROP USER IF EXISTS 'briefcase_staff'@'localhost';

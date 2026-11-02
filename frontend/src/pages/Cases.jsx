@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { caseService, reportService } from '../services/api';
+import { caseService, reportService, lawyerService } from '../services/api';
 import {
   PageHeader,
   MagneticButton,
@@ -8,6 +8,7 @@ import {
   EmptyState,
   Skeleton
 } from '../components/ui';
+import { getRole } from '../lib/auth';
 import { EASE_EXPO } from '../lib/motion';
 import {
   Briefcase,
@@ -28,11 +29,21 @@ import {
 } from 'lucide-react';
 
 export default function Cases() {
+  const role = getRole();
+  const isAdmin = role === 'Admin';
+  const isLawyer = role === 'Lawyer';
+  const canEdit = isAdmin || isLawyer;
+
   const [cases, setCases] = useState([]);
-  const [refData, setRefData] = useState({ caseTypes: [], caseStatuses: [], clients: [] });
+  const [refData, setRefData] = useState({ caseTypes: [], caseStatuses: [], clients: [], lawyers: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
+  // Counsel allocation in dossier modal
+  const [newCounselId, setNewCounselId] = useState('');
+  const [newCounselRole, setNewCounselRole] = useState('Associate Counsel');
+  const [isPrimaryCounsel, setIsPrimaryCounsel] = useState(false);
 
   // Filters
   const [statusFilter, setStatusFilter] = useState('');
@@ -93,8 +104,14 @@ export default function Cases() {
     setAggregateLoading(true);
     try {
       const res = await reportService.getQuery3(func, 'budget', 'CASES');
-      const val = res.data.data?.result ?? res.data.data;
-      setAggregateValue(val);
+      const d = res.data.data;
+      if (!d || d.result_value === null || d.result_value === undefined) {
+        setAggregateValue(d?.message || '—');
+      } else if (d.case_number) {
+        setAggregateValue(`₹${Number(d.result_value).toLocaleString('en-IN', { maximumFractionDigits: 2 })} (${d.case_number})`);
+      } else {
+        setAggregateValue(d.result_value);
+      }
     } catch (err) {
       console.warn('Failed to calculate aggregate:', err.message);
     } finally {
@@ -116,7 +133,7 @@ export default function Cases() {
     setError(null);
     try {
       if (val === 'high_value') {
-        const res = await reportService.getQuery6(300000);
+        const res = await reportService.getQuery6(300000, 'cases');
         setCases(res.data.data || []);
       } else if (val === 'above_average') {
         const res = await reportService.getQuery7();
@@ -148,8 +165,16 @@ export default function Cases() {
 
   const fetchReferenceData = async () => {
     try {
-      const res = await caseService.getReferenceData();
-      setRefData(res.data.data);
+      const [res, lwRes] = await Promise.all([
+        caseService.getReferenceData(),
+        lawyerService.getAll()
+      ]);
+      setRefData({
+        caseTypes: res.data.data?.caseTypes || [],
+        caseStatuses: res.data.data?.caseStatuses || [],
+        clients: res.data.data?.clients || [],
+        lawyers: lwRes.data.data || res.data.data?.lawyers || []
+      });
     } catch (err) {
       console.warn('Could not load reference data:', err.message);
     }
@@ -170,6 +195,35 @@ export default function Cases() {
       setDetailsModalOpen(true);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch case details.');
+    }
+  };
+
+  const handleAssignCounsel = async (e) => {
+    e.preventDefault();
+    if (!newCounselId || !selectedCase) return;
+    try {
+      await caseService.assignCounsel(selectedCase.case_id, {
+        lawyer_id: newCounselId,
+        role: newCounselRole,
+        is_primary: isPrimaryCounsel
+      });
+      setSuccess('Counsel assigned to matter successfully.');
+      setNewCounselId('');
+      setIsPrimaryCounsel(false);
+      viewDetails(selectedCase.case_id);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to assign counsel.');
+    }
+  };
+
+  const handleRemoveCounsel = async (caseId, lawyerId) => {
+    if (!window.confirm('Remove counsel representation from this matter?')) return;
+    try {
+      await caseService.removeCounsel(caseId, lawyerId);
+      setSuccess('Counsel representation revoked.');
+      viewDetails(caseId);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to remove counsel.');
     }
   };
 
@@ -263,16 +317,18 @@ export default function Cases() {
         category="Litigation Hub"
         badge="Dockets Active"
         actions={
-          <MagneticButton
-            variant="brass"
-            size="md"
-            onClick={openAdd}
-            icon={Plus}
-            iconPosition="left"
-            className="text-xs font-mono uppercase tracking-wider"
-          >
-            Register New Matter
-          </MagneticButton>
+          isAdmin ? (
+            <MagneticButton
+              variant="brass"
+              size="md"
+              onClick={openAdd}
+              icon={Plus}
+              iconPosition="left"
+              className="text-xs font-mono uppercase tracking-wider"
+            >
+              Register New Matter
+            </MagneticButton>
+          ) : undefined
         }
       />
 
@@ -459,20 +515,24 @@ export default function Cases() {
                       >
                         <Eye className="w-3.5 h-3.5" />
                       </button>
-                      <button
-                        onClick={() => openEdit(c)}
-                        className="p-1.5 rounded-xs text-silver hover:text-ivory hover:bg-graphite transition-colors cursor-pointer"
-                        title="Edit Matter"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(c.case_id)}
-                        className="p-1.5 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
-                        title="Delete Matter"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      {canEdit && (
+                        <button
+                          onClick={() => openEdit(c)}
+                          className="p-1.5 rounded-xs text-silver hover:text-ivory hover:bg-graphite transition-colors cursor-pointer"
+                          title="Edit Matter"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                      {isAdmin && (
+                        <button
+                          onClick={() => handleDelete(c.case_id)}
+                          className="p-1.5 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
+                          title="Delete Matter"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -750,13 +810,66 @@ export default function Cases() {
                             <div className="font-serif font-medium text-ivory text-xs">{l.name}</div>
                             <div className="text-[10px] text-silver/60 font-mono">Bar Reg: {l.bar_registration_no}</div>
                           </div>
-                          <span className="px-2.5 py-0.5 rounded-xs bg-graphite text-brass border border-brass/30 text-[10px] font-mono">
-                            {l.role} {l.is_primary ? '• Lead Counsel' : ''}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="px-2.5 py-0.5 rounded-xs bg-graphite text-brass border border-brass/30 text-[10px] font-mono">
+                              {l.role} {l.is_primary ? '• Lead Counsel' : ''}
+                            </span>
+                            {isAdmin && (
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveCounsel(selectedCase.case_id, l.lawyer_id)}
+                                className="p-1 rounded-xs text-steel hover:text-red-400 hover:bg-court-danger/20 transition-colors cursor-pointer"
+                                title="Remove Counsel"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
                         </div>
                       ))
                     )}
                   </div>
+                  {isAdmin && (
+                    <form onSubmit={handleAssignCounsel} className="mt-2.5 p-3 bg-graphite/40 border border-brass/15 rounded-xs flex flex-wrap items-center gap-2">
+                      <select
+                        value={newCounselId}
+                        onChange={(e) => setNewCounselId(e.target.value)}
+                        className="court-input px-2.5 py-1 text-xs font-mono bg-charcoal cursor-pointer flex-1 min-w-[140px]"
+                      >
+                        <option value="">Select Advocate...</option>
+                        {(refData.lawyers || []).map((lw) => (
+                          <option key={lw.lawyer_id} value={lw.lawyer_id}>
+                            {lw.name} ({lw.specialization || 'Advocate'})
+                          </option>
+                        ))}
+                      </select>
+                      <select
+                        value={newCounselRole}
+                        onChange={(e) => setNewCounselRole(e.target.value)}
+                        className="court-input px-2.5 py-1 text-xs font-mono bg-charcoal cursor-pointer"
+                      >
+                        <option value="Associate Counsel">Associate Counsel</option>
+                        <option value="Lead Counsel">Lead Counsel</option>
+                        <option value="Senior Advocate">Senior Advocate</option>
+                      </select>
+                      <label className="flex items-center gap-1.5 text-[11px] font-mono text-silver/80 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={isPrimaryCounsel}
+                          onChange={(e) => setIsPrimaryCounsel(e.target.checked)}
+                          className="rounded-xs bg-charcoal border-slate text-brass"
+                        />
+                        <span>Lead</span>
+                      </label>
+                      <button
+                        type="submit"
+                        disabled={!newCounselId}
+                        className="court-btn-brass px-3 py-1 text-xs font-mono uppercase tracking-wider disabled:opacity-50 cursor-pointer"
+                      >
+                        Assign
+                      </button>
+                    </form>
+                  )}
                 </div>
 
                 {/* Hearings Cause List */}

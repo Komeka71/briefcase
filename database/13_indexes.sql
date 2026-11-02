@@ -24,17 +24,12 @@ BEGIN
       AND table_name = p_table_name
       AND index_name = p_index_name;
 
-    IF v_exists > 0 THEN
-        SET @drop_stmt = CONCAT('ALTER TABLE ', p_table_name, ' DROP INDEX ', p_index_name);
-        PREPARE s1 FROM @drop_stmt;
-        EXECUTE s1;
-        DEALLOCATE PREPARE s1;
+    IF v_exists = 0 THEN
+        SET @create_stmt = CONCAT('CREATE INDEX ', p_index_name, ' ON ', p_table_name, ' (', p_column_def, ')');
+        PREPARE s2 FROM @create_stmt;
+        EXECUTE s2;
+        DEALLOCATE PREPARE s2;
     END IF;
-
-    SET @create_stmt = CONCAT('CREATE INDEX ', p_index_name, ' ON ', p_table_name, ' (', p_column_def, ')');
-    PREPARE s2 FROM @create_stmt;
-    EXECUTE s2;
-    DEALLOCATE PREPARE s2;
 END //
 DELIMITER ;
 
